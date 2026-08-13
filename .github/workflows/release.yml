@@ -41,7 +41,6 @@ jobs:
           if [ -n "${{ github.event.inputs.version_suffix }}" ]; then
             BN="${{ github.event.inputs.version_suffix }}"
           elif [[ "${{ github.ref }}" == refs/tags/* ]]; then
-            # tag like v1.1.2 or 1.7.10-1.1.2-42 → use the tag name as build number part
             BN="${GITHUB_REF#refs/tags/}"
             BN="${BN#v}"
           else
@@ -49,6 +48,13 @@ jobs:
           fi
           echo "build_number=$BN" >> $GITHUB_OUTPUT
           echo "Using BUILD_NUMBER=$BN"
+
+      - name: Fetch Waila (compile dependency)
+        run: |
+          mkdir -p libs
+          curl -fsSL -o libs/Waila-1.5.10_1.7.10.jar \
+            "https://mediafilez.forgecdn.net/files/2230/518/Waila-1.5.10_1.7.10.jar"
+          ls -la libs/
 
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
