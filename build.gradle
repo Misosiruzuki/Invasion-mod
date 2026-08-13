@@ -45,18 +45,18 @@ minecraft {
     }
 }
 
-sourceSets.main.resources { srcDir 'src/generated/resources' }
-
+// Port skeleton only: whitelist sources so leftover 1.7.10 files do not compile.
 sourceSets {
     main {
         java {
-            exclude 'invmod/**'
-            exclude 'com/whammich/invasion/client/**'
-            exclude 'com/whammich/invasion/items/**'
-            exclude 'com/whammich/invasion/proxies/**'
-            exclude 'com/whammich/invasion/register/**'
+            setSrcDirs(['src/main/java'])
+            include 'com/whammich/invasion/InvasionMod.java'
+            include 'com/whammich/invasion/Reference.java'
+            include 'com/whammich/invasion/util/**'
         }
         resources {
+            srcDir 'src/main/resources'
+            srcDir 'src/generated/resources'
             exclude 'mcmod.info'
             exclude 'assets/invasion/textures/**'
         }
