@@ -2,6 +2,9 @@ package com.whammich.invasion.nexus;
 
 import com.whammich.invasion.registry.BlockEntityRegistry;
 import com.whammich.invasion.registry.ItemRegistry;
+import com.whammich.invasion.util.LogHelper;
+import com.whammich.invasion.wave.IMWaveSpawner;
+import com.whammich.invasion.wave.WaveSpawnerException;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
@@ -18,8 +21,7 @@ import net.minecraft.world.level.block.entity.BaseContainerBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 
 /**
- * Nexus block entity — holds invasion state.
- * Wave spawning (IMWaveSpawner) is wired in group 5.
+ * Nexus block entity — holds invasion state and drives waves (group 5).
  */
 public class NexusBlockEntity extends BaseContainerBlockEntity implements INexusAccess, MenuProvider {
 
@@ -52,6 +54,9 @@ public class NexusBlockEntity extends BaseContainerBlockEntity implements INexus
     private int hp = 100;
     private int mode;
     private boolean activated;
+
+    private IMWaveSpawner waveSpawner;
+    private int waveRestTimer;
 
     private final ContainerData dataAccess = new ContainerData() {
         @Override
@@ -99,6 +104,61 @@ public class NexusBlockEntity extends BaseContainerBlockEntity implements INexus
 
     public static void serverTick(Level level, BlockPos pos, BlockState state, NexusBlockEntity nexus) {
         nexus.tickCook();
+        nexus.tickWaves();
+    }
+
+    private IMWaveSpawner spawner() {
+        if (waveSpawner == null) {
+            waveSpawner = new IMWaveSpawner(this);
+            waveSpawner.setSpawnRadius(spawnRadius);
+        }
+        return waveSpawner;
+    }
+
+    private void tickWaves() {
+        if (!activated) {
+            return;
+        }
+        if (mode == 1) {
+            activationTimer--;
+            if (activationTimer <= 0) {
+                mode = 2;
+                currentWave = 1;
+                waveRestTimer = 0;
+                try {
+                    spawner().beginNextWave(currentWave);
+                } catch (WaveSpawnerException e) {
+                    LogHelper.warn("Failed to start wave: {}", e.getMessage());
+                    mode = 0;
+                    activated = false;
+                }
+                setChanged();
+            }
+            return;
+        }
+        if (mode != 2) {
+            return;
+        }
+        try {
+            if (spawner().isActive() && !spawner().isWaveComplete()) {
+                spawner().spawn(50);
+            } else if (spawner().isWaveComplete()) {
+                if (waveRestTimer <= 0) {
+                    waveRestTimer = spawner().getWaveRestTime();
+                    if (waveRestTimer <= 0) {
+                        waveRestTimer = 45_000;
+                    }
+                }
+                waveRestTimer -= 50;
+                if (waveRestTimer <= 0) {
+                    currentWave++;
+                    spawner().beginNextWave(currentWave);
+                    setChanged();
+                }
+            }
+        } catch (WaveSpawnerException e) {
+            LogHelper.warn("Wave error: {}", e.getMessage());
+        }
     }
 
     private void tickCook() {
