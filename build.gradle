@@ -56,6 +56,8 @@ sourceSets {
             include 'com/whammich/invasion/proxy/**'
             include 'com/whammich/invasion/registry/**'
             include 'com/whammich/invasion/item/**'
+            include 'com/whammich/invasion/client/**'
+            include 'com/whammich/invasion/nexus/**'
         }
         resources {
             setSrcDirs(['src/main/resources', 'src/generated/resources'])

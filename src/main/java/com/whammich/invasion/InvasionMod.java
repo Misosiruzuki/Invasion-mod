@@ -2,7 +2,10 @@ package com.whammich.invasion;
 
 import com.whammich.invasion.proxy.CommonProxy;
 import com.whammich.invasion.proxy.ProxyInit;
+import com.whammich.invasion.registry.BlockEntityRegistry;
+import com.whammich.invasion.registry.BlockRegistry;
 import com.whammich.invasion.registry.ItemRegistry;
+import com.whammich.invasion.registry.MenuRegistry;
 import com.whammich.invasion.util.LogHelper;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
@@ -42,7 +45,10 @@ public class InvasionMod {
 
         ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, ConfigHandler.COMMON_SPEC);
 
+        BlockRegistry.register(modBus);
+        BlockEntityRegistry.register(modBus);
         ItemRegistry.register(modBus);
+        MenuRegistry.register(modBus);
         CREATIVE_MODE_TABS.register(modBus);
 
         PROXY.register(modBus);
