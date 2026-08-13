@@ -1,6 +1,5 @@
 {
   "itemGroup.invasion": "Invasion",
-
   "item.invasion.catalyst_mixture_unstable": "不安定な触媒混合物",
   "item.invasion.catalyst_mixture_stable": "安定した触媒混合物",
   "item.invasion.nexus_catalyst_unstable": "不安定なネクサス触媒",
@@ -11,7 +10,6 @@
   "item.invasion.remnants_small": "小さな残骸",
   "item.invasion.rift_flux": "リフトフラックス",
   "item.invasion.phase_crystal": "フェーズクリスタル",
-
   "item.invasion.searing_bow": "焼灼の弓",
   "item.invasion.searing_bow.tooltip": "フルチャージで特殊射撃（効果は後日実装）",
   "item.invasion.engy_hammer": "エンジニアハンマー",
@@ -28,5 +26,12 @@
   "item.invasion.trap.pending": "トラップ設置はエンティティ移植待ち (%s, %s, %s)",
   "item.invasion.debug_wand": "デバッグワンド",
   "item.invasion.debug_wand.tooltip": "開発用（enableLogging が必要）",
-  "item.invasion.debug_wand.disabled": "デバッグワンドを使うには設定でログを有効にしてください"
+  "item.invasion.debug_wand.disabled": "デバッグワンドを使うには設定でログを有効にしてください",
+  "block.invasion.nexus": "ネクサス",
+  "block.invasion.nexus.activating": "ネクサス起動中...",
+  "gui.invasion.nexus.mode": "モード: %s",
+  "gui.invasion.nexus.wave": "ウェーブ: %s",
+  "gui.invasion.nexus.level": "レベル: %s",
+  "gui.invasion.nexus.kills": "撃破: %s",
+  "gui.invasion.nexus.hp": "HP: %s / %s"
 }

@@ -1,6 +1,5 @@
 {
   "itemGroup.invasion": "Invasion",
-
   "item.invasion.catalyst_mixture_unstable": "Unstable Catalyst Mixture",
   "item.invasion.catalyst_mixture_stable": "Stable Catalyst Mixture",
   "item.invasion.nexus_catalyst_unstable": "Unstable Nexus Catalyst",
@@ -11,7 +10,6 @@
   "item.invasion.remnants_small": "Small Remnants",
   "item.invasion.rift_flux": "Rift Flux",
   "item.invasion.phase_crystal": "Phase Crystal",
-
   "item.invasion.searing_bow": "Searing Bow",
   "item.invasion.searing_bow.tooltip": "Fires searing shots when fully charged (special effect pending)",
   "item.invasion.engy_hammer": "Engineer Hammer",
@@ -28,5 +26,12 @@
   "item.invasion.trap.pending": "Trap placement pending entity port (%s, %s, %s)",
   "item.invasion.debug_wand": "Debug Wand",
   "item.invasion.debug_wand.tooltip": "Developer tool (requires enableLogging)",
-  "item.invasion.debug_wand.disabled": "Enable logging in config to use the debug wand"
+  "item.invasion.debug_wand.disabled": "Enable logging in config to use the debug wand",
+  "block.invasion.nexus": "Nexus",
+  "block.invasion.nexus.activating": "Nexus activating...",
+  "gui.invasion.nexus.mode": "Mode: %s",
+  "gui.invasion.nexus.wave": "Wave: %s",
+  "gui.invasion.nexus.level": "Level: %s",
+  "gui.invasion.nexus.kills": "Kills: %s",
+  "gui.invasion.nexus.hp": "HP: %s / %s"
 }
