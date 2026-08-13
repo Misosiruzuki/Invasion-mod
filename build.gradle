@@ -63,6 +63,7 @@ sourceSets {
             include 'com/whammich/invasion/client/NexusScreen.java'
             include 'com/whammich/invasion/nexus/**'
             include 'com/whammich/invasion/wave/**'
+            include 'com/whammich/invasion/entity/**'
         }
         resources {
             setSrcDirs(['src/main/resources', 'src/generated/resources'])
