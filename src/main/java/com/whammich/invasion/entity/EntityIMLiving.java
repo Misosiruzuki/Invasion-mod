@@ -7,9 +7,9 @@ import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.Monster;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 
@@ -106,7 +106,7 @@ public abstract class EntityIMLiving extends Monster implements IHasNexus, IPath
 
     @Override
     public float getBlockPathCost(BlockGetter level, BlockPos pos, PathAction action) {
-        float hardness = level.getBlockState(pos).getDestroySpeed(null, pos);
+        float hardness = level.getBlockState(pos).getDestroySpeed(level, pos);
         if (hardness < 0) return 1_000_000.0F;
         return switch (action) {
             case DIG -> 2.0F + hardness;
