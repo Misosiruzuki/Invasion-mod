@@ -8,7 +8,6 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.ModLoadingContext;
@@ -19,9 +18,6 @@ import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.RegistryObject;
 
-/**
- * Main entry point for Invasion on Forge 1.20.1.
- */
 @Mod(Reference.MODID)
 public class InvasionMod {
 
@@ -32,14 +28,13 @@ public class InvasionMod {
             "invasion",
             () -> CreativeModeTab.builder()
                     .title(Component.translatable("itemGroup.invasion"))
-                    .icon(() -> new ItemStack(Items.OBSIDIAN))
+                    .icon(() -> new ItemStack(ItemRegistry.NEXUS_CATALYST_STABLE.get()))
                     .displayItems((params, output) -> {
-                        // Filled as items/blocks are ported
+                        ItemRegistry.ITEMS.getEntries().forEach(ro -> output.accept(ro.get()));
                     })
                     .build()
     );
 
-    /** Side-appropriate proxy (ClientProxy on client, CommonProxy on dedicated server). */
     public static final CommonProxy PROXY = ProxyInit.create();
 
     public InvasionMod() {

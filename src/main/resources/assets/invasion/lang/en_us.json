@@ -1,3 +1,32 @@
 {
-  "itemGroup.invasion": "Invasion"
+  "itemGroup.invasion": "Invasion",
+
+  "item.invasion.catalyst_mixture_unstable": "Unstable Catalyst Mixture",
+  "item.invasion.catalyst_mixture_stable": "Stable Catalyst Mixture",
+  "item.invasion.nexus_catalyst_unstable": "Unstable Nexus Catalyst",
+  "item.invasion.nexus_catalyst_stable": "Stable Nexus Catalyst",
+  "item.invasion.catalyst_strong": "Strong Catalyst",
+  "item.invasion.damping_agent_weak": "Weak Damping Agent",
+  "item.invasion.damping_agent_strong": "Strong Damping Agent",
+  "item.invasion.remnants_small": "Small Remnants",
+  "item.invasion.rift_flux": "Rift Flux",
+  "item.invasion.phase_crystal": "Phase Crystal",
+
+  "item.invasion.searing_bow": "Searing Bow",
+  "item.invasion.searing_bow.tooltip": "Fires searing shots when fully charged (special effect pending)",
+  "item.invasion.engy_hammer": "Engineer Hammer",
+  "item.invasion.engy_hammer.tooltip": "Tool of the Pigman Engineer",
+  "item.invasion.probe": "Probe",
+  "item.invasion.probe.tooltip": "Scans Nexus and terrain data",
+  "item.invasion.probe.scan_pending": "Probe: Nexus scan not available yet",
+  "item.invasion.strange_bone": "Strange Bone",
+  "item.invasion.strange_bone.tooltip": "An odd bone with residual rift energy",
+  "item.invasion.infused_sword": "Infused Sword",
+  "item.invasion.infused_sword.tooltip": "Tempered with Rift Flux",
+  "item.invasion.trap": "Invasion Trap",
+  "item.invasion.trap.tooltip": "Places a trap that snare invaders",
+  "item.invasion.trap.pending": "Trap placement pending entity port (%s, %s, %s)",
+  "item.invasion.debug_wand": "Debug Wand",
+  "item.invasion.debug_wand.tooltip": "Developer tool (requires enableLogging)",
+  "item.invasion.debug_wand.disabled": "Enable logging in config to use the debug wand"
 }

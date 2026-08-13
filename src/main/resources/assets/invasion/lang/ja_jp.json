@@ -1,3 +1,32 @@
 {
-  "itemGroup.invasion": "Invasion"
+  "itemGroup.invasion": "Invasion",
+
+  "item.invasion.catalyst_mixture_unstable": "不安定な触媒混合物",
+  "item.invasion.catalyst_mixture_stable": "安定した触媒混合物",
+  "item.invasion.nexus_catalyst_unstable": "不安定なネクサス触媒",
+  "item.invasion.nexus_catalyst_stable": "安定したネクサス触媒",
+  "item.invasion.catalyst_strong": "強力な触媒",
+  "item.invasion.damping_agent_weak": "弱い減衰剤",
+  "item.invasion.damping_agent_strong": "強い減衰剤",
+  "item.invasion.remnants_small": "小さな残骸",
+  "item.invasion.rift_flux": "リフトフラックス",
+  "item.invasion.phase_crystal": "フェーズクリスタル",
+
+  "item.invasion.searing_bow": "焼灼の弓",
+  "item.invasion.searing_bow.tooltip": "フルチャージで特殊射撃（効果は後日実装）",
+  "item.invasion.engy_hammer": "エンジニアハンマー",
+  "item.invasion.engy_hammer.tooltip": "ピッグマンエンジニアの道具",
+  "item.invasion.probe": "プローブ",
+  "item.invasion.probe.tooltip": "ネクサスと地形データを調査する",
+  "item.invasion.probe.scan_pending": "プローブ: ネクサス走査はまだ利用できません",
+  "item.invasion.strange_bone": "奇妙な骨",
+  "item.invasion.strange_bone.tooltip": "リフトの残滓を帯びた骨",
+  "item.invasion.infused_sword": "注入された剣",
+  "item.invasion.infused_sword.tooltip": "リフトフラックスで鍛えられた剣",
+  "item.invasion.trap": "侵攻トラップ",
+  "item.invasion.trap.tooltip": "侵攻モブを捕らえる罠を設置する",
+  "item.invasion.trap.pending": "トラップ設置はエンティティ移植待ち (%s, %s, %s)",
+  "item.invasion.debug_wand": "デバッグワンド",
+  "item.invasion.debug_wand.tooltip": "開発用（enableLogging が必要）",
+  "item.invasion.debug_wand.disabled": "デバッグワンドを使うには設定でログを有効にしてください"
 }
