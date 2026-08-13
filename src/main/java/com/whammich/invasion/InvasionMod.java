@@ -1,44 +1,56 @@
 package com.whammich.invasion;
 
-import com.whammich.invasion.client.gui.CreativeTabInvasion;
-import com.whammich.invasion.proxies.CommonProxy;
-import com.whammich.invasion.register.ItemRegistry;
-import cpw.mods.fml.common.Mod;
-import cpw.mods.fml.common.SidedProxy;
-import cpw.mods.fml.common.event.FMLInitializationEvent;
-import cpw.mods.fml.common.event.FMLInterModComms;
-import cpw.mods.fml.common.event.FMLPostInitializationEvent;
-import cpw.mods.fml.common.event.FMLPreInitializationEvent;
-import net.minecraft.creativetab.CreativeTabs;
+import com.whammich.invasion.util.LogHelper;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.eventbus.api.IEventBus;
+import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
+import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.minecraftforge.registries.DeferredRegister;
+import net.minecraftforge.registries.RegistryObject;
 
-import java.io.File;
-
-@Mod(modid = Reference.MODID, name = Reference.NAME, version = Reference.VERSION, dependencies = Reference.DEPEND, guiFactory = Reference.GUIFACTORY)
+/**
+ * Main entry point for Invasion on Forge 1.20.1.
+ * Port skeleton — game systems are added item-by-item from the port checklist.
+ */
+@Mod(Reference.MODID)
 public class InvasionMod {
 
-    @SidedProxy(clientSide = Reference.CLIENTPROXY, serverSide = Reference.COMMONPROXY)
-    public static CommonProxy proxy;
+    public static final DeferredRegister<CreativeModeTab> CREATIVE_MODE_TABS =
+            DeferredRegister.create(Registries.CREATIVE_MODE_TAB, Reference.MODID);
 
-    public static CreativeTabs tabInvasion = new CreativeTabInvasion(Reference.PREFIX + ".creativeTab");
+    /**
+     * Creative tab (replaces CreativeTabInvasion / CreativeTabInvmod from 1.7.10).
+     * Icon is temporary (obsidian) until Nexus block is ported.
+     */
+    public static final RegistryObject<CreativeModeTab> TAB_INVASION = CREATIVE_MODE_TABS.register(
+            "invasion",
+            () -> CreativeModeTab.builder()
+                    .title(Component.translatable("itemGroup.invasion"))
+                    .icon(() -> new ItemStack(Items.OBSIDIAN))
+                    .displayItems((params, output) -> {
+                        // Items/blocks added as they are ported
+                    })
+                    .build()
+    );
 
-    @Mod.Instance
-    public static InvasionMod instance;
+    public InvasionMod() {
+        IEventBus modBus = FMLJavaModLoadingContext.get().getModEventBus();
 
-    @Mod.EventHandler
-    public void preInit(FMLPreInitializationEvent event) {
-        ConfigHandler.init(new File(event.getModConfigurationDirectory() + "/InvasionMod.cfg"));
+        CREATIVE_MODE_TABS.register(modBus);
+        modBus.addListener(this::commonSetup);
+
+        MinecraftForge.EVENT_BUS.register(this);
+
+        LogHelper.info("Invasion mod ({}) initializing for Forge 1.20.1", Reference.VERSION);
     }
 
-    @Mod.EventHandler
-    public void init(FMLInitializationEvent event) {
-
-        ItemRegistry.registerItems();
-
-        FMLInterModComms.sendMessage("Waila", "register", "invmod.common.util.IMWailaProvider.callbackRegister");
-    }
-
-    @Mod.EventHandler
-    public void postInit(FMLPostInitializationEvent event) {
-
+    private void commonSetup(final FMLCommonSetupEvent event) {
+        LogHelper.info("Invasion common setup complete");
     }
 }
