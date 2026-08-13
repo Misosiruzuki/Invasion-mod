@@ -1,5 +1,8 @@
 package com.whammich.invasion;
 
+import com.whammich.invasion.proxy.CommonProxy;
+import com.whammich.invasion.proxy.ProxyInit;
+import com.whammich.invasion.registry.ItemRegistry;
 import com.whammich.invasion.util.LogHelper;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
@@ -18,7 +21,6 @@ import net.minecraftforge.registries.RegistryObject;
 
 /**
  * Main entry point for Invasion on Forge 1.20.1.
- * Port skeleton — game systems are added item-by-item from the port checklist.
  */
 @Mod(Reference.MODID)
 public class InvasionMod {
@@ -26,27 +28,29 @@ public class InvasionMod {
     public static final DeferredRegister<CreativeModeTab> CREATIVE_MODE_TABS =
             DeferredRegister.create(Registries.CREATIVE_MODE_TAB, Reference.MODID);
 
-    /**
-     * Creative tab (replaces CreativeTabInvasion / CreativeTabInvmod from 1.7.10).
-     * Icon is temporary (obsidian) until Nexus block is ported.
-     */
     public static final RegistryObject<CreativeModeTab> TAB_INVASION = CREATIVE_MODE_TABS.register(
             "invasion",
             () -> CreativeModeTab.builder()
                     .title(Component.translatable("itemGroup.invasion"))
                     .icon(() -> new ItemStack(Items.OBSIDIAN))
                     .displayItems((params, output) -> {
-                        // Items/blocks added as they are ported
+                        // Filled as items/blocks are ported
                     })
                     .build()
     );
+
+    /** Side-appropriate proxy (ClientProxy on client, CommonProxy on dedicated server). */
+    public static final CommonProxy PROXY = ProxyInit.create();
 
     public InvasionMod() {
         IEventBus modBus = FMLJavaModLoadingContext.get().getModEventBus();
 
         ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, ConfigHandler.COMMON_SPEC);
 
+        ItemRegistry.register(modBus);
         CREATIVE_MODE_TABS.register(modBus);
+
+        PROXY.register(modBus);
         modBus.addListener(this::commonSetup);
 
         MinecraftForge.EVENT_BUS.register(this);

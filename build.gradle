@@ -45,7 +45,6 @@ minecraft {
     }
 }
 
-// Port sources whitelist (expand as classes are ported)
 sourceSets {
     main {
         java {
@@ -54,6 +53,8 @@ sourceSets {
             include 'com/whammich/invasion/Reference.java'
             include 'com/whammich/invasion/ConfigHandler.java'
             include 'com/whammich/invasion/util/**'
+            include 'com/whammich/invasion/proxy/**'
+            include 'com/whammich/invasion/registry/**'
         }
         resources {
             setSrcDirs(['src/main/resources', 'src/generated/resources'])
