@@ -1,6 +1,5 @@
 package com.whammich.invasion.entity;
 
-import com.whammich.invasion.nexus.INexusAccess;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
@@ -16,13 +15,8 @@ import net.minecraft.world.level.Level;
 
 public class EntityIMZombie extends EntityIMMob implements ICanDig {
 
-    public EntityIMZombie(EntityType<? extends EntityIMZombie> type, Level level) {
+    public EntityIMZombie(EntityType<EntityIMZombie> type, Level level) {
         super(type, level);
-        setCanDig(true);
-    }
-
-    public EntityIMZombie(EntityType<? extends EntityIMZombie> type, Level level, INexusAccess nexus) {
-        super(type, level, nexus);
         setCanDig(true);
     }
 

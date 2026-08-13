@@ -15,7 +15,7 @@ import net.minecraft.world.level.Level;
 
 public class EntityIMZombiePigman extends EntityIMMob implements ICanDig {
 
-    public EntityIMZombiePigman(EntityType<? extends EntityIMZombiePigman> type, Level level) {
+    public EntityIMZombiePigman(EntityType<EntityIMZombiePigman> type, Level level) {
         super(type, level);
         setCanDig(true);
     }

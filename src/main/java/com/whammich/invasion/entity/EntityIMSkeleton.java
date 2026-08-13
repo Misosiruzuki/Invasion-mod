@@ -13,7 +13,7 @@ import net.minecraft.world.level.Level;
 
 public class EntityIMSkeleton extends EntityIMMob {
 
-    public EntityIMSkeleton(EntityType<? extends EntityIMSkeleton> type, Level level) {
+    public EntityIMSkeleton(EntityType<EntityIMSkeleton> type, Level level) {
         super(type, level);
     }
 

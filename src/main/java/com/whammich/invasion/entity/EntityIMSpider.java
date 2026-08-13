@@ -14,7 +14,7 @@ import net.minecraft.world.level.Level;
 
 public class EntityIMSpider extends EntityIMMob implements ISpawnsOffspring {
 
-    public EntityIMSpider(EntityType<? extends EntityIMSpider> type, Level level) {
+    public EntityIMSpider(EntityType<EntityIMSpider> type, Level level) {
         super(type, level);
         setCanClimb(true);
         this.moveControl = new IMMoveHelperSpider(this);

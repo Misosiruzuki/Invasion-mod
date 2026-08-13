@@ -13,7 +13,7 @@ import net.minecraft.world.level.Level;
 
 public class EntityIMCreeper extends EntityIMMob {
 
-    public EntityIMCreeper(EntityType<? extends EntityIMCreeper> type, Level level) {
+    public EntityIMCreeper(EntityType<EntityIMCreeper> type, Level level) {
         super(type, level);
     }
 

@@ -13,7 +13,7 @@ import net.minecraft.world.level.Level;
 
 public class EntityIMWolf extends EntityIMMob {
 
-    public EntityIMWolf(EntityType<? extends EntityIMWolf> type, Level level) {
+    public EntityIMWolf(EntityType<EntityIMWolf> type, Level level) {
         super(type, level);
     }
 

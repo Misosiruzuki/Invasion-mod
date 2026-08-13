@@ -13,7 +13,7 @@ import net.minecraft.world.level.Level;
 
 public class EntityIMImp extends EntityIMMob {
 
-    public EntityIMImp(EntityType<? extends EntityIMImp> type, Level level) {
+    public EntityIMImp(EntityType<EntityIMImp> type, Level level) {
         super(type, level);
     }
 
