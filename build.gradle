@@ -45,7 +45,7 @@ minecraft {
     }
 }
 
-// Port skeleton only: whitelist sources so leftover 1.7.10 files do not compile.
+// Port skeleton only: whitelist Java sources so leftover 1.7.10 files do not compile.
 sourceSets {
     main {
         java {
@@ -55,8 +55,7 @@ sourceSets {
             include 'com/whammich/invasion/util/**'
         }
         resources {
-            srcDir 'src/main/resources'
-            srcDir 'src/generated/resources'
+            setSrcDirs(['src/main/resources', 'src/generated/resources'])
             exclude 'mcmod.info'
             exclude 'assets/invasion/textures/**'
         }
@@ -72,6 +71,7 @@ dependencies {
 }
 
 tasks.named('processResources', ProcessResources).configure {
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
     var replaceProperties = [
             minecraft_version: minecraft_version,
             minecraft_version_range: minecraft_version_range,
@@ -92,6 +92,7 @@ tasks.named('processResources', ProcessResources).configure {
 }
 
 tasks.named('jar', Jar).configure {
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
     manifest {
         attributes([
                 'Specification-Title'     : mod_id,
