@@ -1,27 +1,38 @@
 package com.whammich.invasion.util;
 
-import com.whammich.invasion.ConfigHandler;
+import com.mojang.logging.LogUtils;
 import com.whammich.invasion.Reference;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
 
-public class LogHelper {
+/**
+ * Logging helper for Invasion.
+ */
+public final class LogHelper {
+    private static final Logger LOGGER = LogUtils.getLogger();
 
-    private static Logger logger = LogManager.getLogger(Reference.NAME);
-
-    public static void info(Object info) {
-        if (ConfigHandler.enableLogging)
-            logger.info(info);
+    private LogHelper() {
     }
 
-    public static void error(Object error) {
-        if (ConfigHandler.enableLogging)
-            logger.error(error);
+    public static void info(String message, Object... args) {
+        LOGGER.info("[{}] " + message, prepend(args));
     }
 
-    public static void debug(Object debug) {
-        if (ConfigHandler.enableLogging)
-            logger.debug(debug);
+    public static void warn(String message, Object... args) {
+        LOGGER.warn("[{}] " + message, prepend(args));
     }
 
+    public static void error(String message, Object... args) {
+        LOGGER.error("[{}] " + message, prepend(args));
+    }
+
+    public static void debug(String message, Object... args) {
+        LOGGER.debug("[{}] " + message, prepend(args));
+    }
+
+    private static Object[] prepend(Object... args) {
+        Object[] out = new Object[args.length + 1];
+        out[0] = Reference.MODID;
+        System.arraycopy(args, 0, out, 1, args.length);
+        return out;
+    }
 }

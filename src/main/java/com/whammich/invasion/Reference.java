@@ -1,13 +1,13 @@
 package com.whammich.invasion;
 
-public class Reference {
-
+/**
+ * Central constants for the Invasion mod (Forge 1.20.1 port).
+ */
+public final class Reference {
+    public static final String MODID = "invasion";
     public static final String NAME = "Invasion";
-    public static final String MODID = "mod_Invasion";
-    public static final String VERSION = "@VERSION@";
-    public static final String GUIFACTORY = "com.whammich.invasion.client.gui.ConfigGuiFactory";
-    public static final String DEPEND = "";
-    public static final String COMMONPROXY = "com.whammich.invasion.proxies.CommonProxy";
-    public static final String CLIENTPROXY = "com.whammich.invasion.proxies.ClientProxy";
-    public static final String PREFIX = "invasion";
+    public static final String VERSION = "1.20.1-1.0.0";
+
+    private Reference() {
+    }
 }
