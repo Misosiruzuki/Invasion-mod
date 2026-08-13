@@ -35,6 +35,11 @@ jobs:
           distribution: temurin
           java-version: '8'
 
+      - name: Setup Gradle 5.6.4
+        uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '5.6.4'
+
       - name: Determine version / build number
         id: ver
         run: |
@@ -56,19 +61,11 @@ jobs:
             "https://mediafilez.forgecdn.net/files/2230/518/Waila-1.5.10_1.7.10.jar"
           ls -la libs/
 
-      - name: Grant execute permission for gradlew
-        run: chmod +x gradlew
-
-      - name: Build with Gradle
+      - name: Build
         env:
           BUILD_NUMBER: ${{ steps.ver.outputs.build_number }}
-          GRADLE_OPTS: >-
-            -Dorg.gradle.daemon=false
-            -Dorg.gradle.jvmargs=-Xmx2G
-            -Dhttp.allowInsecureProtocol=true
-            -Dhttps.protocols=TLSv1.2
         run: |
-          ./gradlew build --stacktrace --no-daemon
+          gradle build --stacktrace --no-daemon
 
       - name: List built jars
         run: ls -la build/libs/ || true
@@ -88,7 +85,7 @@ jobs:
             - **Commit**: ${{ github.sha }}
 
             ### Artifacts
-            The JAR files below are the output of `./gradlew build`.
+            The JAR files below are the output of `gradle build`.
           files: |
             build/libs/*.jar
           prerelease: ${{ github.event.inputs.prerelease == 'true' || false }}
