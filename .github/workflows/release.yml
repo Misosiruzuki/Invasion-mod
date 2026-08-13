@@ -1,0 +1,92 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+      - '*-*'
+  workflow_dispatch:
+    inputs:
+      version_suffix:
+        description: 'Optional version suffix / build number (e.g. 42 or beta1). Leave empty to use run number.'
+        required: false
+        default: ''
+      prerelease:
+        description: 'Mark as pre-release'
+        required: false
+        type: boolean
+        default: false
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up JDK 8
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '8'
+
+      - name: Determine version / build number
+        id: ver
+        run: |
+          if [ -n "${{ github.event.inputs.version_suffix }}" ]; then
+            BN="${{ github.event.inputs.version_suffix }}"
+          elif [[ "${{ github.ref }}" == refs/tags/* ]]; then
+            # tag like v1.1.2 or 1.7.10-1.1.2-42 → use the tag name as build number part
+            BN="${GITHUB_REF#refs/tags/}"
+            BN="${BN#v}"
+          else
+            BN="${{ github.run_number }}"
+          fi
+          echo "build_number=$BN" >> $GITHUB_OUTPUT
+          echo "Using BUILD_NUMBER=$BN"
+
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+
+      - name: Build with Gradle
+        env:
+          BUILD_NUMBER: ${{ steps.ver.outputs.build_number }}
+          GRADLE_OPTS: >-
+            -Dorg.gradle.daemon=false
+            -Dorg.gradle.jvmargs=-Xmx2G
+            -Dhttp.allowInsecureProtocol=true
+            -Dhttps.protocols=TLSv1.2
+        run: |
+          ./gradlew build --stacktrace --no-daemon
+
+      - name: List built jars
+        run: ls -la build/libs/ || true
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ github.ref_type == 'tag' && github.ref_name || format('build-{0}', steps.ver.outputs.build_number) }}
+          name: Invasion ${{ steps.ver.outputs.build_number }}
+          body: |
+            ## Invasion Mod Build
+
+            - **Minecraft**: 1.7.10
+            - **Forge**: 10.13.2.1291
+            - **Mod version base**: 1.1.2
+            - **Build number**: ${{ steps.ver.outputs.build_number }}
+            - **Commit**: ${{ github.sha }}
+
+            ### Artifacts
+            The JAR files below are the output of `./gradlew build`.
+          files: |
+            build/libs/*.jar
+          prerelease: ${{ github.event.inputs.prerelease == 'true' || false }}
+          generate_release_notes: true
+          fail_on_unmatched_files: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
