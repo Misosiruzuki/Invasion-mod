@@ -10,7 +10,6 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    # ForgeGradle 1.2 / MC 1.7.10 requires old Java
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -21,13 +20,19 @@ jobs:
           distribution: temurin
           java-version: '8'
 
+      - name: Fetch Waila (compile dependency)
+        run: |
+          mkdir -p libs
+          curl -fsSL -o libs/Waila-1.5.10_1.7.10.jar \
+            "https://mediafilez.forgecdn.net/files/2230/518/Waila-1.5.10_1.7.10.jar"
+          ls -la libs/
+
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
 
       - name: Build with Gradle
         env:
           BUILD_NUMBER: ${{ github.run_number }}
-          # Allow legacy HTTP Maven repos used by ForgeGradle 1.2
           GRADLE_OPTS: >-
             -Dorg.gradle.daemon=false
             -Dorg.gradle.jvmargs=-Xmx2G
