@@ -2,9 +2,9 @@ name: Build
 
 on:
   push:
-    branches: [ master, main ]
+    branches: [ master, main, 'port/**' ]
   pull_request:
-    branches: [ master, main ]
+    branches: [ master, main, 'port/**' ]
   workflow_dispatch:
 
 jobs:
@@ -14,29 +14,22 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Set up JDK 8
+      - name: Set up JDK 17
         uses: actions/setup-java@v4
         with:
           distribution: temurin
-          java-version: '8'
+          java-version: '17'
 
-      - name: Setup Gradle 5.6.4
+      - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v4
         with:
-          gradle-version: '5.6.4'
-
-      - name: Fetch Waila (compile dependency)
-        run: |
-          mkdir -p libs
-          curl -fsSL -o libs/Waila-1.5.10_1.7.10.jar \
-            "https://mediafilez.forgecdn.net/files/2230/518/Waila-1.5.10_1.7.10.jar"
-          ls -la libs/
+          gradle-version: '8.8'
 
       - name: Build
         env:
           BUILD_NUMBER: ${{ github.run_number }}
         run: |
-          gradle build --stacktrace --no-daemon
+          gradle build --stacktrace
 
       - name: Upload build artifacts
         uses: actions/upload-artifact@v4
