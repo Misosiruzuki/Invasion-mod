@@ -9,7 +9,7 @@ import net.minecraft.world.level.Level;
 public class EntityIMEgg extends Entity {
     private int hatchTime = 200;
 
-    public EntityIMEgg(EntityType<? extends EntityIMEgg> type, Level level) {
+    public EntityIMEgg(EntityType<EntityIMEgg> type, Level level) {
         super(type, level);
     }
 

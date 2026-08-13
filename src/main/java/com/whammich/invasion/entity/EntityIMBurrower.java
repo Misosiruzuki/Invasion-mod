@@ -14,7 +14,7 @@ import net.minecraft.world.level.Level;
 
 public class EntityIMBurrower extends EntityIMMob implements ICanDig {
 
-    public EntityIMBurrower(EntityType<? extends EntityIMBurrower> type, Level level) {
+    public EntityIMBurrower(EntityType<EntityIMBurrower> type, Level level) {
         super(type, level);
         setCanDig(true);
     }

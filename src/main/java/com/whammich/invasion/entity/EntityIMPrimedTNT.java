@@ -9,7 +9,7 @@ import net.minecraft.world.level.Level;
 public class EntityIMPrimedTNT extends Entity {
     private int fuse = 80;
 
-    public EntityIMPrimedTNT(EntityType<? extends EntityIMPrimedTNT> type, Level level) {
+    public EntityIMPrimedTNT(EntityType<EntityIMPrimedTNT> type, Level level) {
         super(type, level);
     }
 

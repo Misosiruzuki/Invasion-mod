@@ -14,7 +14,7 @@ import net.minecraft.world.level.Level;
 
 public class EntityIMPigEngy extends EntityIMMob implements ICanDig, ILeader {
 
-    public EntityIMPigEngy(EntityType<? extends EntityIMPigEngy> type, Level level) {
+    public EntityIMPigEngy(EntityType<EntityIMPigEngy> type, Level level) {
         super(type, level);
         setCanDig(true);
     }

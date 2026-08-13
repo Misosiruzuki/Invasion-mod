@@ -10,7 +10,7 @@ import net.minecraft.world.phys.HitResult;
 
 public class EntityIMBoulder extends ThrowableItemProjectile {
 
-    public EntityIMBoulder(EntityType<? extends EntityIMBoulder> type, Level level) {
+    public EntityIMBoulder(EntityType<EntityIMBoulder> type, Level level) {
         super(type, level);
     }
 

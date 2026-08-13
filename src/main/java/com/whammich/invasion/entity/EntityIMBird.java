@@ -14,8 +14,13 @@ import net.minecraft.world.level.Level;
 public class EntityIMBird extends EntityIMFlying {
 
     public EntityIMBird(EntityType<? extends EntityIMBird> type, Level level) {
-        super(type, level);
+        super(castFlying(type), level);
         setFlyState(FlyState.FLYING);
+    }
+
+    @SuppressWarnings("unchecked")
+    private static EntityType<? extends EntityIMFlying> castFlying(EntityType<? extends EntityIMBird> type) {
+        return (EntityType<? extends EntityIMFlying>) type;
     }
 
     public static AttributeSupplier.Builder createAttributes() {

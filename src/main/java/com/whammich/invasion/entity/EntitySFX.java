@@ -8,7 +8,7 @@ import net.minecraft.world.level.Level;
 public class EntitySFX extends Entity {
     private int life = 20;
 
-    public EntitySFX(EntityType<? extends EntitySFX> type, Level level) {
+    public EntitySFX(EntityType<EntitySFX> type, Level level) {
         super(type, level);
         noPhysics = true;
     }

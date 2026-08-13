@@ -8,7 +8,7 @@ import net.minecraft.world.level.Level;
 public class EntityIMSpawnProxy extends Entity {
     private int life = 5;
 
-    public EntityIMSpawnProxy(EntityType<? extends EntityIMSpawnProxy> type, Level level) {
+    public EntityIMSpawnProxy(EntityType<EntityIMSpawnProxy> type, Level level) {
         super(type, level);
         noPhysics = true;
     }

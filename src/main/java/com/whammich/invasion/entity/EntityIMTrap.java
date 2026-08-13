@@ -9,7 +9,7 @@ import net.minecraft.world.level.Level;
 public class EntityIMTrap extends Entity {
     private int life = 6000;
 
-    public EntityIMTrap(EntityType<? extends EntityIMTrap> type, Level level) {
+    public EntityIMTrap(EntityType<EntityIMTrap> type, Level level) {
         super(type, level);
     }
 

@@ -13,7 +13,7 @@ import net.minecraft.world.level.Level;
 
 public class EntityIMThrower extends EntityIMMob {
 
-    public EntityIMThrower(EntityType<? extends EntityIMThrower> type, Level level) {
+    public EntityIMThrower(EntityType<EntityIMThrower> type, Level level) {
         super(type, level);
     }
 

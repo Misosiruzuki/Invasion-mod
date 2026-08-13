@@ -9,7 +9,7 @@ import net.minecraft.world.phys.HitResult;
 
 public class EntityIMBolt extends ThrowableProjectile {
 
-    public EntityIMBolt(EntityType<? extends EntityIMBolt> type, Level level) {
+    public EntityIMBolt(EntityType<EntityIMBolt> type, Level level) {
         super(type, level);
     }
 

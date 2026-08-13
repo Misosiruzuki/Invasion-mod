@@ -13,12 +13,12 @@ import net.minecraft.world.level.Level;
 
 public class EntityIMGiantBird extends EntityIMBird {
 
-    public EntityIMGiantBird(EntityType<? extends EntityIMGiantBird> type, Level level) {
-        super(unchecked(type), level);
+    public EntityIMGiantBird(EntityType<EntityIMGiantBird> type, Level level) {
+        super(cast(type), level);
     }
 
     @SuppressWarnings("unchecked")
-    private static EntityType<? extends EntityIMBird> unchecked(EntityType<? extends EntityIMGiantBird> type) {
+    private static EntityType<? extends EntityIMBird> cast(EntityType<EntityIMGiantBird> type) {
         return (EntityType<? extends EntityIMBird>) (EntityType<?>) type;
     }
 
