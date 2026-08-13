@@ -49,14 +49,16 @@ sourceSets {
     main {
         java {
             setSrcDirs(['src/main/java'])
+            // Whitelist only ported 1.20.1 sources. Legacy packages still in the tree
+            // (client/gui, client/render, items/, proxies/, register/) must stay excluded.
             include 'com/whammich/invasion/InvasionMod.java'
             include 'com/whammich/invasion/Reference.java'
             include 'com/whammich/invasion/ConfigHandler.java'
-            include 'com/whammich/invasion/util/**'
+            include 'com/whammich/invasion/util/LogHelper.java'
             include 'com/whammich/invasion/proxy/**'
             include 'com/whammich/invasion/registry/**'
             include 'com/whammich/invasion/item/**'
-            include 'com/whammich/invasion/client/**'
+            include 'com/whammich/invasion/client/NexusScreen.java'
             include 'com/whammich/invasion/nexus/**'
         }
         resources {
