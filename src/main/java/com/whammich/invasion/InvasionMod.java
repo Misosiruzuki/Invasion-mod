@@ -5,6 +5,7 @@ import com.whammich.invasion.proxy.ProxyInit;
 import com.whammich.invasion.registry.BlockEntityRegistry;
 import com.whammich.invasion.registry.BlockRegistry;
 import com.whammich.invasion.registry.ItemRegistry;
+import com.whammich.invasion.registry.EntityRegistry;
 import com.whammich.invasion.registry.MenuRegistry;
 import com.whammich.invasion.util.LogHelper;
 import net.minecraft.core.registries.Registries;
@@ -49,6 +50,7 @@ public class InvasionMod {
         BlockEntityRegistry.register(modBus);
         ItemRegistry.register(modBus);
         MenuRegistry.register(modBus);
+        EntityRegistry.register(modBus);
         CREATIVE_MODE_TABS.register(modBus);
 
         PROXY.register(modBus);
