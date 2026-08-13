@@ -8,7 +8,9 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.IEventBus;
+import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.registries.DeferredRegister;
@@ -42,6 +44,8 @@ public class InvasionMod {
     public InvasionMod() {
         IEventBus modBus = FMLJavaModLoadingContext.get().getModEventBus();
 
+        ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, ConfigHandler.COMMON_SPEC);
+
         CREATIVE_MODE_TABS.register(modBus);
         modBus.addListener(this::commonSetup);
 
@@ -51,6 +55,7 @@ public class InvasionMod {
     }
 
     private void commonSetup(final FMLCommonSetupEvent event) {
-        LogHelper.info("Invasion common setup complete");
+        LogHelper.info("Invasion common setup complete (logging={})",
+                ConfigHandler.COMMON.enableLogging.get());
     }
 }

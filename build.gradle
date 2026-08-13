@@ -45,13 +45,14 @@ minecraft {
     }
 }
 
-// Port skeleton only: whitelist Java sources so leftover 1.7.10 files do not compile.
+// Port sources whitelist (expand as classes are ported)
 sourceSets {
     main {
         java {
             setSrcDirs(['src/main/java'])
             include 'com/whammich/invasion/InvasionMod.java'
             include 'com/whammich/invasion/Reference.java'
+            include 'com/whammich/invasion/ConfigHandler.java'
             include 'com/whammich/invasion/util/**'
         }
         resources {
