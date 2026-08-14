@@ -188,6 +188,7 @@ public class NexusBlockEntity extends BaseContainerBlockEntity implements INexus
     }
 
     public void tryActivate(Player player) {
+        NexusTracker.setFocusNexus(this);
         if (activated || mode != 0) {
             return;
         }
@@ -388,5 +389,54 @@ public class NexusBlockEntity extends BaseContainerBlockEntity implements INexus
         hp = tag.contains("Hp") ? tag.getInt("Hp") : 100;
         maxHp = tag.contains("MaxHp") ? tag.getInt("MaxHp") : 100;
         activated = tag.getBoolean("Activated");
+    }
+
+    // --- Debug / command helpers (group 10) ---
+
+    public void debugStartInvasion(int startWave) throws WaveSpawnerException {
+        mode = 2;
+        activated = true;
+        activationTimer = 0;
+        currentWave = Math.max(1, startWave);
+        waveRestTimer = 0;
+        NexusTracker.setFocusNexus(this);
+        NexusTracker.setActiveNexus(this);
+        spawner().beginNextWave(currentWave);
+        setChanged();
+        LogHelper.info("Debug start invasion at wave {} @ {}", currentWave, worldPosition);
+    }
+
+    public void emergencyStop() {
+        mode = 0;
+        activated = false;
+        activationTimer = 0;
+        if (waveSpawner != null) {
+            waveSpawner.stop();
+        }
+        NexusTracker.setActiveNexus(null);
+        setChanged();
+        LogHelper.info("Emergency stop @ {}", worldPosition);
+    }
+
+    public boolean setSpawnRadius(int radius) {
+        if (activated && mode == 2) {
+            return false;
+        }
+        if (radius < 32 || radius > 128) {
+            return false;
+        }
+        this.spawnRadius = radius;
+        if (waveSpawner != null) {
+            waveSpawner.setSpawnRadius(radius);
+        }
+        setChanged();
+        return true;
+    }
+
+    public String debugStatus() {
+        return String.format(
+                "Nexus@%s mode=%d activated=%s wave=%d level=%d kills=%d radius=%d hp=%d/%d gen=%d",
+                worldPosition, mode, activated, currentWave, nexusLevel, nexusKills,
+                spawnRadius, hp, maxHp, generation);
     }
 }
