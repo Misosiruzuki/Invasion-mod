@@ -1,7 +1,7 @@
 {
   "parent": "minecraft:block/cube_bottom_top",
   "textures": {
-    "bottom": "minecraft:block/obsidian",
+    "bottom": "invasion:block/nexusbottom",
     "top": "invasion:block/nexustopoff",
     "side": "invasion:block/nexussideoff"
   }
