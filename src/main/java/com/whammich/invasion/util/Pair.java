@@ -1,8 +1,9 @@
 package com.whammich.invasion.util;
 
+/** Simple mutable pair (legacy Pair; val2 is mutable for FiniteSelectionPool). */
 public final class Pair<A, B> {
     private final A first;
-    private final B second;
+    private B second;
 
     public Pair(A first, B second) {
         this.first = first;
@@ -15,5 +16,9 @@ public final class Pair<A, B> {
 
     public B getVal2() {
         return second;
+    }
+
+    public void setVal2(B second) {
+        this.second = second;
     }
 }
