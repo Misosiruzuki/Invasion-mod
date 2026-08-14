@@ -58,16 +58,11 @@ public class NexusScreen extends AbstractContainerScreen<NexusMenu> {
             graphics.blit(TEXTURE, left + 19, top + 29, 176, 31, 9, 31);
         }
 
-        boolean activating = activation > 0 && mode == 0;
-        if ((mode == 0 || mode == 2) && activating) {
-            int actScaled = scale(activation, 31, 100);
+        // Left activation gauge (fills while catalyst charges; max = ACTIVATION_MAX)
+        if ((mode == 0 || mode == 4) && activation > 0) {
+            int actScaled = scale(activation, 31, NexusBlockEntity.ACTIVATION_MAX);
             if (actScaled > 0) {
                 graphics.blit(TEXTURE, left + 19, top + 29 + 31 - actScaled, 176, 31 - actScaled, 9, actScaled);
-            }
-        } else if (mode == 4 && activating) {
-            int actScaled = scale(activation, 31, 100);
-            if (actScaled > 0) {
-                graphics.blit(TEXTURE, left + 19, top + 29 + 31 - actScaled, 176, 62 - actScaled, 9, actScaled);
             }
         }
     }
@@ -96,7 +91,7 @@ public class NexusScreen extends AbstractContainerScreen<NexusMenu> {
             graphics.drawString(this.font, String.valueOf(generation), 61, 44, color, false);
         }
 
-        if (activation > 0 && mode == 0) {
+        if (activation > 0 && (mode == 0 || mode == 4)) {
             graphics.drawString(this.font, "Activating...", 13, 62, color, false);
             graphics.drawString(this.font, "Are you sure?", 8, 72, color, false);
         }
