@@ -20,9 +20,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BaseContainerBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 
-/**
- * Nexus block entity — holds invasion state and drives waves.
- */
 public class NexusBlockEntity extends BaseContainerBlockEntity implements INexusAccess, MenuProvider {
 
     public static final int SLOT_INPUT = 0;
@@ -41,8 +38,8 @@ public class NexusBlockEntity extends BaseContainerBlockEntity implements INexus
     public static final int DATA_COOK = 9;
     public static final int DATA_COUNT = 10;
 
-    /** Ticks to fill activation gauge (legacy = 400). */
     public static final int ACTIVATION_MAX = 400;
+    public static final int GENERATION_MAX = 3000;
 
     private NonNullList<ItemStack> items = NonNullList.withSize(SLOT_COUNT, ItemStack.EMPTY);
 
@@ -55,7 +52,7 @@ public class NexusBlockEntity extends BaseContainerBlockEntity implements INexus
     private int cookTime;
     private int maxHp = 100;
     private int hp = 100;
-    private int mode; // 0 idle, 1 activating, 2 invasion
+    private int mode;
     private boolean activated;
 
     private IMWaveSpawner waveSpawner;
@@ -108,6 +105,7 @@ public class NexusBlockEntity extends BaseContainerBlockEntity implements INexus
     public static void serverTick(Level level, BlockPos pos, BlockState state, NexusBlockEntity nexus) {
         nexus.tickActivation();
         nexus.tickCook();
+        nexus.tickGeneration();
         nexus.tickWaves();
         nexus.syncActiveBlockState(level, pos, state);
     }
@@ -166,10 +164,6 @@ public class NexusBlockEntity extends BaseContainerBlockEntity implements INexus
         }
     }
 
-    /**
-     * Left slot catalyst fills the left gauge; at full, consume one and start invasion.
-     * Matches legacy TileEntityNexus.updateStatus (activationTimer → 400).
-     */
     private void tickActivation() {
         ItemStack input = items.get(SLOT_INPUT);
         if (mode != 0 && mode != 4) {
@@ -224,6 +218,33 @@ public class NexusBlockEntity extends BaseContainerBlockEntity implements INexus
         if (state.hasProperty(BlockNexus.ACTIVE) && state.getValue(BlockNexus.ACTIVE) != want) {
             level.setBlock(pos, state.setValue(BlockNexus.ACTIVE, want), 3);
         }
+    }
+
+    private void tickGeneration() {
+        if (!activated || (mode != 1 && mode != 2 && mode != 3)) {
+            return;
+        }
+        generateFlux(1);
+    }
+
+    private void generateFlux(int increment) {
+        generation += increment;
+        if (generation < GENERATION_MAX) {
+            setChanged();
+            return;
+        }
+        ItemStack output = items.get(SLOT_OUTPUT);
+        if (output.isEmpty()) {
+            items.set(SLOT_OUTPUT, new ItemStack(ItemRegistry.RIFT_FLUX.get()));
+            generation -= GENERATION_MAX;
+        } else if (output.is(ItemRegistry.RIFT_FLUX.get()) && output.getCount() < output.getMaxStackSize()) {
+            output.grow(1);
+            generation -= GENERATION_MAX;
+        }
+        if (generation > GENERATION_MAX) {
+            generation = GENERATION_MAX;
+        }
+        setChanged();
     }
 
     private void tickCook() {
