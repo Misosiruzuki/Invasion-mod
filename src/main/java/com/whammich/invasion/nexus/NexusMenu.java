@@ -29,8 +29,8 @@ public class NexusMenu extends AbstractContainerMenu {
         this.data = data;
         checkContainerSize(nexus, NexusBlockEntity.SLOT_COUNT);
 
-        addSlot(new Slot(nexus, NexusBlockEntity.SLOT_INPUT, 56, 35));
-        addSlot(new SlotOutput(nexus, NexusBlockEntity.SLOT_OUTPUT, 116, 35));
+        addSlot(new Slot(nexus, NexusBlockEntity.SLOT_INPUT, 32, 33));
+        addSlot(new SlotOutput(nexus, NexusBlockEntity.SLOT_OUTPUT, 102, 33));
 
         for (int row = 0; row < 3; row++) {
             for (int col = 0; col < 9; col++) {
