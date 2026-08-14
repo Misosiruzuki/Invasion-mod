@@ -3,26 +3,38 @@ package com.whammich.invasion.nexus;
 import com.whammich.invasion.registry.BlockEntityRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraftforge.network.NetworkHooks;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.BaseEntityBlock;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.phys.BlockHitResult;
+import net.minecraftforge.network.NetworkHooks;
 
 /**
- * Nexus core block — extremely resistant; opens GUI / activates with catalyst.
+ * Nexus core block — extremely resistant; opens GUI / activates with catalyst in slot.
  */
 public class BlockNexus extends BaseEntityBlock {
 
-    public BlockNexus(Properties properties) {
+    public static final BooleanProperty ACTIVE = BooleanProperty.create("active");
+
+    public BlockNexus(BlockBehaviour.Properties properties) {
         super(properties);
+        this.registerDefaultState(this.stateDefinition.any().setValue(ACTIVE, false));
+    }
+
+    @Override
+    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
+        builder.add(ACTIVE);
     }
 
     @Override
@@ -46,12 +58,8 @@ public class BlockNexus extends BaseEntityBlock {
             return InteractionResult.SUCCESS;
         }
         BlockEntity be = level.getBlockEntity(pos);
-        if (be instanceof NexusBlockEntity nexus) {
-            if (player.isShiftKeyDown()) {
-                nexus.tryActivate(player);
-            } else if (player instanceof ServerPlayer serverPlayer) {
-                NetworkHooks.openScreen(serverPlayer, nexus, pos);
-            }
+        if (be instanceof NexusBlockEntity nexus && player instanceof ServerPlayer serverPlayer) {
+            NetworkHooks.openScreen(serverPlayer, nexus, pos);
         }
         return InteractionResult.CONSUME;
     }

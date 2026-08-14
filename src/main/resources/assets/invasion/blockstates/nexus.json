@@ -1,5 +1,6 @@
 {
   "variants": {
-    "": { "model": "invasion:block/nexus" }
+    "active=false": { "model": "invasion:block/nexus" },
+    "active=true":  { "model": "invasion:block/nexus_on" }
   }
 }
