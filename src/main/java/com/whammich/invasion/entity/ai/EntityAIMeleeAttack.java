@@ -1,7 +1,7 @@
 package com.whammich.invasion.entity.ai;
 
 import com.whammich.invasion.entity.EntityIMLiving;
-import com.whammich.invasion.entity.Goal;
+import com.whammich.invasion.entity.IMGoal;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.goal.Goal;
 
@@ -24,27 +24,29 @@ public class EntityAIMeleeAttack extends Goal {
     public boolean canUse() {
         LivingEntity target = mob.getTarget();
         return target != null && target.isAlive()
-                && (mob.getAIGoal() == Goal.MELEE_TARGET || mob.getAIGoal() == Goal.TARGET_ENTITY
-                || mob.getAIGoal() == Goal.NONE || mob.getAIGoal() == Goal.BREAK_NEXUS);
+                && (mob.getAIGoal() == IMGoal.MELEE_TARGET || mob.getAIGoal() == IMGoal.TARGET_ENTITY
+                || mob.getAIGoal() == IMGoal.NONE || mob.getAIGoal() == IMGoal.BREAK_NEXUS);
     }
 
     @Override
     public void start() {
-        mob.setAIGoal(Goal.MELEE_TARGET);
+        mob.setAIGoal(IMGoal.MELEE_TARGET);
         ticksUntilNextAttack = 0;
     }
 
     @Override
     public void stop() {
-        if (mob.getAIGoal() == Goal.MELEE_TARGET) {
-            mob.setAIGoal(Goal.NONE);
+        if (mob.getAIGoal() == IMGoal.MELEE_TARGET) {
+            mob.setAIGoal(IMGoal.NONE);
         }
     }
 
     @Override
     public void tick() {
         LivingEntity target = mob.getTarget();
-        if (target == null) return;
+        if (target == null) {
+            return;
+        }
         mob.getLookControl().setLookAt(target, 30.0F, 30.0F);
         mob.getNavigation().moveTo(target, speed);
         ticksUntilNextAttack = Math.max(0, ticksUntilNextAttack - 1);
