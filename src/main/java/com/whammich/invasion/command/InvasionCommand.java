@@ -9,7 +9,6 @@ import com.whammich.invasion.util.LogHelper;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.network.chat.Component;
-import net.minecraft.server.level.ServerPlayer;
 
 /**
  * Brigadier port of legacy InvasionCommand: begin / end / range / status / help.
@@ -108,6 +107,9 @@ public final class InvasionCommand {
     private static int status(CommandContext<CommandSourceStack> ctx) {
         NexusBlockEntity nexus = NexusTracker.getFocusNexus();
         boolean active = nexus != null && nexus.isActivated();
+        if (nexus != null) {
+            NexusTracker.syncStatus(nexus);
+        }
         ctx.getSource().sendSuccess(
                 () -> Component.literal("focus nexus active: " + active
                         + (nexus != null ? " @ " + nexus.getBlockPosition() : "")),
