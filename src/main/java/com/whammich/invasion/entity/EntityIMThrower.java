@@ -3,12 +3,6 @@ package com.whammich.invasion.entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
-import net.minecraft.world.entity.ai.goal.FloatGoal;
-import net.minecraft.world.entity.ai.goal.MeleeAttackGoal;
-import net.minecraft.world.entity.ai.goal.WaterAvoidingRandomStrollGoal;
-import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
-import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 
 public class EntityIMThrower extends EntityIMMob {
@@ -26,10 +20,13 @@ public class EntityIMThrower extends EntityIMMob {
 
     @Override
     protected void registerGoals() {
-        goalSelector.addGoal(0, new FloatGoal(this));
-        goalSelector.addGoal(2, new MeleeAttackGoal(this, 0.9D, false));
-        goalSelector.addGoal(5, new WaterAvoidingRandomStrollGoal(this, 0.7D));
-        targetSelector.addGoal(1, new HurtByTargetGoal(this));
-        targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, Player.class, true));
+        goalSelector.addGoal(0, new net.minecraft.world.entity.ai.goal.FloatGoal(this));
+        goalSelector.addGoal(1, new com.whammich.invasion.entity.ai.EntityAIAttackNexus(this));
+        goalSelector.addGoal(2, new com.whammich.invasion.entity.ai.EntityAIGoToNexus(this));
+        goalSelector.addGoal(3, new com.whammich.invasion.entity.ai.EntityAIRandomBoulder(this));
+        goalSelector.addGoal(4, new com.whammich.invasion.entity.ai.EntityAIThrowerKillEntity(this));
+        goalSelector.addGoal(6, new com.whammich.invasion.entity.ai.EntityAIWanderIM(this, 0.7D));
+        targetSelector.addGoal(1, new com.whammich.invasion.entity.ai.EntityAITargetRetaliate(this));
+        targetSelector.addGoal(2, new com.whammich.invasion.entity.ai.EntityAISimpleTarget(this, 10));
     }
 }
