@@ -8,9 +8,6 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 
-/**
- * Nexus status screen — layout mirrors legacy 1.7.10 GuiNexus + nexusgui.png.
- */
 public class NexusScreen extends AbstractContainerScreen<NexusMenu> {
 
     private static final ResourceLocation TEXTURE =
@@ -41,7 +38,7 @@ public class NexusScreen extends AbstractContainerScreen<NexusMenu> {
         int generation = data.get(NexusBlockEntity.DATA_GENERATION);
         int cook = data.get(NexusBlockEntity.DATA_COOK);
 
-        int genScaled = scale(generation, 26, 100);
+        int genScaled = scale(generation, 26, NexusBlockEntity.GENERATION_MAX);
         if (genScaled > 0) {
             graphics.blit(TEXTURE, left + 126, top + 28 + 26 - genScaled, 185, 26 - genScaled, 9, genScaled);
         }
@@ -58,7 +55,6 @@ public class NexusScreen extends AbstractContainerScreen<NexusMenu> {
             graphics.blit(TEXTURE, left + 19, top + 29, 176, 31, 9, 31);
         }
 
-        // Left activation gauge (fills while catalyst charges; max = ACTIVATION_MAX)
         if ((mode == 0 || mode == 4) && activation > 0) {
             int actScaled = scale(activation, 31, NexusBlockEntity.ACTIVATION_MAX);
             if (actScaled > 0) {
