@@ -403,6 +403,7 @@ public class NexusBlockEntity extends BaseContainerBlockEntity implements INexus
         NexusTracker.setActiveNexus(this);
         spawner().beginNextWave(currentWave);
         setChanged();
+        NexusTracker.syncStatus(this);
         LogHelper.info("Debug start invasion at wave {} @ {}", currentWave, worldPosition);
     }
 
@@ -415,6 +416,7 @@ public class NexusBlockEntity extends BaseContainerBlockEntity implements INexus
         }
         NexusTracker.setActiveNexus(null);
         setChanged();
+        NexusTracker.syncStatus(this);
         LogHelper.info("Emergency stop @ {}", worldPosition);
     }
 
