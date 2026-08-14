@@ -1,10 +1,11 @@
 package com.whammich.invasion.entity.ai;
 
 import com.whammich.invasion.entity.EntityIMLiving;
-import com.whammich.invasion.entity.Goal;
+import com.whammich.invasion.entity.IMGoal;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
 import net.minecraft.world.entity.player.Player;
 
+/** Prefer players when nexus pathing is unavailable. */
 public class EntityAITargetOnNoNexusPath extends NearestAttackableTargetGoal<Player> {
     private final EntityIMLiving imMob;
 
@@ -15,7 +16,7 @@ public class EntityAITargetOnNoNexusPath extends NearestAttackableTargetGoal<Pla
 
     @Override
     public boolean canUse() {
-        if (imMob.getNexus() != null && imMob.getAIGoal() == Goal.BREAK_NEXUS
+        if (imMob.getNexus() != null && imMob.getAIGoal() == IMGoal.BREAK_NEXUS
                 && !imMob.getNavigation().isDone()) {
             return false;
         }
