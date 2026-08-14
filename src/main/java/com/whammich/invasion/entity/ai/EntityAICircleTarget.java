@@ -1,7 +1,7 @@
 package com.whammich.invasion.entity.ai;
 
 import com.whammich.invasion.entity.EntityIMFlying;
-import com.whammich.invasion.entity.Goal;
+import com.whammich.invasion.entity.IMGoal;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.phys.Vec3;
 
@@ -25,7 +25,7 @@ public class EntityAICircleTarget extends net.minecraft.world.entity.ai.goal.Goa
 
     @Override
     public void start() {
-        mob.setAIGoal(Goal.STAY_AT_RANGE);
+        mob.setAIGoal(IMGoal.STAY_AT_RANGE);
         angle = mob.getRandom().nextDouble() * Math.PI * 2;
     }
 

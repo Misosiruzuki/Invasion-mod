@@ -2,7 +2,7 @@ package com.whammich.invasion.entity.ai;
 
 import com.whammich.invasion.entity.EntityIMFlying;
 import com.whammich.invasion.entity.FlyState;
-import com.whammich.invasion.entity.Goal;
+import com.whammich.invasion.entity.IMGoal;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.phys.Vec3;
 
@@ -27,7 +27,7 @@ public class EntityAISwoop extends net.minecraft.world.entity.ai.goal.Goal {
     public void start() {
         ticks = 25;
         mob.setFlyState(FlyState.SWOOPING);
-        mob.setAIGoal(Goal.SWOOP);
+        mob.setAIGoal(IMGoal.SWOOP);
     }
 
     @Override

@@ -1,13 +1,14 @@
 package com.whammich.invasion.entity.ai;
 
 import com.whammich.invasion.entity.EntityIMLiving;
-import com.whammich.invasion.entity.Goal;
+import com.whammich.invasion.entity.IMGoal;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.entity.projectile.Arrow;
 
 import java.util.EnumSet;
 
+/** Ranged attack stand-in using vanilla arrows. */
 public class EntityAIKillWithArrow extends Goal {
     private final EntityIMLiving mob;
     private final double speed;
@@ -30,13 +31,16 @@ public class EntityAIKillWithArrow extends Goal {
     @Override
     public void tick() {
         LivingEntity target = mob.getTarget();
-        if (target == null) return;
-        mob.setAIGoal(Goal.STAY_AT_RANGE);
+        if (target == null) {
+            return;
+        }
+        mob.setAIGoal(IMGoal.STAY_AT_RANGE);
         double dist = mob.distanceToSqr(target);
         mob.getLookControl().setLookAt(target, 30.0F, 30.0F);
         if (dist > 12 * 12) {
             mob.getNavigation().moveTo(target, speed);
         } else if (dist < 6 * 6) {
+            // back off slightly
             mob.getMoveControl().strafe(-0.5F, 0);
         } else {
             mob.getNavigation().stop();

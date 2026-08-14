@@ -2,7 +2,7 @@ package com.whammich.invasion.entity.ai;
 
 import com.whammich.invasion.entity.EntityIMFlying;
 import com.whammich.invasion.entity.FlyState;
-import com.whammich.invasion.entity.Goal;
+import com.whammich.invasion.entity.IMGoal;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.phys.Vec3;
 
@@ -25,7 +25,7 @@ public class EntityAIFlyingTackle extends net.minecraft.world.entity.ai.goal.Goa
     @Override
     public void start() {
         mob.setFlyState(FlyState.SWOOPING);
-        mob.setAIGoal(Goal.TACKLE_TARGET);
+        mob.setAIGoal(IMGoal.TACKLE_TARGET);
     }
 
     @Override

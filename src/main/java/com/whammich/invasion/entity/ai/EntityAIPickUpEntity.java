@@ -1,11 +1,12 @@
 package com.whammich.invasion.entity.ai;
 
 import com.whammich.invasion.entity.EntityIMLiving;
-import com.whammich.invasion.entity.Goal;
+import com.whammich.invasion.entity.IMGoal;
 import net.minecraft.world.entity.LivingEntity;
 
 import java.util.EnumSet;
 
+/** Attempt to carry target (birds). Simplified: stick close and mark goal. */
 public class EntityAIPickUpEntity extends net.minecraft.world.entity.ai.goal.Goal {
     private final EntityIMLiving mob;
 
@@ -22,7 +23,7 @@ public class EntityAIPickUpEntity extends net.minecraft.world.entity.ai.goal.Goa
 
     @Override
     public void start() {
-        mob.setAIGoal(Goal.PICK_UP_TARGET);
+        mob.setAIGoal(IMGoal.PICK_UP_TARGET);
     }
 
     @Override
