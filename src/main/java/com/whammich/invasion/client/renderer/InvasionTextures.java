@@ -10,6 +10,11 @@ public final class InvasionTextures {
         return new ResourceLocation(Reference.MODID, path);
     }
 
+    /** Vanilla (minecraft) texture — two-arg constructor avoids single-string deprecation. */
+    public static ResourceLocation vanilla(String path) {
+        return new ResourceLocation("minecraft", path);
+    }
+
     public static final ResourceLocation IMP = of("textures/imp.png");
     public static final ResourceLocation THROWER_T1 = of("textures/throwerT1.png");
     public static final ResourceLocation THROWER_T2 = of("textures/throwerT2.png");
@@ -21,9 +26,9 @@ public final class InvasionTextures {
     public static final ResourceLocation SPIDER_T2 = of("textures/spiderT2.png");
     public static final ResourceLocation PIG_ZOMBIE = of("textures/pigzombie64x32.png");
     public static final ResourceLocation TEST = of("textures/testmodel.png");
-    public static final ResourceLocation ZOMBIE = new ResourceLocation("textures/entity/zombie/zombie.png");
-    public static final ResourceLocation SKELETON = new ResourceLocation("textures/entity/skeleton/skeleton.png");
-    public static final ResourceLocation CREEPER = new ResourceLocation("textures/entity/creeper/creeper.png");
-    public static final ResourceLocation SPIDER = new ResourceLocation("textures/entity/spider/spider.png");
-    public static final ResourceLocation WOLF = new ResourceLocation("textures/entity/wolf/wolf.png");
+    public static final ResourceLocation ZOMBIE = vanilla("textures/entity/zombie/zombie.png");
+    public static final ResourceLocation SKELETON = vanilla("textures/entity/skeleton/skeleton.png");
+    public static final ResourceLocation CREEPER = vanilla("textures/entity/creeper/creeper.png");
+    public static final ResourceLocation SPIDER = vanilla("textures/entity/spider/spider.png");
+    public static final ResourceLocation WOLF = vanilla("textures/entity/wolf/wolf.png");
 }
