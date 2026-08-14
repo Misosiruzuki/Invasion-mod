@@ -82,7 +82,6 @@ dependencies {
 }
 
 tasks.named('processResources', ProcessResources).configure {
-    // Decode text-stored textures (workaround for binary push limits)
     doFirst {
         def texRoot = file('src/main/resources/assets/invasion/textures')
         def decodeDir = { File b64Dir, File outDir ->
@@ -101,6 +100,17 @@ tasks.named('processResources', ProcessResources).configure {
             new File(guiDir, 'nexus.png').bytes = guiB64.getText('UTF-8').decodeBase64()
         }
         decodeDir(new File(texRoot, 'item_b64'), new File(texRoot, 'item'))
+        ['item_bundle_remaining.json', 'item_bundle_a.json', 'item_bundle_b.json'].each { bn ->
+            def itemBundleRem = new File(texRoot, bn)
+            if (itemBundleRem.exists()) {
+                def map = new groovy.json.JsonSlurper().parse(itemBundleRem)
+                def itemOut = new File(texRoot, 'item')
+                itemOut.mkdirs()
+                map.each { name, b64 ->
+                    new File(itemOut, name + '.png').bytes = b64.decodeBase64()
+                }
+            }
+        }
     }
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
     var replaceProperties = [
