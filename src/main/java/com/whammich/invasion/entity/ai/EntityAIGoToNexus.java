@@ -1,7 +1,7 @@
 package com.whammich.invasion.entity.ai;
 
 import com.whammich.invasion.entity.EntityIMMob;
-import com.whammich.invasion.entity.Goal;
+import com.whammich.invasion.entity.IMGoal;
 import com.whammich.invasion.nexus.INexusAccess;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.ai.goal.Goal;
@@ -21,7 +21,7 @@ public class EntityAIGoToNexus extends Goal {
 
     @Override
     public boolean canUse() {
-        return mob.getAIGoal() == Goal.BREAK_NEXUS && mob.getNexus() != null;
+        return mob.getAIGoal() == IMGoal.BREAK_NEXUS && mob.getNexus() != null;
     }
 
     @Override
