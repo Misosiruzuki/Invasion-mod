@@ -84,21 +84,25 @@ dependencies {
 tasks.named('processResources', ProcessResources).configure {
     // Decode text-stored textures (workaround for binary push limits)
     doFirst {
-        def b64Dir = file('src/main/resources/assets/invasion/textures/block_b64')
-        def outDir = file('src/main/resources/assets/invasion/textures/block')
-        if (b64Dir.exists()) {
+        def texRoot = file('src/main/resources/assets/invasion/textures')
+        def decodeDir = { File b64Dir, File outDir ->
+            if (!b64Dir.exists()) return
             outDir.mkdirs()
             b64Dir.eachFileMatch(~/.*\.png\.b64/) { f ->
                 def plain = f.name.replaceAll(/\.b64$/, '')
-                def destDir = plain == 'nexusgui.png'
-                        ? file('src/main/resources/assets/invasion/textures/gui')
-                        : outDir
-                destDir.mkdirs()
-                def destName = plain == 'nexusgui.png' ? 'nexus.png' : plain
-                def dest = new File(destDir, destName)
+                def dest = new File(outDir, plain)
                 dest.bytes = f.getText('UTF-8').decodeBase64()
             }
         }
+        decodeDir(new File(texRoot, 'block_b64'), new File(texRoot, 'block'))
+        // nexusgui.png.b64 also becomes textures/gui/nexus.png
+        def guiB64 = new File(texRoot, 'block_b64/nexusgui.png.b64')
+        if (guiB64.exists()) {
+            def guiDir = new File(texRoot, 'gui')
+            guiDir.mkdirs()
+            new File(guiDir, 'nexus.png').bytes = guiB64.getText('UTF-8').decodeBase64()
+        }
+        decodeDir(new File(texRoot, 'item_b64'), new File(texRoot, 'item'))
     }
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
     var replaceProperties = [
