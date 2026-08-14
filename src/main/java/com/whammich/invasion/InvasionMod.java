@@ -38,7 +38,13 @@ public class InvasionMod {
                     .title(Component.translatable("itemGroup.invasion"))
                     .icon(() -> new ItemStack(BlockRegistry.NEXUS.get()))
                     .displayItems((params, output) -> {
-                        ItemRegistry.ITEMS.getEntries().forEach(ro -> output.accept(ro.get()));
+                        // Nexus first, then remaining items in registry order
+                        output.accept(BlockRegistry.NEXUS.get());
+                        ItemRegistry.ITEMS.getEntries().forEach(ro -> {
+                            if (ro.get() != BlockRegistry.NEXUS.get().asItem()) {
+                                output.accept(ro.get());
+                            }
+                        });
                     })
                     .build()
     );
