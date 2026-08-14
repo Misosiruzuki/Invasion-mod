@@ -1,5 +1,7 @@
 package com.whammich.invasion.nexus;
 
+import com.whammich.invasion.network.InvasionNetwork;
+import com.whammich.invasion.network.NexusStatusPacket;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
@@ -27,6 +29,9 @@ public final class NexusTracker {
 
     public static void setActiveNexus(NexusBlockEntity nexus) {
         activeNexus = nexus;
+        if (nexus != null) {
+            syncStatus(nexus);
+        }
     }
 
     public static void clearIfMatches(NexusBlockEntity nexus) {
@@ -46,5 +51,20 @@ public final class NexusTracker {
         for (ServerPlayer player : server.getPlayerList().getPlayers()) {
             player.sendSystemMessage(text);
         }
+    }
+
+    /** Push current nexus combat snapshot to all online players (S→C). */
+    public static void syncStatus(NexusBlockEntity nexus) {
+        if (nexus == null || nexus.getLevel() == null || nexus.getLevel().isClientSide) {
+            return;
+        }
+        NexusStatusPacket packet = new NexusStatusPacket(
+                nexus.getBlockPosition(),
+                nexus.getMode(),
+                nexus.getCurrentWave(),
+                nexus.getHp(),
+                nexus.getMaxHp()
+        );
+        InvasionNetwork.sendToAll(packet);
     }
 }
