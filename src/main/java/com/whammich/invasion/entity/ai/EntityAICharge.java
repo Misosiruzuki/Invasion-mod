@@ -1,7 +1,7 @@
 package com.whammich.invasion.entity.ai;
 
 import com.whammich.invasion.entity.EntityIMLiving;
-import com.whammich.invasion.entity.Goal;
+import com.whammich.invasion.entity.IMGoal;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.phys.Vec3;
@@ -28,7 +28,7 @@ public class EntityAICharge extends Goal {
     @Override
     public void start() {
         chargeTicks = 30;
-        mob.setAIGoal(Goal.TARGET_ENTITY);
+        mob.setAIGoal(IMGoal.TARGET_ENTITY);
     }
 
     @Override
