@@ -14,9 +14,10 @@ base {
 
 java.toolchain.languageVersion = JavaLanguageVersion.of(17)
 
+println "Java: ${System.getProperty 'java.version'}, JVM: ${System.getProperty 'java.vm.version'} (${System.getProperty 'java.vendor'}), Arch: ${System.getProperty 'os.arch'}"
+
 minecraft {
     mappings channel: mapping_channel, version: mapping_version
-
     copyIdeResources = true
 
     runs {
@@ -73,6 +74,7 @@ sourceSets {
 }
 
 repositories {
+    mavenCentral()
 }
 
 dependencies {
@@ -80,12 +82,31 @@ dependencies {
 }
 
 tasks.named('processResources', ProcessResources).configure {
+    // Decode text-stored block textures (workaround for binary push limits)
+    doFirst {
+        def b64Dir = file('src/main/resources/assets/invasion/textures/block_b64')
+        def outDir = file('src/main/resources/assets/invasion/textures/block')
+        if (b64Dir.exists()) {
+            outDir.mkdirs()
+            b64Dir.eachFileMatch(~/.*\.png\.b64/) { f ->
+                def dest = new File(outDir, f.name.replaceAll(/\.b64$/, ''))
+                dest.bytes = f.getText('UTF-8').decodeBase64()
+            }
+        }
+    }
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
     var replaceProperties = [
-            minecraft_version: minecraft_version, minecraft_version_range: minecraft_version_range,
-            forge_version: forge_version, forge_version_range: forge_version_range,
+            minecraft_version: minecraft_version,
+            minecraft_version_range: minecraft_version_range,
+            forge_version: forge_version,
+            forge_version_range: forge_version_range,
             loader_version_range: loader_version_range,
-            mod_id: mod_id, mod_name: mod_name, mod_license: mod_license, mod_version: mod_version,
-            mod_authors: mod_authors, mod_description: mod_description,
+            mod_id: mod_id,
+            mod_name: mod_name,
+            mod_license: mod_license,
+            mod_version: mod_version,
+            mod_authors: mod_authors,
+            mod_description: mod_description,
     ]
     inputs.properties replaceProperties
     filesMatching(['META-INF/mods.toml', 'pack.mcmeta']) {
