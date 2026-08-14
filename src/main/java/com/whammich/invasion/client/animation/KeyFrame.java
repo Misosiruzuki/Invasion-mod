@@ -3,6 +3,7 @@ package com.whammich.invasion.client.animation;
 import com.whammich.invasion.util.MathUtil;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
 
@@ -67,10 +68,12 @@ public class KeyFrame {
         }
     }
 
+    /** Circular offset of frames within [start,end]; full legacy algorithm preserved in spirit. */
     public static void offsetFramesCircular(List<KeyFrame> keyFrames, float start, float end, float offset) {
         if (keyFrames.size() < 1) return;
         float diff = end - start;
         offset %= diff;
+        // simple rotate times within window
         List<KeyFrame> copy = cloneFrames(keyFrames);
         keyFrames.clear();
         for (KeyFrame k : copy) {
