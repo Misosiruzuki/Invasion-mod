@@ -36,7 +36,7 @@ public class InvasionMod {
             "invasion",
             () -> CreativeModeTab.builder()
                     .title(Component.translatable("itemGroup.invasion"))
-                    .icon(() -> new ItemStack(ItemRegistry.NEXUS_CATALYST_STABLE.get()))
+                    .icon(() -> new ItemStack(BlockRegistry.NEXUS.get()))
                     .displayItems((params, output) -> {
                         ItemRegistry.ITEMS.getEntries().forEach(ro -> output.accept(ro.get()));
                     })
