@@ -33,5 +33,17 @@
   "gui.invasion.nexus.wave": "ウェーブ: %s",
   "gui.invasion.nexus.level": "レベル: %s",
   "gui.invasion.nexus.kills": "撃破: %s",
-  "gui.invasion.nexus.hp": "HP: %s / %s"
+  "gui.invasion.nexus.hp": "HP: %s / %s",
+  "item.invasion.im_zombie_spawn_egg": "IMゾンビのスポーンエッグ",
+  "item.invasion.im_zombie_pigman_spawn_egg": "IMゾンビピッグマンのスポーンエッグ",
+  "item.invasion.im_spider_spawn_egg": "IMクモのスポーンエッグ",
+  "item.invasion.im_skeleton_spawn_egg": "IMスケルトンのスポーンエッグ",
+  "item.invasion.im_creeper_spawn_egg": "IMクリーパーのスポーンエッグ",
+  "item.invasion.im_imp_spawn_egg": "IMインプのスポーンエッグ",
+  "item.invasion.im_wolf_spawn_egg": "IMオオカミのスポーンエッグ",
+  "item.invasion.im_pig_engineer_spawn_egg": "IMピッグエンジニアのスポーンエッグ",
+  "item.invasion.im_thrower_spawn_egg": "IMスローワーのスポーンエッグ",
+  "item.invasion.im_burrower_spawn_egg": "IMバローワーのスポーンエッグ",
+  "item.invasion.im_bird_spawn_egg": "IM鳥のスポーンエッグ",
+  "item.invasion.im_giant_bird_spawn_egg": "IM巨大鳥のスポーンエッグ"
 }

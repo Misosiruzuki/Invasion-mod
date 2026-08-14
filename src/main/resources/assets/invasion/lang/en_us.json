@@ -33,5 +33,17 @@
   "gui.invasion.nexus.wave": "Wave: %s",
   "gui.invasion.nexus.level": "Level: %s",
   "gui.invasion.nexus.kills": "Kills: %s",
-  "gui.invasion.nexus.hp": "HP: %s / %s"
+  "gui.invasion.nexus.hp": "HP: %s / %s",
+  "item.invasion.im_zombie_spawn_egg": "IM Zombie Spawn Egg",
+  "item.invasion.im_zombie_pigman_spawn_egg": "IM Zombie Pigman Spawn Egg",
+  "item.invasion.im_spider_spawn_egg": "IM Spider Spawn Egg",
+  "item.invasion.im_skeleton_spawn_egg": "IM Skeleton Spawn Egg",
+  "item.invasion.im_creeper_spawn_egg": "IM Creeper Spawn Egg",
+  "item.invasion.im_imp_spawn_egg": "IM Imp Spawn Egg",
+  "item.invasion.im_wolf_spawn_egg": "IM Wolf Spawn Egg",
+  "item.invasion.im_pig_engineer_spawn_egg": "IM Pig Engineer Spawn Egg",
+  "item.invasion.im_thrower_spawn_egg": "IM Thrower Spawn Egg",
+  "item.invasion.im_burrower_spawn_egg": "IM Burrower Spawn Egg",
+  "item.invasion.im_bird_spawn_egg": "IM Bird Spawn Egg",
+  "item.invasion.im_giant_bird_spawn_egg": "IM Giant Bird Spawn Egg"
 }
