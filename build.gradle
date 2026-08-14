@@ -82,14 +82,20 @@ dependencies {
 }
 
 tasks.named('processResources', ProcessResources).configure {
-    // Decode text-stored block textures (workaround for binary push limits)
+    // Decode text-stored textures (workaround for binary push limits)
     doFirst {
         def b64Dir = file('src/main/resources/assets/invasion/textures/block_b64')
         def outDir = file('src/main/resources/assets/invasion/textures/block')
         if (b64Dir.exists()) {
             outDir.mkdirs()
             b64Dir.eachFileMatch(~/.*\.png\.b64/) { f ->
-                def dest = new File(outDir, f.name.replaceAll(/\.b64$/, ''))
+                def plain = f.name.replaceAll(/\.b64$/, '')
+                def destDir = plain == 'nexusgui.png'
+                        ? file('src/main/resources/assets/invasion/textures/gui')
+                        : outDir
+                destDir.mkdirs()
+                def destName = plain == 'nexusgui.png' ? 'nexus.png' : plain
+                def dest = new File(destDir, destName)
                 dest.bytes = f.getText('UTF-8').decodeBase64()
             }
         }
