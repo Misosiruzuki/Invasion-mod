@@ -1,7 +1,7 @@
 package com.whammich.invasion.wave;
 
 import com.whammich.invasion.entity.EntityIMLiving;
-import com.whammich.invasion.entity.Goal;
+import com.whammich.invasion.entity.IMGoal;
 import com.whammich.invasion.registry.EntityRegistry;
 import com.whammich.invasion.util.LogHelper;
 import net.minecraft.server.level.ServerLevel;
@@ -35,7 +35,7 @@ public class MobBuilder {
         }
         if (entity instanceof EntityIMLiving living) {
             living.setTier(Math.max(1, construct.getTier()));
-            living.setAIGoal(Goal.BREAK_NEXUS);
+            living.setAIGoal(IMGoal.BREAK_NEXUS);
         }
         return Optional.of(entity);
     }
