@@ -82,32 +82,44 @@ dependencies {
 }
 
 tasks.named('processResources', ProcessResources).configure {
+    // Decode b64 into source tree AND destinationDir. Writing only under src/
+    // in doFirst is too late for Gradle's input snapshot, so the jar never
+    // received the decoded item/block PNGs (purple/black missing textures).
     doFirst {
         def texRoot = file('src/main/resources/assets/invasion/textures')
+        def destTexRoot = new File(destinationDir, 'assets/invasion/textures')
         def decodeDir = { File b64Dir, File outDir ->
             if (!b64Dir.exists()) return
             outDir.mkdirs()
             b64Dir.eachFileMatch(~/.*\.png\.b64/) { f ->
                 def plain = f.name.replaceAll(/\.b64$/, '')
-                new File(outDir, plain).bytes = f.getText('UTF-8').decodeBase64()
+                def bytes = f.getText('UTF-8').decodeBase64()
+                new File(outDir, plain).bytes = bytes
             }
         }
-        decodeDir(new File(texRoot, 'block_b64'), new File(texRoot, 'block'))
+        def writeDecoded = { File b64Dir, String relOut ->
+            decodeDir(b64Dir, new File(texRoot, relOut))
+            decodeDir(b64Dir, new File(destTexRoot, relOut))
+        }
+        writeDecoded(new File(texRoot, 'block_b64'), 'block')
+        writeDecoded(new File(texRoot, 'item_b64'), 'item')
         def guiB64 = new File(texRoot, 'block_b64/nexusgui.png.b64')
         if (guiB64.exists()) {
-            def guiDir = new File(texRoot, 'gui')
-            guiDir.mkdirs()
-            new File(guiDir, 'nexus.png').bytes = guiB64.getText('UTF-8').decodeBase64()
+            def bytes = guiB64.getText('UTF-8').decodeBase64()
+            [new File(texRoot, 'gui'), new File(destTexRoot, 'gui')].each { guiDir ->
+                guiDir.mkdirs()
+                new File(guiDir, 'nexus.png').bytes = bytes
+            }
         }
-        decodeDir(new File(texRoot, 'item_b64'), new File(texRoot, 'item'))
         ['item_bundle_remaining.json', 'item_bundle_a.json', 'item_bundle_b.json'].each { bn ->
             def itemBundleRem = new File(texRoot, bn)
             if (itemBundleRem.exists()) {
                 def map = new groovy.json.JsonSlurper().parse(itemBundleRem)
-                def itemOut = new File(texRoot, 'item')
-                itemOut.mkdirs()
-                map.each { name, b64 ->
-                    new File(itemOut, name + '.png').bytes = b64.decodeBase64()
+                [new File(texRoot, 'item'), new File(destTexRoot, 'item')].each { itemOut ->
+                    itemOut.mkdirs()
+                    map.each { name, b64 ->
+                        new File(itemOut, name + '.png').bytes = b64.decodeBase64()
+                    }
                 }
             }
         }
@@ -127,6 +139,8 @@ tasks.named('processResources', ProcessResources).configure {
             mod_description: mod_description,
     ]
     inputs.properties replaceProperties
+    inputs.dir('src/main/resources/assets/invasion/textures/item_b64').optional()
+    inputs.dir('src/main/resources/assets/invasion/textures/block_b64').optional()
     filesMatching(['META-INF/mods.toml', 'pack.mcmeta']) {
         expand replaceProperties + [project: project]
     }
@@ -163,3 +177,5 @@ publishing {
 tasks.withType(JavaCompile).configureEach {
     options.encoding = 'UTF-8'
 }
+
+java.withSourcesJar()
