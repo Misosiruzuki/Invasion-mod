@@ -1,0 +1,6 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": ["   ", "XXX", "   "],
+  "key": { "X": { "item": "invasion:damping_agent_weak" } },
+  "result": { "item": "invasion:damping_agent_strong", "count": 1 }
+}
