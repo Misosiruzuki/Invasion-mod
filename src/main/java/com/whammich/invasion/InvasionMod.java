@@ -7,7 +7,11 @@ import com.whammich.invasion.registry.BlockRegistry;
 import com.whammich.invasion.registry.ItemRegistry;
 import com.whammich.invasion.registry.EntityRegistry;
 import com.whammich.invasion.registry.MenuRegistry;
+import com.whammich.invasion.command.InvasionCommand;
+import com.whammich.invasion.network.InvasionNetwork;
 import com.whammich.invasion.util.LogHelper;
+import net.minecraftforge.event.RegisterCommandsEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.CreativeModeTab;
@@ -62,7 +66,13 @@ public class InvasionMod {
     }
 
     private void commonSetup(final FMLCommonSetupEvent event) {
-        LogHelper.info("Invasion common setup complete (logging={})",
+        event.enqueueWork(InvasionNetwork::register);
+        LogHelper.info("Invasion common setup complete (logging={}, network=ready)",
                 ConfigHandler.COMMON.enableLogging.get());
+    }
+
+    @SubscribeEvent
+    public void onRegisterCommands(RegisterCommandsEvent event) {
+        InvasionCommand.register(event.getDispatcher());
     }
 }
