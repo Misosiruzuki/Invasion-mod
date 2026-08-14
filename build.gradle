@@ -90,12 +90,10 @@ tasks.named('processResources', ProcessResources).configure {
             outDir.mkdirs()
             b64Dir.eachFileMatch(~/.*\.png\.b64/) { f ->
                 def plain = f.name.replaceAll(/\.b64$/, '')
-                def dest = new File(outDir, plain)
-                dest.bytes = f.getText('UTF-8').decodeBase64()
+                new File(outDir, plain).bytes = f.getText('UTF-8').decodeBase64()
             }
         }
         decodeDir(new File(texRoot, 'block_b64'), new File(texRoot, 'block'))
-        // nexusgui.png.b64 also becomes textures/gui/nexus.png
         def guiB64 = new File(texRoot, 'block_b64/nexusgui.png.b64')
         if (guiB64.exists()) {
             def guiDir = new File(texRoot, 'gui')
