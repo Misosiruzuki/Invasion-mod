@@ -1,6 +1,6 @@
 {
   "name": "invasion-p0-continuous-start",
-  "description": "P0: start continuous mode via /invasion continuous; expect mode=2 and nexus active.",
+  "description": "P0: start continuous mode via /invasion continuous after placing nexus nearby; expect mode=2 and nexus active.",
   "launchServer": true,
   "totalTicks": 400,
   "captureEvery": 40,
@@ -11,7 +11,7 @@
     "time set day",
     "weather clear",
     "gamemode creative Dev",
-    "tp Dev 0 -60 0",
+    "tp Dev 0 -60 5",
     "fill -8 -61 -8 8 -61 8 minecraft:stone",
     "fill -8 -60 -8 8 -60 8 minecraft:air",
     "setblock 0 -60 3 invasion:nexus",
@@ -23,14 +23,22 @@
   "actions": [
     {
       "fromTick": 0,
-      "toTick": 39,
+      "toTick": 24,
+      "camera": "first",
+      "yaw": 180,
+      "pitch": 25,
+      "keys": { "use": true }
+    },
+    {
+      "fromTick": 25,
+      "toTick": 49,
       "camera": "third_back",
       "commands": [
         "invasion continuous"
       ]
     },
     {
-      "fromTick": 40,
+      "fromTick": 50,
       "toTick": 199,
       "camera": "third_back",
       "commands": [

@@ -1,6 +1,6 @@
 {
   "name": "invasion-p0-invasion-begin",
-  "description": "P0 regression: /invasion begin 1 runs waves; /invasion end stops cleanly.",
+  "description": "P0 regression: place nexus nearby, /invasion begin 1, then /invasion end.",
   "launchServer": true,
   "totalTicks": 600,
   "captureEvery": 50,
@@ -11,7 +11,7 @@
     "time set day",
     "weather clear",
     "gamemode creative Dev",
-    "tp Dev 0 -60 0",
+    "tp Dev 0 -60 4",
     "fill -20 -61 -20 20 -61 20 minecraft:stone",
     "fill -20 -60 -20 20 -55 20 minecraft:air",
     "setblock 0 -60 0 invasion:nexus",
@@ -24,13 +24,21 @@
     {
       "fromTick": 0,
       "toTick": 19,
+      "camera": "first",
+      "yaw": 180,
+      "pitch": 20,
+      "keys": { "use": true }
+    },
+    {
+      "fromTick": 20,
+      "toTick": 39,
       "camera": "third_back",
       "commands": [
         "invasion begin 1"
       ]
     },
     {
-      "fromTick": 20,
+      "fromTick": 40,
       "toTick": 99,
       "camera": "third_back",
       "commands": [

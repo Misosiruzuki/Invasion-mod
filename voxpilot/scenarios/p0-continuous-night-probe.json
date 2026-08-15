@@ -1,6 +1,6 @@
 {
   "name": "invasion-p0-continuous-night-probe",
-  "description": "P0: continuous mode then advance time; watch logs for night_looms / continuous_attack / mode=3. Long waits depend on minDaysToAttack config (default 2-3).",
+  "description": "P0: continuous mode then advance time; watch logs for continuous_attack / mode=3. Long waits depend on minDaysToAttack.",
   "launchServer": true,
   "totalTicks": 1200,
   "captureEvery": 60,
@@ -11,7 +11,7 @@
     "time set day",
     "weather clear",
     "gamemode creative Dev",
-    "tp Dev 0 -60 0",
+    "tp Dev 0 -60 6",
     "fill -12 -61 -12 12 -61 12 minecraft:stone",
     "fill -12 -60 -12 12 -55 12 minecraft:air",
     "setblock 0 -60 0 invasion:nexus",
@@ -23,7 +23,15 @@
   "actions": [
     {
       "fromTick": 0,
-      "toTick": 39,
+      "toTick": 19,
+      "camera": "first",
+      "yaw": 180,
+      "pitch": 20,
+      "keys": { "use": true }
+    },
+    {
+      "fromTick": 20,
+      "toTick": 49,
       "camera": "third_back",
       "commands": [
         "invasion continuous",
@@ -31,16 +39,16 @@
       ]
     },
     {
-      "fromTick": 40,
-      "toTick": 79,
+      "fromTick": 50,
+      "toTick": 89,
       "camera": "third_back",
       "commands": [
         "time add 24000"
       ]
     },
     {
-      "fromTick": 80,
-      "toTick": 119,
+      "fromTick": 90,
+      "toTick": 129,
       "camera": "third_back",
       "commands": [
         "time add 24000",
@@ -48,16 +56,16 @@
       ]
     },
     {
-      "fromTick": 120,
-      "toTick": 159,
+      "fromTick": 130,
+      "toTick": 169,
       "camera": "third_back",
       "commands": [
         "time add 24000"
       ]
     },
     {
-      "fromTick": 160,
-      "toTick": 199,
+      "fromTick": 170,
+      "toTick": 209,
       "camera": "third_back",
       "commands": [
         "time set night",
@@ -65,7 +73,7 @@
       ]
     },
     {
-      "fromTick": 200,
+      "fromTick": 210,
       "toTick": 1100,
       "camera": "third_back",
       "deltaYaw": 0.5

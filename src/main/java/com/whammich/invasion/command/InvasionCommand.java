@@ -8,12 +8,22 @@ import com.whammich.invasion.nexus.NexusTracker;
 import com.whammich.invasion.util.LogHelper;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
+import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.HitResult;
 
 /**
  * Brigadier port of legacy InvasionCommand: begin / end / range / status / help.
+ * Focus resolution: existing focus → look-at block → nearest nexus in range (for automation / VoxPilot).
  */
 public final class InvasionCommand {
+    private static final double LOOK_RANGE = 8.0;
+    private static final int NEAREST_RANGE = 12;
+
     private InvasionCommand() {}
 
     public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
@@ -48,11 +58,74 @@ public final class InvasionCommand {
         return 1;
     }
 
+    /**
+     * Resolve a nexus for debug commands without requiring a prior GUI open.
+     * Order: valid focus → block under crosshair → nearest nexus within {@link #NEAREST_RANGE}.
+     */
+    private static NexusBlockEntity resolveNexus(CommandSourceStack src) {
+        NexusBlockEntity focus = NexusTracker.getFocusNexus();
+        if (isUsable(focus)) {
+            return focus;
+        }
+
+        ServerPlayer player = src.getPlayer();
+        if (player != null) {
+            HitResult hit = player.pick(LOOK_RANGE, 0.0f, false);
+            if (hit.getType() == HitResult.Type.BLOCK) {
+                BlockPos pos = ((BlockHitResult) hit).getBlockPos();
+                BlockEntity be = player.level().getBlockEntity(pos);
+                if (be instanceof NexusBlockEntity nexus) {
+                    NexusTracker.setFocusNexus(nexus);
+                    return nexus;
+                }
+            }
+
+            NexusBlockEntity nearest = findNearestNexus(player.serverLevel(), player.blockPosition(), NEAREST_RANGE);
+            if (nearest != null) {
+                NexusTracker.setFocusNexus(nearest);
+                return nearest;
+            }
+        } else if (src.getLevel() instanceof ServerLevel level) {
+            BlockPos origin = BlockPos.containing(src.getPosition());
+            NexusBlockEntity nearest = findNearestNexus(level, origin, NEAREST_RANGE);
+            if (nearest != null) {
+                NexusTracker.setFocusNexus(nearest);
+                return nearest;
+            }
+        }
+        return null;
+    }
+
+    private static boolean isUsable(NexusBlockEntity nexus) {
+        return nexus != null && !nexus.isRemoved() && nexus.getLevel() != null;
+    }
+
+    private static NexusBlockEntity findNearestNexus(ServerLevel level, BlockPos origin, int range) {
+        NexusBlockEntity best = null;
+        double bestDist = Double.MAX_VALUE;
+        for (int dx = -range; dx <= range; dx++) {
+            for (int dy = -4; dy <= 4; dy++) {
+                for (int dz = -range; dz <= range; dz++) {
+                    BlockPos pos = origin.offset(dx, dy, dz);
+                    BlockEntity be = level.getBlockEntity(pos);
+                    if (be instanceof NexusBlockEntity nexus) {
+                        double d = origin.distSqr(pos);
+                        if (d < bestDist) {
+                            bestDist = d;
+                            best = nexus;
+                        }
+                    }
+                }
+            }
+        }
+        return best;
+    }
+
     private static int begin(CommandContext<CommandSourceStack> ctx, int wave) {
         CommandSourceStack src = ctx.getSource();
-        NexusBlockEntity nexus = NexusTracker.getFocusNexus();
+        NexusBlockEntity nexus = resolveNexus(src);
         if (nexus == null) {
-            src.sendFailure(Component.literal("No focus nexus. Look at / place a nexus and interact first."));
+            src.sendFailure(Component.literal("No focus nexus. Look at / place a nexus nearby."));
             return 0;
         }
         try {
@@ -73,9 +146,9 @@ public final class InvasionCommand {
 
     private static int beginContinuous(CommandContext<CommandSourceStack> ctx) {
         CommandSourceStack src = ctx.getSource();
-        NexusBlockEntity nexus = NexusTracker.getFocusNexus();
+        NexusBlockEntity nexus = resolveNexus(src);
         if (nexus == null) {
-            src.sendFailure(Component.literal("No focus nexus. Look at / place a nexus and interact first."));
+            src.sendFailure(Component.literal("No focus nexus. Look at / place a nexus nearby."));
             return 0;
         }
         nexus.debugStartContinuous();
@@ -87,8 +160,8 @@ public final class InvasionCommand {
     private static int end(CommandContext<CommandSourceStack> ctx) {
         CommandSourceStack src = ctx.getSource();
         NexusBlockEntity nexus = NexusTracker.getActiveNexus();
-        if (nexus == null) {
-            nexus = NexusTracker.getFocusNexus();
+        if (!isUsable(nexus)) {
+            nexus = resolveNexus(src);
         }
         if (nexus == null) {
             src.sendFailure(Component.literal("No invasion to end"));
@@ -106,7 +179,7 @@ public final class InvasionCommand {
 
     private static int range(CommandContext<CommandSourceStack> ctx, int radius) {
         CommandSourceStack src = ctx.getSource();
-        NexusBlockEntity nexus = NexusTracker.getFocusNexus();
+        NexusBlockEntity nexus = resolveNexus(src);
         if (nexus == null) {
             src.sendFailure(Component.literal("No focus nexus"));
             return 0;
@@ -120,7 +193,7 @@ public final class InvasionCommand {
     }
 
     private static int status(CommandContext<CommandSourceStack> ctx) {
-        NexusBlockEntity nexus = NexusTracker.getFocusNexus();
+        NexusBlockEntity nexus = resolveNexus(ctx.getSource());
         boolean active = nexus != null && nexus.isActivated();
         if (nexus != null) {
             NexusTracker.syncStatus(nexus);
@@ -133,7 +206,7 @@ public final class InvasionCommand {
     }
 
     private static int nexusStatus(CommandContext<CommandSourceStack> ctx) {
-        NexusBlockEntity nexus = NexusTracker.getFocusNexus();
+        NexusBlockEntity nexus = resolveNexus(ctx.getSource());
         if (nexus == null) {
             ctx.getSource().sendFailure(Component.literal("No focus nexus"));
             return 0;
