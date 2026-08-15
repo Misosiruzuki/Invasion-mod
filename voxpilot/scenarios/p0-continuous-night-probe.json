@@ -1,0 +1,83 @@
+{
+  "name": "invasion-p0-continuous-night-probe",
+  "description": "P0: continuous mode then advance time; watch logs for night_looms / continuous_attack / mode=3. Long waits depend on minDaysToAttack config (default 2-3).",
+  "launchServer": true,
+  "totalTicks": 1200,
+  "captureEvery": 60,
+  "warmupFrames": 40,
+  "closeClient": true,
+  "display": { "background": true },
+  "commands": [
+    "time set day",
+    "weather clear",
+    "gamemode creative Dev",
+    "tp Dev 0 -60 0",
+    "fill -12 -61 -12 12 -61 12 minecraft:stone",
+    "fill -12 -60 -12 12 -55 12 minecraft:air",
+    "setblock 0 -60 0 invasion:nexus",
+    "tp Dev 0 -59 6"
+  ],
+  "trackedBlocks": [
+    { "label": "nexus", "x": 0, "y": -60, "z": 0 }
+  ],
+  "actions": [
+    {
+      "fromTick": 0,
+      "toTick": 39,
+      "camera": "third_back",
+      "commands": [
+        "invasion continuous",
+        "invasion nexusstatus"
+      ]
+    },
+    {
+      "fromTick": 40,
+      "toTick": 79,
+      "camera": "third_back",
+      "commands": [
+        "time add 24000"
+      ]
+    },
+    {
+      "fromTick": 80,
+      "toTick": 119,
+      "camera": "third_back",
+      "commands": [
+        "time add 24000",
+        "invasion nexusstatus"
+      ]
+    },
+    {
+      "fromTick": 120,
+      "toTick": 159,
+      "camera": "third_back",
+      "commands": [
+        "time add 24000"
+      ]
+    },
+    {
+      "fromTick": 160,
+      "toTick": 199,
+      "camera": "third_back",
+      "commands": [
+        "time set night",
+        "invasion nexusstatus"
+      ]
+    },
+    {
+      "fromTick": 200,
+      "toTick": 1100,
+      "camera": "third_back",
+      "deltaYaw": 0.5
+    },
+    {
+      "fromTick": 1101,
+      "toTick": 1199,
+      "camera": "third_back",
+      "commands": [
+        "invasion nexusstatus",
+        "invasion end"
+      ]
+    }
+  ]
+}
