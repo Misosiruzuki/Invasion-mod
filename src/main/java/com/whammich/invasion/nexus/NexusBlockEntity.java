@@ -1,9 +1,11 @@
 package com.whammich.invasion.nexus;
 
+import com.whammich.invasion.ConfigHandler;
 import com.whammich.invasion.registry.BlockEntityRegistry;
 import com.whammich.invasion.registry.ItemRegistry;
 import com.whammich.invasion.util.LogHelper;
 import com.whammich.invasion.wave.IMWaveSpawner;
+import com.whammich.invasion.wave.Wave;
 import com.whammich.invasion.wave.WaveSpawnerException;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;
@@ -19,7 +21,16 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BaseContainerBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.AABB;
 
+import java.util.List;
+import java.util.Random;
+
+/**
+ * Nexus block entity - invasion and continuous modes (1.7.10 mode integers).
+ * P0: continuous skeleton (mode 2/3/4, powerLevel, nextAttackTime, slow flux).
+ * Damping agent effects deferred to P1.
+ */
 public class NexusBlockEntity extends BaseContainerBlockEntity implements INexusAccess, MenuProvider {
 
     public static final int SLOT_INPUT = 0;
@@ -55,8 +66,17 @@ public class NexusBlockEntity extends BaseContainerBlockEntity implements INexus
     private int mode;
     private boolean activated;
 
+    private int powerLevel;
+    private int powerLevelTimer;
+    private long nextAttackTime;
+    private long lastWorldTime;
+    private boolean continuousAttack;
+    private boolean nightLoomWarned;
+
     private IMWaveSpawner waveSpawner;
     private int waveRestTimer;
+
+    private final Random continuousRandom = new Random();
 
     private final ContainerData dataAccess = new ContainerData() {
         @Override
@@ -122,26 +142,16 @@ public class NexusBlockEntity extends BaseContainerBlockEntity implements INexus
         if (!activated) {
             return;
         }
-        if (mode == 1) {
-            activationTimer--;
-            if (activationTimer <= 0) {
-                mode = 2;
-                currentWave = 1;
-                waveRestTimer = 0;
-                try {
-                    spawner().beginNextWave(currentWave);
-                } catch (WaveSpawnerException e) {
-                    LogHelper.warn("Failed to start wave: {}", e.getMessage());
-                    mode = 0;
-                    activated = false;
-                }
-                setChanged();
-            }
-            return;
+        if (mode == NexusMode.INVASION) {
+            tickInvasionWaves();
+        } else if (mode == NexusMode.CONTINUOUS) {
+            tickContinuousWaiting();
+        } else if (mode == NexusMode.CONTINUOUS_ATTACK) {
+            tickContinuousAttack();
         }
-        if (mode != 2) {
-            return;
-        }
+    }
+
+    private void tickInvasionWaves() {
         try {
             if (spawner().isActive() && !spawner().isWaveComplete()) {
                 spawner().spawn(50);
@@ -155,56 +165,196 @@ public class NexusBlockEntity extends BaseContainerBlockEntity implements INexus
                 waveRestTimer -= 50;
                 if (waveRestTimer <= 0) {
                     currentWave++;
+                    if (currentWave > nexusLevel) {
+                        nexusLevel = currentWave;
+                    }
                     spawner().beginNextWave(currentWave);
                     setChanged();
                 }
             }
         } catch (WaveSpawnerException e) {
             LogHelper.warn("Wave error: {}", e.getMessage());
+            notifyNearby(Component.literal(e.getMessage()));
         }
+    }
+
+    private void tickContinuousWaiting() {
+        if (level == null || level.isClientSide) {
+            return;
+        }
+        long currentTime = level.getGameTime();
+        if (lastWorldTime == 0L) {
+            lastWorldTime = currentTime;
+        }
+
+        powerLevelTimer += 50;
+        if (powerLevelTimer > ContinuousSchedule.POWER_TICK_INTERVAL) {
+            powerLevelTimer -= ContinuousSchedule.POWER_TICK_INTERVAL;
+            generateFlux(ContinuousSchedule.continuousFluxIncrement(powerLevel));
+            powerLevel++;
+            setChanged();
+        }
+
+        if (ContinuousSchedule.crossedDusk(lastWorldTime, currentTime)
+                && currentTime + ContinuousSchedule.DUSK_TICK > nextAttackTime
+                && !nightLoomWarned) {
+            notifyNearby(Component.translatable("message.invasion.nexus.night_looms"));
+            nightLoomWarned = true;
+        }
+
+        if (lastWorldTime > currentTime) {
+            nextAttackTime -= (lastWorldTime - currentTime);
+        }
+        lastWorldTime = currentTime;
+
+        if (currentTime >= nextAttackTime) {
+            beginContinuousAttack();
+        }
+    }
+
+    private void tickContinuousAttack() {
+        try {
+            if (spawner().isActive() && !spawner().isWaveComplete()) {
+                spawner().spawn(50);
+            } else if (spawner().isWaveComplete()) {
+                endContinuousAttack();
+            }
+        } catch (WaveSpawnerException e) {
+            LogHelper.warn("Continuous wave error: {}", e.getMessage());
+            endContinuousAttack();
+        }
+    }
+
+    private void beginContinuousAttack() {
+        if (level == null || level.isClientSide) {
+            return;
+        }
+        if (!spawner().isReady()) {
+            return;
+        }
+        float difficulty = ContinuousSchedule.difficultyFromPower(powerLevel);
+        float tier = difficulty;
+        try {
+            Wave wave = spawner().getWaveBuilder().generateWave(
+                    difficulty, tier, ContinuousSchedule.DEFAULT_WAVE_LENGTH_SECONDS);
+            currentWave = Math.max(1, Math.round(difficulty * 3));
+            if (currentWave > nexusLevel) {
+                nexusLevel = currentWave;
+            }
+            spawner().beginNextWave(wave);
+            mode = NexusMode.CONTINUOUS_ATTACK;
+            continuousAttack = true;
+            nightLoomWarned = false;
+            notifyNearby(Component.translatable("message.invasion.nexus.continuous_attack"));
+            setChanged();
+            NexusTracker.syncStatus(this);
+            LogHelper.info("Continuous attack started (power={}, diff={}) @ {}", powerLevel, difficulty, worldPosition);
+        } catch (WaveSpawnerException e) {
+            LogHelper.warn("Failed continuous attack: {}", e.getMessage());
+            notifyNearby(Component.literal(e.getMessage()));
+            scheduleNextContinuousAttack();
+        }
+    }
+
+    private void endContinuousAttack() {
+        continuousAttack = false;
+        mode = NexusMode.CONTINUOUS;
+        if (waveSpawner != null) {
+            waveSpawner.stop();
+        }
+        scheduleNextContinuousAttack();
+        notifyNearby(Component.translatable("message.invasion.nexus.continuous_calm"));
+        setChanged();
+        NexusTracker.syncStatus(this);
+    }
+
+    private void scheduleNextContinuousAttack() {
+        if (level == null) {
+            return;
+        }
+        int minDays = ConfigHandler.COMMON.minDaysToAttack.get();
+        int maxDays = ConfigHandler.COMMON.maxDaysToAttack.get();
+        nextAttackTime = ContinuousSchedule.computeNextAttackTime(
+                level.getGameTime(), minDays, maxDays, continuousRandom);
+        lastWorldTime = level.getGameTime();
+        nightLoomWarned = false;
+        setChanged();
     }
 
     private void tickActivation() {
         ItemStack input = items.get(SLOT_INPUT);
-        if (mode != 0 && mode != 4) {
+        if (mode != NexusMode.IDLE && mode != NexusMode.ACTIVATING_STABLE) {
             return;
         }
         if (input.isEmpty() || !isCatalyst(input)) {
-            if (activationTimer != 0) {
+            if (activationTimer != 0 || mode == NexusMode.ACTIVATING_STABLE) {
                 activationTimer = 0;
+                if (mode == NexusMode.ACTIVATING_STABLE) {
+                    mode = NexusMode.IDLE;
+                }
                 setChanged();
             }
             return;
         }
+
+        boolean stable = input.is(ItemRegistry.NEXUS_CATALYST_STABLE.get());
+        boolean strong = input.is(ItemRegistry.CATALYST_STRONG.get());
+        mode = stable ? NexusMode.ACTIVATING_STABLE : NexusMode.IDLE;
         activationTimer++;
         if (activationTimer >= ACTIVATION_MAX) {
-            boolean stable = input.is(ItemRegistry.NEXUS_CATALYST_STABLE.get());
             input.shrink(1);
             if (input.isEmpty()) {
                 items.set(SLOT_INPUT, ItemStack.EMPTY);
             }
             activationTimer = 0;
-            beginActivation(stable);
+            if (stable) {
+                beginContinuous();
+            } else {
+                beginInvasion(strong ? 10 : 1);
+            }
         }
         setChanged();
     }
 
-    private void beginActivation(boolean stable) {
+    private void beginInvasion(int startWave) {
         activated = true;
-        mode = 1;
+        mode = NexusMode.INVASION;
         activationTimer = 0;
-        currentWave = 1;
+        currentWave = Math.max(1, startWave);
         waveRestTimer = 0;
+        continuousAttack = false;
+        hp = maxHp;
+        NexusTracker.setFocusNexus(this);
+        NexusTracker.setActiveNexus(this);
         try {
             spawner().beginNextWave(currentWave);
-            mode = 2;
-            LogHelper.info("Nexus activated (stable={}) at {}", stable, worldPosition);
+            notifyNearby(Component.translatable("message.invasion.nexus.invasion_started"));
+            LogHelper.info("Nexus invasion started at wave {} @ {}", currentWave, worldPosition);
         } catch (WaveSpawnerException e) {
-            LogHelper.warn("Failed to start wave: {}", e.getMessage());
-            mode = 0;
+            LogHelper.warn("Failed to start invasion: {}", e.getMessage());
+            notifyNearby(Component.literal(e.getMessage()));
+            mode = NexusMode.IDLE;
             activated = false;
         }
         setChanged();
+        NexusTracker.syncStatus(this);
+    }
+
+    private void beginContinuous() {
+        activated = true;
+        mode = NexusMode.CONTINUOUS;
+        activationTimer = 0;
+        continuousAttack = false;
+        powerLevel = Math.max(0, powerLevel);
+        powerLevelTimer = 0;
+        hp = maxHp;
+        NexusTracker.setFocusNexus(this);
+        NexusTracker.setActiveNexus(this);
+        scheduleNextContinuousAttack();
+        notifyNearby(Component.translatable("message.invasion.nexus.continuous_stable"));
+        LogHelper.info("Nexus continuous mode started @ {} nextAttack={}", worldPosition, nextAttackTime);
+        setChanged();
+        NexusTracker.syncStatus(this);
     }
 
     private static boolean isCatalyst(ItemStack stack) {
@@ -214,14 +364,14 @@ public class NexusBlockEntity extends BaseContainerBlockEntity implements INexus
     }
 
     private void syncActiveBlockState(Level level, BlockPos pos, BlockState state) {
-        boolean want = activated && (mode == 1 || mode == 2 || mode == 3);
+        boolean want = activated && NexusMode.isRunning(mode);
         if (state.hasProperty(BlockNexus.ACTIVE) && state.getValue(BlockNexus.ACTIVE) != want) {
             level.setBlock(pos, state.setValue(BlockNexus.ACTIVE, want), 3);
         }
     }
 
     private void tickGeneration() {
-        if (!activated || (mode != 1 && mode != 2 && mode != 3)) {
+        if (!activated || mode != NexusMode.INVASION) {
             return;
         }
         generateFlux(1);
@@ -255,7 +405,8 @@ public class NexusBlockEntity extends BaseContainerBlockEntity implements INexus
             return;
         }
         boolean canCook = input.is(ItemRegistry.CATALYST_MIXTURE_STABLE.get())
-                && (output.isEmpty() || (output.is(ItemRegistry.NEXUS_CATALYST_STABLE.get()) && output.getCount() < output.getMaxStackSize()));
+                && (output.isEmpty() || (output.is(ItemRegistry.NEXUS_CATALYST_STABLE.get())
+                && output.getCount() < output.getMaxStackSize()));
         if (!canCook) {
             cookTime = 0;
             return;
@@ -273,24 +424,40 @@ public class NexusBlockEntity extends BaseContainerBlockEntity implements INexus
         }
     }
 
+    private void notifyNearby(Component message) {
+        if (level == null || level.isClientSide) {
+            return;
+        }
+        double r = spawnRadius + 16.0;
+        AABB box = new AABB(worldPosition).inflate(r, 64.0, r);
+        List<Player> players = level.getEntitiesOfClass(Player.class, box);
+        for (Player player : players) {
+            player.displayClientMessage(message, false);
+        }
+    }
+
     public void tryActivate(Player player) {
         NexusTracker.setFocusNexus(this);
-        if (activated || mode != 0) {
+        if (activated || (mode != NexusMode.IDLE && mode != NexusMode.ACTIVATING_STABLE)) {
             return;
         }
         ItemStack held = player.getMainHandItem();
-        if (held.is(ItemRegistry.NEXUS_CATALYST_STABLE.get())
-                || held.is(ItemRegistry.NEXUS_CATALYST_UNSTABLE.get())) {
-            if (!player.getAbilities().instabuild) {
-                held.shrink(1);
-            }
-            mode = 1;
-            activationTimer = 60;
-            activated = true;
-            setChanged();
-            if (level != null && !level.isClientSide) {
-                player.displayClientMessage(Component.translatable("block.invasion.nexus.activating"), true);
-            }
+        if (!isCatalyst(held)) {
+            return;
+        }
+        boolean stable = held.is(ItemRegistry.NEXUS_CATALYST_STABLE.get());
+        boolean strong = held.is(ItemRegistry.CATALYST_STRONG.get());
+        if (!player.getAbilities().instabuild) {
+            held.shrink(1);
+        }
+        activationTimer = 0;
+        if (stable) {
+            beginContinuous();
+        } else {
+            beginInvasion(strong ? 10 : 1);
+        }
+        if (level != null && !level.isClientSide) {
+            player.displayClientMessage(Component.translatable("block.invasion.nexus.activating"), true);
         }
     }
 
@@ -303,21 +470,25 @@ public class NexusBlockEntity extends BaseContainerBlockEntity implements INexus
         hp = Math.max(0, hp - damage);
         setChanged();
         if (hp <= 0 && level != null && !level.isClientSide) {
-            mode = 0;
-            activated = false;
+            emergencyStop();
+            notifyNearby(Component.translatable("message.invasion.nexus.destroyed"));
         }
     }
 
     @Override
     public void registerMobDied() {
         nexusKills++;
-        generation++;
+        if (mode == NexusMode.INVASION) {
+            generation++;
+        }
         setChanged();
     }
 
     @Override
     public boolean isActivating() {
-        return mode == 1;
+        return (mode == NexusMode.IDLE || mode == NexusMode.ACTIVATING_STABLE)
+                && activationTimer > 0
+                && activationTimer < ACTIVATION_MAX;
     }
 
     @Override
@@ -370,6 +541,18 @@ public class NexusBlockEntity extends BaseContainerBlockEntity implements INexus
         return maxHp;
     }
 
+    public int getPowerLevel() {
+        return powerLevel;
+    }
+
+    public long getNextAttackTime() {
+        return nextAttackTime;
+    }
+
+    public boolean isContinuousAttack() {
+        return continuousAttack;
+    }
+
     @Override
     public Level getLevel() {
         return level;
@@ -397,8 +580,8 @@ public class NexusBlockEntity extends BaseContainerBlockEntity implements INexus
 
     @Override
     public boolean isEmpty() {
-        for (ItemStack s : items) {
-            if (!s.isEmpty()) {
+        for (ItemStack stack : items) {
+            if (!stack.isEmpty()) {
                 return false;
             }
         }
@@ -406,23 +589,23 @@ public class NexusBlockEntity extends BaseContainerBlockEntity implements INexus
     }
 
     @Override
-    public ItemStack getItem(int index) {
-        return items.get(index);
+    public ItemStack getItem(int slot) {
+        return items.get(slot);
     }
 
     @Override
-    public ItemStack removeItem(int index, int count) {
-        return ContainerHelper.removeItem(items, index, count);
+    public ItemStack removeItem(int slot, int amount) {
+        return ContainerHelper.removeItem(items, slot, amount);
     }
 
     @Override
-    public ItemStack removeItemNoUpdate(int index) {
-        return ContainerHelper.takeItem(items, index);
+    public ItemStack removeItemNoUpdate(int slot) {
+        return ContainerHelper.takeItem(items, slot);
     }
 
     @Override
-    public void setItem(int index, ItemStack stack) {
-        items.set(index, stack);
+    public void setItem(int slot, ItemStack stack) {
+        items.set(slot, stack);
         if (stack.getCount() > getMaxStackSize()) {
             stack.setCount(getMaxStackSize());
         }
@@ -434,7 +617,10 @@ public class NexusBlockEntity extends BaseContainerBlockEntity implements INexus
         if (level == null || level.getBlockEntity(worldPosition) != this) {
             return false;
         }
-        return player.distanceToSqr(worldPosition.getX() + 0.5, worldPosition.getY() + 0.5, worldPosition.getZ() + 0.5) <= 64.0;
+        return player.distanceToSqr(
+                worldPosition.getX() + 0.5,
+                worldPosition.getY() + 0.5,
+                worldPosition.getZ() + 0.5) <= 64.0;
     }
 
     @Override
@@ -457,6 +643,11 @@ public class NexusBlockEntity extends BaseContainerBlockEntity implements INexus
         tag.putInt("Hp", hp);
         tag.putInt("MaxHp", maxHp);
         tag.putBoolean("Activated", activated);
+        tag.putInt("PowerLevel", powerLevel);
+        tag.putInt("PowerLevelTimer", powerLevelTimer);
+        tag.putLong("NextAttackTime", nextAttackTime);
+        tag.putLong("LastWorldTime", lastWorldTime);
+        tag.putBoolean("ContinuousAttack", continuousAttack);
     }
 
     @Override
@@ -475,26 +666,29 @@ public class NexusBlockEntity extends BaseContainerBlockEntity implements INexus
         hp = tag.contains("Hp") ? tag.getInt("Hp") : 100;
         maxHp = tag.contains("MaxHp") ? tag.getInt("MaxHp") : 100;
         activated = tag.getBoolean("Activated");
+        powerLevel = tag.getInt("PowerLevel");
+        powerLevelTimer = tag.getInt("PowerLevelTimer");
+        nextAttackTime = tag.getLong("NextAttackTime");
+        lastWorldTime = tag.getLong("LastWorldTime");
+        continuousAttack = tag.getBoolean("ContinuousAttack");
     }
 
     public void debugStartInvasion(int startWave) throws WaveSpawnerException {
-        mode = 2;
-        activated = true;
-        activationTimer = 0;
-        currentWave = Math.max(1, startWave);
-        waveRestTimer = 0;
-        NexusTracker.setFocusNexus(this);
-        NexusTracker.setActiveNexus(this);
-        spawner().beginNextWave(currentWave);
-        setChanged();
-        NexusTracker.syncStatus(this);
+        beginInvasion(Math.max(1, startWave));
         LogHelper.info("Debug start invasion at wave {} @ {}", currentWave, worldPosition);
     }
 
+    public void debugStartContinuous() {
+        beginContinuous();
+        LogHelper.info("Debug start continuous @ {}", worldPosition);
+    }
+
     public void emergencyStop() {
-        mode = 0;
+        mode = NexusMode.IDLE;
         activated = false;
         activationTimer = 0;
+        continuousAttack = false;
+        nightLoomWarned = false;
         if (waveSpawner != null) {
             waveSpawner.stop();
         }
@@ -505,7 +699,7 @@ public class NexusBlockEntity extends BaseContainerBlockEntity implements INexus
     }
 
     public boolean setSpawnRadius(int radius) {
-        if (activated && mode == 2) {
+        if (activated && (mode == NexusMode.INVASION || mode == NexusMode.CONTINUOUS_ATTACK)) {
             return false;
         }
         if (radius < 32 || radius > 128) {
@@ -521,8 +715,8 @@ public class NexusBlockEntity extends BaseContainerBlockEntity implements INexus
 
     public String debugStatus() {
         return String.format(
-                "Nexus@%s mode=%d activated=%s wave=%d level=%d kills=%d radius=%d hp=%d/%d gen=%d",
+                "Nexus@%s mode=%d activated=%s wave=%d level=%d kills=%d radius=%d hp=%d/%d gen=%d power=%d nextAttack=%d contAtk=%s",
                 worldPosition, mode, activated, currentWave, nexusLevel, nexusKills,
-                spawnRadius, hp, maxHp, generation);
+                spawnRadius, hp, maxHp, generation, powerLevel, nextAttackTime, continuousAttack);
     }
 }

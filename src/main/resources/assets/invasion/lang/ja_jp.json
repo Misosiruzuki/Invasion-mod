@@ -45,5 +45,11 @@
   "item.invasion.im_thrower_spawn_egg": "IMスローワーのスポーンエッグ",
   "item.invasion.im_burrower_spawn_egg": "IMバローワーのスポーンエッグ",
   "item.invasion.im_bird_spawn_egg": "IM鳥のスポーンエッグ",
-  "item.invasion.im_giant_bird_spawn_egg": "IM巨大鳥のスポーンエッグ"
+  "item.invasion.im_giant_bird_spawn_egg": "IM巨大鳥のスポーンエッグ",
+  "message.invasion.nexus.night_looms": "夜がネクサスの周囲に迫っている…",
+  "message.invasion.nexus.continuous_stable": "ネクサスが起動し、安定した",
+  "message.invasion.nexus.continuous_attack": "継続モードの襲撃が始まった！",
+  "message.invasion.nexus.continuous_calm": "ネクサスは再び静まった。",
+  "message.invasion.nexus.invasion_started": "最初のウェーブが間もなく来る！",
+  "message.invasion.nexus.destroyed": "ネクサスが破壊された！"
 }

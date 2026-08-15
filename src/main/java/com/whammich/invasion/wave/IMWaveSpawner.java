@@ -77,6 +77,7 @@ public class IMWaveSpawner implements ISpawnerAccess {
 
     public void stop() {
         active = false;
+        waveComplete = true;
     }
 
     public boolean isActive() {
@@ -85,6 +86,15 @@ public class IMWaveSpawner implements ISpawnerAccess {
 
     public boolean isWaveComplete() {
         return waveComplete;
+    }
+
+    /** True when a new wave can be started (idle or previous wave finished). */
+    public boolean isReady() {
+        return !active || waveComplete;
+    }
+
+    public IMWaveBuilder getWaveBuilder() {
+        return waveBuilder;
     }
 
     public int getCurrentWaveNumber() {

@@ -31,6 +31,7 @@ public final class InvasionCommand {
                                         .executes(ctx -> range(ctx, IntegerArgumentType.getInteger(ctx, "radius")))))
                         .then(Commands.literal("status").executes(InvasionCommand::status))
                         .then(Commands.literal("nexusstatus").executes(InvasionCommand::nexusStatus))
+                        .then(Commands.literal("continuous").executes(InvasionCommand::beginContinuous))
                         .executes(InvasionCommand::help)
         );
     }
@@ -39,6 +40,7 @@ public final class InvasionCommand {
         CommandSourceStack src = ctx.getSource();
         src.sendSuccess(() -> Component.literal("--- Invasion commands ---"), false);
         src.sendSuccess(() -> Component.literal("/invasion begin [wave]  — start invasion at wave"), false);
+        src.sendSuccess(() -> Component.literal("/invasion continuous    — start continuous mode"), false);
         src.sendSuccess(() -> Component.literal("/invasion end            — emergency stop"), false);
         src.sendSuccess(() -> Component.literal("/invasion range <32-128> — set spawn radius"), false);
         src.sendSuccess(() -> Component.literal("/invasion status         — focus nexus active?"), false);
@@ -67,6 +69,19 @@ public final class InvasionCommand {
             src.sendFailure(Component.literal("Failed: " + e.getMessage()));
             return 0;
         }
+    }
+
+    private static int beginContinuous(CommandContext<CommandSourceStack> ctx) {
+        CommandSourceStack src = ctx.getSource();
+        NexusBlockEntity nexus = NexusTracker.getFocusNexus();
+        if (nexus == null) {
+            src.sendFailure(Component.literal("No focus nexus. Look at / place a nexus and interact first."));
+            return 0;
+        }
+        nexus.debugStartContinuous();
+        NexusTracker.setActiveNexus(nexus);
+        src.sendSuccess(() -> Component.literal("Started continuous mode (next attack scheduled)"), true);
+        return 1;
     }
 
     private static int end(CommandContext<CommandSourceStack> ctx) {
