@@ -85,7 +85,9 @@ public final class InvasionCommand {
                 NexusTracker.setFocusNexus(nearest);
                 return nearest;
             }
-        } else if (src.getLevel() instanceof ServerLevel level) {
+        } else {
+            // CommandSourceStack#getLevel() is already ServerLevel on 1.20.1 (not Level).
+            ServerLevel level = src.getLevel();
             BlockPos origin = BlockPos.containing(src.getPosition());
             NexusBlockEntity nearest = findNearestNexus(level, origin, NEAREST_RANGE);
             if (nearest != null) {
