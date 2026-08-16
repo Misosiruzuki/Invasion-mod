@@ -2,6 +2,10 @@
 
 JSON scenarios for [VoxPilot](https://github.com/Misosiruzuki/VoxPilot) against this MDK.
 
+## Convention
+
+**Every feature implementation must ship with a dedicated scenario** under `voxpilot/scenarios/` (plus unit tests when logic is pure). Do not land code-only changes without a scenario named for the checklist item or feature.
+
 ## Prerequisites
 
 - Java 17
@@ -11,13 +15,13 @@ JSON scenarios for [VoxPilot](https://github.com/Misosiruzuki/VoxPilot) against 
 ## Run
 
 ```text
-java -jar VoxPilot.jar run --project /path/to/Invasion-mod --scenario /path/to/Invasion-mod/voxpilot/scenarios/p0-continuous-start.json
+java -jar VoxPilot.jar run --project /path/to/Invasion-mod --scenario /path/to/Invasion-mod/voxpilot/scenarios/<scenario>.json
 ```
 
 Windows example:
 
 ```text
-java -jar VoxPilot.jar run --project C:\src\Invasion-mod --scenario C:\src\Invasion-mod\voxpilot\scenarios\p0-continuous-start.json
+java -jar VoxPilot.jar run --project C:\src\Invasion-mod --scenario C:\src\Invasion-mod\voxpilot\scenarios\b40-continuous-generate-wave.json
 ```
 
 Reports:
@@ -31,31 +35,33 @@ run/voxpilot-reports/<timestamp>/
   server.log
 ```
 
-## Scenarios (P0 continuous-mode skeleton)
+## Scenarios
+
+### P0 continuous-mode skeleton
 
 | File | Purpose |
 |------|---------|
-| `p0-continuous-start.json` | `/invasion continuous` after nearby nexus; expect success chat + `active=true` |
+| `p0-continuous-start.json` | `/invasion continuous`; mode=2, `active=true` |
 | `p0-invasion-begin.json` | `/invasion begin 1` → end |
-| `p0-continuous-night-probe.json` | Continuous + time advance; watch for attack / mode=3 |
-| `p0-catalyst-give-smoke.json` | Creative give of catalysts + nexus place (smoke / screenshots) |
+| `p0-continuous-night-probe.json` | `/invasion continuous soon`; mode=3 path (generic) |
+| `p0-catalyst-give-smoke.json` | Give catalysts / flux / damping (smoke) |
 
-## Pass criteria (`p0-continuous-start`)
+### Wiki parity B-40..B-42
 
-Client or server chat / log should contain:
+| File | Purpose |
+|------|---------|
+| `b40-continuous-generate-wave.json` | Full 1.7 continuous `generateWave` via `continuous soon` → mode=3 → end |
 
-```text
-Started continuous mode (next attack scheduled)
-```
+## Pass criteria (`b40-continuous-generate-wave`)
 
-`frames.jsonl` `trackedBlocks` for label `nexus` should show `active=true` after the continuous command.
-
-`/invasion nexusstatus` should print a mode/power dump (not `No focus nexus`).
+1. `Continuous mode; next attack in ~30 ticks`
+2. Early `nexusstatus`: `mode=2`
+3. `A continuous-mode attack has begun!` and/or `mode=3` / `contAtk=true`
+4. `Invasion ended` → `mode=0`
 
 ## Notes
 
-- `/invasion` commands resolve nexus in order: existing focus → block under crosshair → nearest nexus within 12 blocks (so VoxPilot does not require a prior GUI open).
-- Scenarios still briefly press `use` while facing the nexus as a belt-and-suspenders interact.
-- Default config `minDaysToAttack` / `maxDaysToAttack` (2–3) makes real night waits long.
-- VoxPilot may install performance mods into `run/`; see VoxPilot README.
-- Operator player name used by VoxPilot offline server is `Dev`.
+- `/invasion` resolves nexus: focus → look-at → nearest within 12 blocks.
+- `continuous soon` is test-only (skips minDays wait).
+- VoxPilot may install performance mods into `run/`.
+- Operator player name: `Dev`.
