@@ -187,13 +187,7 @@ public class NexusBlockEntity extends BaseContainerBlockEntity implements INexus
             lastWorldTime = currentTime;
         }
 
-        powerLevelTimer += 50;
-        if (powerLevelTimer > ContinuousSchedule.POWER_TICK_INTERVAL) {
-            powerLevelTimer -= ContinuousSchedule.POWER_TICK_INTERVAL;
-            generateFlux(ContinuousSchedule.continuousFluxIncrement(powerLevel));
-            powerLevel++;
-            setChanged();
-        }
+        applyContinuousPowerAndDamping(false);
 
         if (ContinuousSchedule.crossedDusk(lastWorldTime, currentTime)
                 && currentTime + ContinuousSchedule.DUSK_TICK > nextAttackTime
@@ -207,12 +201,22 @@ public class NexusBlockEntity extends BaseContainerBlockEntity implements INexus
         }
         lastWorldTime = currentTime;
 
+        // Shutdown from strong damping may leave continuous mode.
+        if (mode != NexusMode.CONTINUOUS) {
+            return;
+        }
+
         if (currentTime >= nextAttackTime) {
             beginContinuousAttack();
         }
     }
 
     private void tickContinuousAttack() {
+        // 1.7: flux/power timer still runs during attack; strong damping does not drain mid-attack.
+        applyContinuousPowerAndDamping(true);
+        if (mode != NexusMode.CONTINUOUS_ATTACK) {
+            return;
+        }
         try {
             if (spawner().isActive() && !spawner().isWaveComplete()) {
                 spawner().spawn(50);
@@ -223,6 +227,51 @@ public class NexusBlockEntity extends BaseContainerBlockEntity implements INexus
             LogHelper.warn("Continuous wave error: {}", e.getMessage());
             endContinuousAttack();
         }
+    }
+
+    /**
+     * 1.7 doContinuous power / damping (B-23..B-25).
+     * Weak damping in input slot: power does not rise (flux still generates).
+     * Strong damping: power drains each tick while not mid continuous-attack; power &lt; 0 → stop.
+     *
+     * @param continuousAttackActive true during mode CONTINUOUS_ATTACK
+     */
+    private void applyContinuousPowerAndDamping(boolean continuousAttackActive) {
+        powerLevelTimer += 50;
+        if (powerLevelTimer > ContinuousSchedule.POWER_TICK_INTERVAL) {
+            powerLevelTimer -= ContinuousSchedule.POWER_TICK_INTERVAL;
+            generateFlux(ContinuousSchedule.continuousFluxIncrement(powerLevel));
+            powerLevel = DampingLogic.applyPowerTickGain(powerLevel, hasWeakDampingInCatalystSlot());
+            setChanged();
+        }
+
+        int after = DampingLogic.applyStrongDrain(
+                powerLevel, hasStrongDampingInCatalystSlot(), continuousAttackActive);
+        if (after != powerLevel) {
+            powerLevel = after;
+            setChanged();
+        }
+        if (DampingLogic.shouldShutdownAfterDrain(powerLevel)) {
+            LogHelper.info("Strong damping reduced power below 0; stopping nexus @ {}", worldPosition);
+            emergencyStop();
+            notifyNearby(Component.translatable("message.invasion.nexus.damped_shutdown"));
+        }
+    }
+
+    private boolean hasWeakDampingInCatalystSlot() {
+        ItemStack stack = items.get(SLOT_INPUT);
+        return !stack.isEmpty() && stack.is(ItemRegistry.DAMPING_AGENT_WEAK.get());
+    }
+
+    private boolean hasStrongDampingInCatalystSlot() {
+        ItemStack stack = items.get(SLOT_INPUT);
+        return !stack.isEmpty() && stack.is(ItemRegistry.DAMPING_AGENT_STRONG.get());
+    }
+
+    /** Test / VoxPilot: put damping agent in catalyst slot without GUI. */
+    public void debugSetCatalystSlot(ItemStack stack) {
+        items.set(SLOT_INPUT, stack == null ? ItemStack.EMPTY : stack.copy());
+        setChanged();
     }
 
     private void beginContinuousAttack() {
@@ -717,6 +766,9 @@ public class NexusBlockEntity extends BaseContainerBlockEntity implements INexus
         activationTimer = 0;
         continuousAttack = false;
         nightLoomWarned = false;
+        if (powerLevel < 0) {
+            powerLevel = 0;
+        }
         if (waveSpawner != null) {
             waveSpawner.stop();
         }

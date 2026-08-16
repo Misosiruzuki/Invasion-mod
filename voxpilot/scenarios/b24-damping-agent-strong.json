@@ -1,0 +1,67 @@
+{
+  "name": "invasion-b24-damping-agent-strong",
+  "description": "B-24: strong damping drains power while continuous waiting. power 40 + damping strong; later nexusstatus power much lower.",
+  "launchServer": true,
+  "totalTicks": 120,
+  "totalFrames": 160,
+  "captureEvery": 30,
+  "warmupFrames": 40,
+  "closeClient": true,
+  "display": { "background": true },
+  "commands": [
+    "time set day",
+    "weather clear",
+    "gamemode creative Dev",
+    "tp Dev 0 -60 6",
+    "fill -12 -61 -12 12 -61 12 minecraft:stone",
+    "fill -12 -60 -12 12 -55 12 minecraft:air",
+    "setblock 0 -60 0 invasion:nexus",
+    "tp Dev 0 -59 6"
+  ],
+  "trackedBlocks": [
+    { "label": "nexus", "x": 0, "y": -60, "z": 0 }
+  ],
+  "actions": [
+    {
+      "fromTick": 0,
+      "toTick": 12,
+      "camera": "first",
+      "yaw": 180,
+      "pitch": 20,
+      "keys": { "use": true }
+    },
+    {
+      "fromTick": 13,
+      "toTick": 28,
+      "camera": "third_back",
+      "commands": [
+        "invasion continuous",
+        "invasion power 40",
+        "invasion damping strong",
+        "invasion nexusstatus"
+      ]
+    },
+    {
+      "fromTick": 29,
+      "toTick": 79,
+      "camera": "third_back",
+      "deltaYaw": 0.5
+    },
+    {
+      "fromTick": 80,
+      "toTick": 94,
+      "camera": "third_back",
+      "commands": [
+        "invasion nexusstatus"
+      ]
+    },
+    {
+      "fromTick": 95,
+      "toTick": 119,
+      "camera": "third_back",
+      "commands": [
+        "invasion end"
+      ]
+    }
+  ]
+}

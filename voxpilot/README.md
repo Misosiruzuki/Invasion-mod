@@ -56,6 +56,14 @@ run/voxpilot-reports/<timestamp>/
 | `b41-continuous-difficulty-power.json` | B-41: `power 9000` then soon; difficulty 1+power/4500 |
 | `b42-continuous-wave-length.json` | B-42: default power continuous soon (lengthSeconds=240 path) |
 
+### Wiki parity P1 / B-23..B-25 damping
+
+| File | Purpose |
+|------|---------|
+| `b23-damping-agent-weak.json` | B-23: weak damping freezes power rise |
+| `b24-damping-agent-strong.json` | B-24: strong damping drains power |
+| `b25-damping-power-zero-shutdown.json` | B-25: drain past 0 → idle shutdown |
+
 ## Pass criteria (`b40-continuous-generate-wave`)
 
 1. `Continuous mode; next attack in ~30 ticks`

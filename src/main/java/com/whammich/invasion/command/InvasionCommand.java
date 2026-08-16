@@ -5,6 +5,7 @@ import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.context.CommandContext;
 import com.whammich.invasion.nexus.NexusBlockEntity;
 import com.whammich.invasion.nexus.NexusTracker;
+import com.whammich.invasion.registry.ItemRegistry;
 import com.whammich.invasion.util.LogHelper;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
@@ -12,6 +13,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
@@ -50,6 +52,10 @@ public final class InvasionCommand {
                         .then(Commands.literal("power")
                                 .then(Commands.argument("value", IntegerArgumentType.integer(0, 100000))
                                         .executes(ctx -> setPower(ctx, IntegerArgumentType.getInteger(ctx, "value")))))
+                        .then(Commands.literal("damping")
+                                .then(Commands.literal("weak").executes(ctx -> setDamping(ctx, "weak")))
+                                .then(Commands.literal("strong").executes(ctx -> setDamping(ctx, "strong")))
+                                .then(Commands.literal("clear").executes(ctx -> setDamping(ctx, "clear"))))
                         .executes(InvasionCommand::help)
         );
     }
@@ -60,7 +66,8 @@ public final class InvasionCommand {
         src.sendSuccess(() -> Component.literal("/invasion begin [wave]  — start invasion at wave"), false);
         src.sendSuccess(() -> Component.literal("/invasion continuous         — start continuous mode"), false);
         src.sendSuccess(() -> Component.literal("/invasion continuous soon [t] — schedule attack in t ticks (test)"), false);
-        src.sendSuccess(() -> Component.literal("/invasion power <n>          — set powerLevel (test, B-41)"), false);
+        src.sendSuccess(() -> Component.literal("/invasion power <n>          — set powerLevel (test)"), false);
+        src.sendSuccess(() -> Component.literal("/invasion damping weak|strong|clear — catalyst slot (test, P1)"), false);
         src.sendSuccess(() -> Component.literal("/invasion end            — emergency stop"), false);
         src.sendSuccess(() -> Component.literal("/invasion range <32-128> — set spawn radius"), false);
         src.sendSuccess(() -> Component.literal("/invasion status         — focus nexus active?"), false);
@@ -197,6 +204,26 @@ public final class InvasionCommand {
         src.sendSuccess(
                 () -> Component.literal("Set powerLevel=" + value + " (difficulty~" + diff + ")"),
                 true);
+        return 1;
+    }
+
+    private static int setDamping(CommandContext<CommandSourceStack> ctx, String kind) {
+        CommandSourceStack src = ctx.getSource();
+        NexusBlockEntity nexus = resolveNexus(src);
+        if (nexus == null) {
+            src.sendFailure(Component.literal("No focus nexus. Look at / place a nexus nearby."));
+            return 0;
+        }
+        ItemStack stack;
+        if ("weak".equals(kind)) {
+            stack = new ItemStack(ItemRegistry.DAMPING_AGENT_WEAK.get());
+        } else if ("strong".equals(kind)) {
+            stack = new ItemStack(ItemRegistry.DAMPING_AGENT_STRONG.get());
+        } else {
+            stack = ItemStack.EMPTY;
+        }
+        nexus.debugSetCatalystSlot(stack);
+        src.sendSuccess(() -> Component.literal("Catalyst slot damping: " + kind), true);
         return 1;
     }
 
