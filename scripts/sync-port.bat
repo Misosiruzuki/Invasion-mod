@@ -4,12 +4,15 @@ chcp 65001 >nul
 
 rem ============================================================
 rem  Invasion-mod: sync local working tree with origin/port/1.20.1
-rem  Prefer SSH remote (git@github.com:...). HTTPS also works if
-rem  credential helper / PAT is already set up.
+rem  Prefer SSH remote (git@github.com:...).
 rem
-rem  Usage (from anywhere):
-rem    scripts\sync-port.bat
-rem    scripts\sync-port.bat pull
+rem  Default "pull" OVERWRITES local tracked files to match remote
+rem  (checkout -f + reset --hard). Untracked files that would block
+rem  checkout are removed with git clean for paths coming from remote.
+rem
+rem  Usage:
+rem    scripts\sync-port.bat           same as pull
+rem    scripts\sync-port.bat pull      force sync to origin (overwrite)
 rem    scripts\sync-port.bat push
 rem    scripts\sync-port.bat status
 rem    scripts\sync-port.bat use-ssh
@@ -19,7 +22,6 @@ set "BRANCH=port/1.20.1"
 set "MODE=%~1"
 if "%MODE%"=="" set "MODE=pull"
 
-rem Move to repo root (parent of scripts\)
 cd /d "%~dp0.."
 if not exist ".git" (
   echo [ERROR] Not a git repo: %CD%
@@ -69,12 +71,12 @@ echo.
 git status -sb
 echo.
 echo Local HEAD:
-git log -1 --oneline
+git log -1 --oneline HEAD 2>nul
 echo origin/%BRANCH%:
 git log -1 --oneline "origin/%BRANCH%" 2>nul
 echo.
 git rev-list --left-right --count "origin/%BRANCH%...HEAD" 2>nul
-echo ^(left=behind remote, right=ahead of remote^)
+echo ^(left=commits only on remote, right=commits only on local^)
 exit /b 0
 
 :pull
@@ -86,58 +88,48 @@ if errorlevel 1 (
   exit /b 1
 )
 
-git checkout "%BRANCH%" 2>nul
-if errorlevel 1 (
-  echo Creating local branch %BRANCH% tracking origin...
-  git checkout -B "%BRANCH%" "origin/%BRANCH%"
-  if errorlevel 1 (
-    echo [ERROR] checkout failed
-    exit /b 1
-  )
-) else (
-  git branch --set-upstream-to="origin/%BRANCH%" "%BRANCH%" 2>nul
-)
-
 echo.
-echo Checking for local uncommitted changes...
-git diff --quiet --exit-code
-set "DIRTY=%ERRORLEVEL%"
-git diff --cached --quiet --exit-code
-if errorlevel 1 set "DIRTY=1"
-if not "%DIRTY%"=="0" (
-  echo [WARN] Working tree has local changes.
-  echo        Stash or commit before pull if merge conflicts worry you.
-  git status -sb
-  echo.
-)
+echo WARNING: Local tracked files will be OVERWRITTEN to match origin/%BRANCH%.
+echo          Untracked files that conflict with the branch will be removed.
+echo.
 
-echo Fast-forward pull...
-git pull --ff-only origin "%BRANCH%"
+rem Force-create/switch local branch to origin tip (overwrites index + worktree)
+git checkout -f -B "%BRANCH%" "origin/%BRANCH%"
 if errorlevel 1 (
-  echo.
-  echo [WARN] Fast-forward failed. Local and remote diverged.
-  echo Options:
-  echo   1^) Review:  git log --oneline --left-right origin/%BRANCH%...HEAD
-  echo   2^) Rebase:  git pull --rebase origin %BRANCH%
-  echo   3^) Force local to remote ^(DESTROYS local commits^):
-  echo        git reset --hard origin/%BRANCH%
+  echo [ERROR] force checkout failed
   exit /b 1
 )
 
+git branch --set-upstream-to="origin/%BRANCH%" "%BRANCH%" 2>nul
+
+rem Hard reset so HEAD / index / worktree match remote exactly
+git reset --hard "origin/%BRANCH%"
+if errorlevel 1 (
+  echo [ERROR] git reset --hard failed
+  exit /b 1
+)
+
+rem Remove untracked files/dirs that are not ignored (keeps run/, .gradle/, etc. if gitignored)
+rem -d: directories, -f: force. Does NOT use -x so ignored build outputs stay.
+echo Cleaning untracked files that are not gitignored...
+git clean -fd
+if errorlevel 1 (
+  echo [WARN] git clean reported an issue; continuing
+)
+
 echo.
-echo Synced. HEAD:
+echo Synced (overwrite). HEAD:
 git log -1 --oneline
 git status -sb
 echo.
-echo Optional: open report folder after VoxPilot
-echo   dir run\voxpilot-reports
+echo Tip: VoxPilot reports under run\voxpilot-reports are kept if gitignored.
 exit /b 0
 
 :push
 echo Pushing local %BRANCH% to origin...
 git checkout "%BRANCH%" 2>nul
 if errorlevel 1 (
-  echo [ERROR] Local branch %BRANCH% missing
+  echo [ERROR] Local branch %BRANCH% missing. Run: scripts\sync-port.bat pull
   exit /b 1
 )
 git push -u origin "%BRANCH%"
