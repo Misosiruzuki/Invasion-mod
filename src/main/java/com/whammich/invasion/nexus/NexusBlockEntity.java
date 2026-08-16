@@ -703,6 +703,14 @@ public class NexusBlockEntity extends BaseContainerBlockEntity implements INexus
                 delay, nextAttackTime, worldPosition);
     }
 
+    /** Test helper (B-41): set continuous powerLevel for difficulty = 1 + power/4500. */
+    public void debugSetPowerLevel(int power) {
+        this.powerLevel = Math.max(0, power);
+        setChanged();
+        LogHelper.info("Debug powerLevel={} (diff~{}) @ {}", powerLevel,
+                1.0F + powerLevel / 4500.0F, worldPosition);
+    }
+
     public void emergencyStop() {
         mode = NexusMode.IDLE;
         activated = false;

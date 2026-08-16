@@ -47,6 +47,9 @@ public final class InvasionCommand {
                                                 .executes(ctx -> continuousSoon(ctx, IntegerArgumentType.getInteger(ctx, "ticks"))))
                                         .executes(ctx -> continuousSoon(ctx, 40)))
                                 .executes(InvasionCommand::beginContinuous))
+                        .then(Commands.literal("power")
+                                .then(Commands.argument("value", IntegerArgumentType.integer(0, 100000))
+                                        .executes(ctx -> setPower(ctx, IntegerArgumentType.getInteger(ctx, "value")))))
                         .executes(InvasionCommand::help)
         );
     }
@@ -57,6 +60,7 @@ public final class InvasionCommand {
         src.sendSuccess(() -> Component.literal("/invasion begin [wave]  — start invasion at wave"), false);
         src.sendSuccess(() -> Component.literal("/invasion continuous         — start continuous mode"), false);
         src.sendSuccess(() -> Component.literal("/invasion continuous soon [t] — schedule attack in t ticks (test)"), false);
+        src.sendSuccess(() -> Component.literal("/invasion power <n>          — set powerLevel (test, B-41)"), false);
         src.sendSuccess(() -> Component.literal("/invasion end            — emergency stop"), false);
         src.sendSuccess(() -> Component.literal("/invasion range <32-128> — set spawn radius"), false);
         src.sendSuccess(() -> Component.literal("/invasion status         — focus nexus active?"), false);
@@ -177,6 +181,21 @@ public final class InvasionCommand {
         NexusTracker.setActiveNexus(nexus);
         src.sendSuccess(
                 () -> Component.literal("Continuous mode; next attack in ~" + ticks + " ticks"),
+                true);
+        return 1;
+    }
+
+    private static int setPower(CommandContext<CommandSourceStack> ctx, int value) {
+        CommandSourceStack src = ctx.getSource();
+        NexusBlockEntity nexus = resolveNexus(src);
+        if (nexus == null) {
+            src.sendFailure(Component.literal("No focus nexus. Look at / place a nexus nearby."));
+            return 0;
+        }
+        nexus.debugSetPowerLevel(value);
+        float diff = 1.0F + value / 4500.0F;
+        src.sendSuccess(
+                () -> Component.literal("Set powerLevel=" + value + " (difficulty~" + diff + ")"),
                 true);
         return 1;
     }

@@ -46,11 +46,13 @@ run/voxpilot-reports/<timestamp>/
 | `p0-continuous-night-probe.json` | `/invasion continuous soon`; mode=3 path (generic) |
 | `p0-catalyst-give-smoke.json` | Give catalysts / flux / damping (smoke) |
 
-### Wiki parity B-40..B-42
+### Wiki parity B-40..B-42 (one scenario each)
 
 | File | Purpose |
 |------|---------|
-| `b40-continuous-generate-wave.json` | Full 1.7 continuous `generateWave` via `continuous soon` → mode=3 → end |
+| `b40-continuous-generate-wave.json` | B-40: full 1.7 group/finale `generateWave` → mode=3 → end |
+| `b41-continuous-difficulty-power.json` | B-41: `power 9000` then soon; difficulty 1+power/4500 |
+| `b42-continuous-wave-length.json` | B-42: default power continuous soon (lengthSeconds=240 path) |
 
 ## Pass criteria (`b40-continuous-generate-wave`)
 

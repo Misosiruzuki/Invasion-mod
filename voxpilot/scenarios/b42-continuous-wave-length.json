@@ -1,0 +1,80 @@
+{
+  "name": "invasion-b42-continuous-wave-length",
+  "description": "B-42 only: continuous soon at default power; lengthSeconds=240 path. Expect mode=3 attack start (density/length from 1.7 formula) then end.",
+  "launchServer": true,
+  "totalTicks": 140,
+  "totalFrames": 180,
+  "captureEvery": 30,
+  "warmupFrames": 40,
+  "closeClient": true,
+  "display": { "background": true },
+  "commands": [
+    "time set night",
+    "weather clear",
+    "gamemode creative Dev",
+    "tp Dev 0 -60 6",
+    "fill -16 -61 -16 16 -61 16 minecraft:stone",
+    "fill -16 -60 -16 16 -55 16 minecraft:air",
+    "setblock 0 -60 0 invasion:nexus",
+    "tp Dev 0 -59 6"
+  ],
+  "trackedBlocks": [
+    { "label": "nexus", "x": 0, "y": -60, "z": 0 }
+  ],
+  "actions": [
+    {
+      "fromTick": 0,
+      "toTick": 12,
+      "camera": "first",
+      "yaw": 180,
+      "pitch": 20,
+      "keys": { "use": true }
+    },
+    {
+      "fromTick": 13,
+      "toTick": 24,
+      "camera": "third_back",
+      "commands": [
+        "invasion continuous soon 30"
+      ]
+    },
+    {
+      "fromTick": 25,
+      "toTick": 34,
+      "camera": "third_back",
+      "commands": [
+        "invasion nexusstatus"
+      ]
+    },
+    {
+      "fromTick": 35,
+      "toTick": 89,
+      "camera": "third_back",
+      "deltaYaw": 0.5
+    },
+    {
+      "fromTick": 90,
+      "toTick": 99,
+      "camera": "third_back",
+      "commands": [
+        "invasion nexusstatus"
+      ]
+    },
+    {
+      "fromTick": 100,
+      "toTick": 114,
+      "camera": "third_back",
+      "commands": [
+        "invasion end"
+      ]
+    },
+    {
+      "fromTick": 115,
+      "toTick": 139,
+      "camera": "third_back",
+      "commands": [
+        "invasion nexusstatus"
+      ]
+    }
+  ]
+}
