@@ -41,7 +41,12 @@ public final class InvasionCommand {
                                         .executes(ctx -> range(ctx, IntegerArgumentType.getInteger(ctx, "radius")))))
                         .then(Commands.literal("status").executes(InvasionCommand::status))
                         .then(Commands.literal("nexusstatus").executes(InvasionCommand::nexusStatus))
-                        .then(Commands.literal("continuous").executes(InvasionCommand::beginContinuous))
+                        .then(Commands.literal("continuous")
+                                .then(Commands.literal("soon")
+                                        .then(Commands.argument("ticks", IntegerArgumentType.integer(1, 1200))
+                                                .executes(ctx -> continuousSoon(ctx, IntegerArgumentType.getInteger(ctx, "ticks"))))
+                                        .executes(ctx -> continuousSoon(ctx, 40)))
+                                .executes(InvasionCommand::beginContinuous))
                         .executes(InvasionCommand::help)
         );
     }
@@ -50,7 +55,8 @@ public final class InvasionCommand {
         CommandSourceStack src = ctx.getSource();
         src.sendSuccess(() -> Component.literal("--- Invasion commands ---"), false);
         src.sendSuccess(() -> Component.literal("/invasion begin [wave]  — start invasion at wave"), false);
-        src.sendSuccess(() -> Component.literal("/invasion continuous    — start continuous mode"), false);
+        src.sendSuccess(() -> Component.literal("/invasion continuous         — start continuous mode"), false);
+        src.sendSuccess(() -> Component.literal("/invasion continuous soon [t] — schedule attack in t ticks (test)"), false);
         src.sendSuccess(() -> Component.literal("/invasion end            — emergency stop"), false);
         src.sendSuccess(() -> Component.literal("/invasion range <32-128> — set spawn radius"), false);
         src.sendSuccess(() -> Component.literal("/invasion status         — focus nexus active?"), false);
@@ -156,6 +162,22 @@ public final class InvasionCommand {
         nexus.debugStartContinuous();
         NexusTracker.setActiveNexus(nexus);
         src.sendSuccess(() -> Component.literal("Started continuous mode (next attack scheduled)"), true);
+        return 1;
+    }
+
+    /** VoxPilot / debug: continuous mode with next attack in a few ticks. */
+    private static int continuousSoon(CommandContext<CommandSourceStack> ctx, int ticks) {
+        CommandSourceStack src = ctx.getSource();
+        NexusBlockEntity nexus = resolveNexus(src);
+        if (nexus == null) {
+            src.sendFailure(Component.literal("No focus nexus. Look at / place a nexus nearby."));
+            return 0;
+        }
+        nexus.debugStartContinuousAttackSoon(ticks);
+        NexusTracker.setActiveNexus(nexus);
+        src.sendSuccess(
+                () -> Component.literal("Continuous mode; next attack in ~" + ticks + " ticks"),
+                true);
         return 1;
     }
 

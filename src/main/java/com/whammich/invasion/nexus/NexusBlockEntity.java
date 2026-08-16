@@ -683,6 +683,26 @@ public class NexusBlockEntity extends BaseContainerBlockEntity implements INexus
         LogHelper.info("Debug start continuous @ {}", worldPosition);
     }
 
+    /**
+     * Test helper: ensure continuous mode and schedule the next attack after {@code delayTicks}
+     * (game time). Used by VoxPilot so mode=3 can be reached without waiting minDays.
+     */
+    public void debugStartContinuousAttackSoon(int delayTicks) {
+        if (mode != NexusMode.CONTINUOUS && mode != NexusMode.CONTINUOUS_ATTACK) {
+            beginContinuous();
+        }
+        if (level == null || level.isClientSide) {
+            return;
+        }
+        int delay = Math.max(1, delayTicks);
+        nextAttackTime = level.getGameTime() + delay;
+        nightLoomWarned = false;
+        lastWorldTime = level.getGameTime();
+        setChanged();
+        LogHelper.info("Debug continuous attack soon in {} ticks (nextAttack={}) @ {}",
+                delay, nextAttackTime, worldPosition);
+    }
+
     public void emergencyStop() {
         mode = NexusMode.IDLE;
         activated = false;
