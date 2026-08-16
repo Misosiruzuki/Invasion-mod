@@ -1,9 +1,10 @@
 {
   "name": "invasion-p0-invasion-begin",
-  "description": "P0 regression: place nexus nearby, /invasion begin 1, then /invasion end.",
+  "description": "P0 regression: begin wave 1, brief wait, then end. Timed for short VoxPilot sessions (~100 game ticks).",
   "launchServer": true,
-  "totalTicks": 600,
-  "captureEvery": 50,
+  "totalTicks": 100,
+  "totalFrames": 150,
+  "captureEvery": 25,
   "warmupFrames": 40,
   "closeClient": true,
   "display": { "background": true },
@@ -12,8 +13,8 @@
     "weather clear",
     "gamemode creative Dev",
     "tp Dev 0 -60 4",
-    "fill -20 -61 -20 20 -61 20 minecraft:stone",
-    "fill -20 -60 -20 20 -55 20 minecraft:air",
+    "fill -12 -61 -12 12 -61 12 minecraft:stone",
+    "fill -12 -60 -12 12 -55 12 minecraft:air",
     "setblock 0 -60 0 invasion:nexus",
     "tp Dev 0 -59 4"
   ],
@@ -23,40 +24,47 @@
   "actions": [
     {
       "fromTick": 0,
-      "toTick": 19,
+      "toTick": 12,
       "camera": "first",
       "yaw": 180,
       "pitch": 20,
       "keys": { "use": true }
     },
     {
-      "fromTick": 20,
-      "toTick": 39,
+      "fromTick": 13,
+      "toTick": 24,
       "camera": "third_back",
       "commands": [
         "invasion begin 1"
       ]
     },
     {
-      "fromTick": 40,
-      "toTick": 99,
+      "fromTick": 25,
+      "toTick": 34,
       "camera": "third_back",
       "commands": [
         "invasion nexusstatus"
       ]
     },
     {
-      "fromTick": 100,
-      "toTick": 549,
+      "fromTick": 35,
+      "toTick": 64,
       "camera": "third_back",
-      "deltaYaw": 0.8
+      "deltaYaw": 1.0
     },
     {
-      "fromTick": 550,
-      "toTick": 599,
+      "fromTick": 65,
+      "toTick": 84,
       "camera": "third_back",
       "commands": [
-        "invasion end",
+        "invasion end"
+      ]
+    },
+    {
+      "fromTick": 85,
+      "toTick": 99,
+      "camera": "third_back",
+      "commands": [
         "invasion nexusstatus"
       ]
     }
