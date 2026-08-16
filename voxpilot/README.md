@@ -6,6 +6,8 @@ JSON scenarios for [VoxPilot](https://github.com/Misosiruzuki/VoxPilot) against 
 
 **Every feature implementation must ship with a dedicated scenario** under `voxpilot/scenarios/` (plus unit tests when logic is pure). Do not land code-only changes without a scenario named for the checklist item or feature.
 
+**Numbering:** One scenario per checklist number (e.g. `b40-…`, `b41-…`, `b42-…`). Do not bundle multiple checklist IDs into a single scenario file.
+
 ## Prerequisites
 
 - Java 17
