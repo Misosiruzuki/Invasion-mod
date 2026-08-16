@@ -27,6 +27,12 @@ public class WaveEntry {
         this(timeBegin, timeEnd, amount, granularity, mobPool, -180, 180, 1);
     }
 
+    /** 1.7-style: angleRange is applied as ±angleRange. */
+    public WaveEntry(int timeBegin, int timeEnd, int amount, int granularity,
+                     ISelect<IEntityIMPattern> mobPool, int angleRange, int minPointsInRange) {
+        this(timeBegin, timeEnd, amount, granularity, mobPool, -angleRange, angleRange, minPointsInRange);
+    }
+
     public WaveEntry(int timeBegin, int timeEnd, int amount, int granularity,
                      ISelect<IEntityIMPattern> mobPool, int minAngle, int maxAngle, int minPointsInRange) {
         this.timeBegin = timeBegin;
