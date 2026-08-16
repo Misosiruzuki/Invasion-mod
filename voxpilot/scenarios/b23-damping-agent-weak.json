@@ -2,12 +2,14 @@
   "name": "invasion-b23-damping-agent-weak",
   "description": "B-23: weak damping in catalyst slot stops power rise. continuous + power 5 + damping weak; after wait power should stay ~5 (not climb).",
   "launchServer": true,
-  "totalTicks": 160,
-  "totalFrames": 200,
+  "totalTicks": 180,
+  "totalFrames": 220,
   "captureEvery": 40,
   "warmupFrames": 40,
   "closeClient": true,
-  "display": { "background": true },
+  "display": {
+    "background": true
+  },
   "commands": [
     "time set day",
     "weather clear",
@@ -19,7 +21,12 @@
     "tp Dev 0 -59 6"
   ],
   "trackedBlocks": [
-    { "label": "nexus", "x": 0, "y": -60, "z": 0 }
+    {
+      "label": "nexus",
+      "x": 0,
+      "y": -60,
+      "z": 0
+    }
   ],
   "actions": [
     {
@@ -28,7 +35,9 @@
       "camera": "first",
       "yaw": 180,
       "pitch": 20,
-      "keys": { "use": true }
+      "keys": {
+        "use": true
+      }
     },
     {
       "fromTick": 13,
@@ -43,21 +52,35 @@
     },
     {
       "fromTick": 29,
-      "toTick": 129,
+      "toTick": 80,
       "camera": "third_back",
-      "deltaYaw": 0.4
+      "deltaYaw": 0.3
     },
     {
-      "fromTick": 130,
-      "toTick": 144,
+      "fromTick": 81,
+      "toTick": 90,
       "camera": "third_back",
       "commands": [
         "invasion nexusstatus"
       ]
     },
     {
-      "fromTick": 145,
-      "toTick": 159,
+      "fromTick": 91,
+      "toTick": 150,
+      "camera": "third_back",
+      "deltaYaw": 0.3
+    },
+    {
+      "fromTick": 151,
+      "toTick": 165,
+      "camera": "third_back",
+      "commands": [
+        "invasion nexusstatus"
+      ]
+    },
+    {
+      "fromTick": 166,
+      "toTick": 179,
       "camera": "third_back",
       "commands": [
         "invasion end"
