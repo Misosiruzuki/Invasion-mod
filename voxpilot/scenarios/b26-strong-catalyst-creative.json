@@ -1,0 +1,37 @@
+{
+  "name": "invasion-b26-strong-catalyst-creative",
+  "description": "B-26: Strong Catalyst is creatively obtainable (give). No survival recipe expected.",
+  "launchServer": true,
+  "totalTicks": 80,
+  "totalFrames": 100,
+  "captureEvery": 20,
+  "warmupFrames": 40,
+  "closeClient": true,
+  "display": { "background": true },
+  "commands": [
+    "time set day",
+    "weather clear",
+    "gamemode creative Dev",
+    "tp Dev 0 -60 4",
+    "fill -8 -61 -8 8 -61 8 minecraft:stone",
+    "fill -8 -60 -8 8 -55 8 minecraft:air",
+    "give Dev invasion:catalyst_strong 4",
+    "tp Dev 0 -59 4"
+  ],
+  "actions": [
+    {
+      "fromTick": 0,
+      "toTick": 40,
+      "camera": "third_back",
+      "deltaYaw": 1.0
+    },
+    {
+      "fromTick": 41,
+      "toTick": 79,
+      "camera": "third_back",
+      "commands": [
+        "give Dev invasion:catalyst_strong 1"
+      ]
+    }
+  ]
+}

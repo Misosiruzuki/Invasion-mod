@@ -359,7 +359,7 @@ public class NexusBlockEntity extends BaseContainerBlockEntity implements INexus
             if (stable) {
                 beginContinuous();
             } else {
-                beginInvasion(strong ? 10 : 1);
+                beginInvasion(CatalystLogic.invasionStartWave(strong));
             }
         }
         setChanged();
@@ -503,7 +503,7 @@ public class NexusBlockEntity extends BaseContainerBlockEntity implements INexus
         if (stable) {
             beginContinuous();
         } else {
-            beginInvasion(strong ? 10 : 1);
+            beginInvasion(CatalystLogic.invasionStartWave(strong));
         }
         if (level != null && !level.isClientSide) {
             player.displayClientMessage(Component.translatable("block.invasion.nexus.activating"), true);
@@ -758,6 +758,14 @@ public class NexusBlockEntity extends BaseContainerBlockEntity implements INexus
         setChanged();
         LogHelper.info("Debug powerLevel={} (diff~{}) @ {}", powerLevel,
                 1.0F + powerLevel / 4500.0F, worldPosition);
+    }
+
+    /** P2 / VoxPilot: consume Strong Catalyst path and start invasion at wave 10. */
+    public void debugActivateStrongCatalyst() {
+        items.set(SLOT_INPUT, new ItemStack(ItemRegistry.CATALYST_STRONG.get()));
+        beginInvasion(CatalystLogic.invasionStartWave(true));
+        items.set(SLOT_INPUT, ItemStack.EMPTY);
+        LogHelper.info("Debug strong catalyst activation at wave {} @ {}", currentWave, worldPosition);
     }
 
     public void emergencyStop() {

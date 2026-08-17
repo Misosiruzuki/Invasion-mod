@@ -64,6 +64,13 @@ run/voxpilot-reports/<timestamp>/
 | `b24-damping-agent-strong.json` | B-24: strong damping drains power |
 | `b25-damping-power-zero-shutdown.json` | B-25: drain past 0 → idle shutdown |
 
+### Wiki parity P2 / B-26..B-27 Strong Catalyst
+
+| File | Purpose |
+|------|---------|
+| `b26-strong-catalyst-creative.json` | B-26: creative give of Strong Catalyst |
+| `b27-strong-catalyst-wave10.json` | B-27: activate strong → wave=10 invasion |
+
 ## Pass criteria (`b40-continuous-generate-wave`)
 
 1. `Continuous mode; next attack in ~30 ticks`

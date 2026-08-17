@@ -56,6 +56,8 @@ public final class InvasionCommand {
                                 .then(Commands.literal("weak").executes(ctx -> setDamping(ctx, "weak")))
                                 .then(Commands.literal("strong").executes(ctx -> setDamping(ctx, "strong")))
                                 .then(Commands.literal("clear").executes(ctx -> setDamping(ctx, "clear"))))
+                        .then(Commands.literal("activate")
+                                .then(Commands.literal("strong").executes(InvasionCommand::activateStrong)))
                         .executes(InvasionCommand::help)
         );
     }
@@ -68,6 +70,7 @@ public final class InvasionCommand {
         src.sendSuccess(() -> Component.literal("/invasion continuous soon [t] — schedule attack in t ticks (test)"), false);
         src.sendSuccess(() -> Component.literal("/invasion power <n>          — set powerLevel (test)"), false);
         src.sendSuccess(() -> Component.literal("/invasion damping weak|strong|clear — catalyst slot (test, P1)"), false);
+        src.sendSuccess(() -> Component.literal("/invasion activate strong — Strong Catalyst → wave 10 (test, P2)"), false);
         src.sendSuccess(() -> Component.literal("/invasion end            — emergency stop"), false);
         src.sendSuccess(() -> Component.literal("/invasion range <32-128> — set spawn radius"), false);
         src.sendSuccess(() -> Component.literal("/invasion status         — focus nexus active?"), false);
@@ -224,6 +227,19 @@ public final class InvasionCommand {
         }
         nexus.debugSetCatalystSlot(stack);
         src.sendSuccess(() -> Component.literal("Catalyst slot damping: " + kind), true);
+        return 1;
+    }
+
+    private static int activateStrong(CommandContext<CommandSourceStack> ctx) {
+        CommandSourceStack src = ctx.getSource();
+        NexusBlockEntity nexus = resolveNexus(src);
+        if (nexus == null) {
+            src.sendFailure(Component.literal("No focus nexus. Look at / place a nexus nearby."));
+            return 0;
+        }
+        nexus.debugActivateStrongCatalyst();
+        NexusTracker.setActiveNexus(nexus);
+        src.sendSuccess(() -> Component.literal("Strong Catalyst activation (expect wave 10)"), true);
         return 1;
     }
 
