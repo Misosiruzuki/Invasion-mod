@@ -1,0 +1,29 @@
+{
+  "name": "invasion-d45-flux-conversion-shapes",
+  "description": "D-45: all four Flux conversion recipes load in-game (items giveable). Shape fidelity covered by unit tests matching 1.7 patterns.",
+  "launchServer": true,
+  "totalTicks": 80,
+  "totalFrames": 100,
+  "captureEvery": 20,
+  "warmupFrames": 40,
+  "closeClient": true,
+  "display": { "background": true },
+  "commands": [
+    "time set day",
+    "gamemode creative Dev",
+    "tp Dev 0 -60 0",
+    "give Dev invasion:rift_flux 32",
+    "give Dev minecraft:diamond 1",
+    "give Dev minecraft:iron_ingot 4",
+    "give Dev minecraft:redstone 24",
+    "give Dev minecraft:lapis_lazuli 12"
+  ],
+  "actions": [
+    {
+      "fromTick": 0,
+      "toTick": 79,
+      "camera": "third_back",
+      "deltaYaw": 0.4
+    }
+  ]
+}

@@ -1,0 +1,26 @@
+{
+  "name": "invasion-d41-flux-to-diamond",
+  "description": "D-41: Flux→diamond recipe present. Give flux; success = no unknown item (craft verified by unit test + recipe JSON).",
+  "launchServer": true,
+  "totalTicks": 60,
+  "totalFrames": 80,
+  "captureEvery": 20,
+  "warmupFrames": 40,
+  "closeClient": true,
+  "display": { "background": true },
+  "commands": [
+    "time set day",
+    "gamemode creative Dev",
+    "tp Dev 0 -60 0",
+    "give Dev invasion:rift_flux 16",
+    "give Dev minecraft:crafting_table 1"
+  ],
+  "actions": [
+    {
+      "fromTick": 0,
+      "toTick": 59,
+      "camera": "third_back",
+      "deltaYaw": 0.5
+    }
+  ]
+}

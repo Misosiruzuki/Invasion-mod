@@ -71,6 +71,16 @@ run/voxpilot-reports/<timestamp>/
 | `b26-strong-catalyst-creative.json` | B-26: creative give of Strong Catalyst |
 | `b27-strong-catalyst-wave10.json` | B-27: activate strong → wave=10 invasion |
 
+### Wiki parity P3 / D-41..D-45 Flux conversion
+
+| File | Purpose |
+|------|---------|
+| `d41-flux-to-diamond.json` | D-41 smoke: give flux (+ crafting table) |
+| `d42-flux-to-iron.json` | D-42 smoke |
+| `d43-flux-to-redstone.json` | D-43 smoke |
+| `d44-flux-to-lapis.json` | D-44 smoke |
+| `d45-flux-conversion-shapes.json` | D-45: all conversion products giveable |
+
 ## Pass criteria (`b40-continuous-generate-wave`)
 
 1. `Continuous mode; next attack in ~30 ticks`
