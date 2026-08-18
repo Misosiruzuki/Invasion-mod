@@ -1,9 +1,9 @@
 {
   "name": "invasion-b24-damping-agent-strong",
-  "description": "P1/B-24: GUI continuous via stable catalyst; GUI put strong damping; power drains.",
+  "description": "P1/B-24: GUI stable catalyst continuous; GUI strong damping; power must drain substantially.",
   "launchServer": true,
-  "totalTicks": 620,
-  "totalFrames": 2580,
+  "totalTicks": 919,
+  "totalFrames": 3776,
   "captureEvery": 15,
   "warmupFrames": 40,
   "closeClient": true,
@@ -33,48 +33,56 @@
   "actions": [
     {
       "fromTick": 0,
-      "toTick": 15,
+      "toTick": 20,
       "camera": "first",
       "yaw": 180,
-      "pitch": 25
+      "pitch": 35
     },
     {
-      "fromTick": 16,
-      "toTick": 40,
+      "fromTick": 21,
+      "toTick": 45,
       "camera": "first",
       "yaw": 180,
-      "pitch": 25,
+      "pitch": 35,
       "keys": {
         "use": true
       }
     },
     {
-      "fromTick": 16,
-      "toTick": 28,
+      "fromTick": 46,
+      "toTick": 60,
       "camera": "first",
+      "yaw": 180,
+      "pitch": 35,
+      "hotbar": 0,
       "containerClick": {
         "slot": 29,
         "button": 0,
         "type": "quick_move"
-      },
+      }
+    },
+    {
+      "fromTick": 61,
+      "toTick": 80,
+      "camera": "first",
       "yaw": 180,
       "pitch": 35
     },
     {
-      "fromTick": 29,
-      "toTick": 45,
+      "fromTick": 81,
+      "toTick": 95,
       "camera": "first",
       "closeScreen": true
     },
     {
-      "fromTick": 46,
-      "toTick": 430,
+      "fromTick": 96,
+      "toTick": 520,
       "camera": "third_back",
-      "deltaYaw": 0.08
+      "deltaYaw": 0.05
     },
     {
-      "fromTick": 431,
-      "toTick": 450,
+      "fromTick": 521,
+      "toTick": 540,
       "camera": "third_back",
       "commands": [
         "invasion power 80",
@@ -82,55 +90,65 @@
       ]
     },
     {
-      "fromTick": 451,
-      "toTick": 471,
+      "fromTick": 541,
+      "toTick": 560,
       "camera": "first",
       "yaw": 180,
-      "pitch": 25,
+      "pitch": 35
+    },
+    {
+      "fromTick": 561,
+      "toTick": 585,
+      "camera": "first",
+      "yaw": 180,
+      "pitch": 35,
       "keys": {
         "use": true
       }
     },
     {
-      "fromTick": 466,
-      "toTick": 485,
+      "fromTick": 586,
+      "toTick": 610,
       "camera": "first",
+      "yaw": 180,
+      "pitch": 35,
+      "hotbar": 1,
       "containerClick": {
         "slot": 30,
         "button": 0,
         "type": "quick_move"
-      },
+      }
+    },
+    {
+      "fromTick": 611,
+      "toTick": 630,
+      "camera": "first",
       "yaw": 180,
       "pitch": 35
     },
     {
-      "fromTick": 486,
-      "toTick": 510,
-      "camera": "first"
-    },
-    {
-      "fromTick": 511,
-      "toTick": 525,
+      "fromTick": 631,
+      "toTick": 645,
       "camera": "first",
       "closeScreen": true
     },
     {
-      "fromTick": 526,
-      "toTick": 580,
+      "fromTick": 646,
+      "toTick": 846,
       "camera": "third_back",
-      "deltaYaw": 0.2
+      "deltaYaw": 0.08
     },
     {
-      "fromTick": 581,
-      "toTick": 600,
+      "fromTick": 847,
+      "toTick": 877,
       "camera": "third_back",
       "commands": [
         "invasion nexusstatus"
       ]
     },
     {
-      "fromTick": 601,
-      "toTick": 619,
+      "fromTick": 878,
+      "toTick": 918,
       "camera": "third_back",
       "commands": [
         "invasion end"
