@@ -32,7 +32,14 @@
   "actions": [
     {
       "fromTick": 0,
-      "toTick": 20,
+      "toTick": 15,
+      "camera": "first",
+      "yaw": 180,
+      "pitch": 25
+    },
+    {
+      "fromTick": 16,
+      "toTick": 40,
       "camera": "first",
       "yaw": 180,
       "pitch": 25,
