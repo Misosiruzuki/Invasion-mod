@@ -1,65 +1,29 @@
 {
   "name": "invasion-b27-strong-catalyst-wave10",
-  "description": "B-27: Strong Catalyst activation starts invasion at wave 10. /invasion activate strong then nexusstatus.",
+  "description": "P2/B-27 play-faithful: Strong Catalyst in slot, wait ~400 ticks natural activation to wave 10.",
   "launchServer": true,
-  "totalTicks": 100,
-  "totalFrames": 140,
-  "captureEvery": 25,
+  "totalTicks": 520,
+  "totalFrames": 600,
+  "captureEvery": 40,
   "warmupFrames": 40,
   "closeClient": true,
   "display": { "background": true },
   "commands": [
-    "time set day",
-    "weather clear",
-    "gamemode creative Dev",
-    "tp Dev 0 -60 4",
+    "time set day", "weather clear", "gamemode creative Dev",
+    "tp Dev 0 -60 6",
     "fill -12 -61 -12 12 -61 12 minecraft:stone",
     "fill -12 -60 -12 12 -55 12 minecraft:air",
     "setblock 0 -60 0 invasion:nexus",
-    "tp Dev 0 -59 4"
+    "give Dev invasion:catalyst_strong 1",
+    "tp Dev 0 -59 6"
   ],
-  "trackedBlocks": [
-    { "label": "nexus", "x": 0, "y": -60, "z": 0 }
-  ],
+  "trackedBlocks": [ { "label": "nexus", "x": 0, "y": -60, "z": 0 } ],
   "actions": [
-    {
-      "fromTick": 0,
-      "toTick": 12,
-      "camera": "first",
-      "yaw": 180,
-      "pitch": 20,
-      "keys": { "use": true }
-    },
-    {
-      "fromTick": 13,
-      "toTick": 28,
-      "camera": "third_back",
-      "commands": [
-        "invasion activate strong",
-        "invasion nexusstatus"
-      ]
-    },
-    {
-      "fromTick": 29,
-      "toTick": 69,
-      "camera": "third_back",
-      "deltaYaw": 0.5
-    },
-    {
-      "fromTick": 70,
-      "toTick": 84,
-      "camera": "third_back",
-      "commands": [
-        "invasion nexusstatus"
-      ]
-    },
-    {
-      "fromTick": 85,
-      "toTick": 99,
-      "camera": "third_back",
-      "commands": [
-        "invasion end"
-      ]
-    }
+    { "fromTick": 0, "toTick": 15, "camera": "first", "yaw": 180, "pitch": 25, "keys": { "use": true } },
+    { "fromTick": 16, "toTick": 30, "camera": "third_back", "commands": ["invasion catalyst strong", "invasion nexusstatus"] },
+    { "fromTick": 31, "toTick": 450, "camera": "third_back", "deltaYaw": 0.15 },
+    { "fromTick": 451, "toTick": 470, "camera": "third_back", "commands": ["invasion nexusstatus"] },
+    { "fromTick": 471, "toTick": 500, "camera": "third_back", "commands": ["invasion end"] },
+    { "fromTick": 501, "toTick": 519, "camera": "third_back", "commands": ["invasion nexusstatus"] }
   ]
 }

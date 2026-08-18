@@ -1,26 +1,24 @@
 {
   "name": "invasion-d41-flux-to-diamond",
-  "description": "D-41: Flux→diamond recipe present. Give flux; success = no unknown item (craft verified by unit test + recipe JSON).",
+  "description": "P3/D-41 play-faithful: place crafting table, give flux, RecipeManager craft diamond.",
   "launchServer": true,
-  "totalTicks": 60,
-  "totalFrames": 80,
+  "totalTicks": 100,
+  "totalFrames": 140,
   "captureEvery": 20,
   "warmupFrames": 40,
   "closeClient": true,
   "display": { "background": true },
   "commands": [
-    "time set day",
-    "gamemode creative Dev",
-    "tp Dev 0 -60 0",
+    "time set day", "weather clear", "gamemode creative Dev",
+    "tp Dev 0 -60 4",
+    "fill -6 -61 -6 6 -61 6 minecraft:stone",
+    "setblock 0 -60 0 minecraft:crafting_table",
     "give Dev invasion:rift_flux 16",
-    "give Dev minecraft:crafting_table 1"
+    "tp Dev 0 -59 4"
   ],
   "actions": [
-    {
-      "fromTick": 0,
-      "toTick": 59,
-      "camera": "third_back",
-      "deltaYaw": 0.5
-    }
+    { "fromTick": 0, "toTick": 20, "camera": "first", "yaw": 180, "pitch": 30, "keys": { "use": true } },
+    { "fromTick": 21, "toTick": 50, "camera": "third_back", "commands": ["invasion craft diamond"] },
+    { "fromTick": 51, "toTick": 99, "camera": "third_back", "deltaYaw": 0.5 }
   ]
 }

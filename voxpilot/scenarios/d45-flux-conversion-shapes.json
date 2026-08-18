@@ -1,29 +1,25 @@
 {
   "name": "invasion-d45-flux-conversion-shapes",
-  "description": "D-45: all four Flux conversion recipes load in-game (items giveable). Shape fidelity covered by unit tests matching 1.7 patterns.",
+  "description": "P3/D-45 play-faithful: craft all four flux conversions via RecipeManager.",
   "launchServer": true,
-  "totalTicks": 80,
-  "totalFrames": 100,
+  "totalTicks": 180,
+  "totalFrames": 220,
   "captureEvery": 20,
   "warmupFrames": 40,
   "closeClient": true,
   "display": { "background": true },
   "commands": [
-    "time set day",
-    "gamemode creative Dev",
-    "tp Dev 0 -60 0",
-    "give Dev invasion:rift_flux 32",
-    "give Dev minecraft:diamond 1",
-    "give Dev minecraft:iron_ingot 4",
-    "give Dev minecraft:redstone 24",
-    "give Dev minecraft:lapis_lazuli 12"
+    "time set day", "gamemode creative Dev", "tp Dev 0 -60 4",
+    "fill -6 -61 -6 6 -61 6 minecraft:stone",
+    "setblock 0 -60 0 minecraft:crafting_table",
+    "give Dev invasion:rift_flux 32", "tp Dev 0 -59 4"
   ],
   "actions": [
-    {
-      "fromTick": 0,
-      "toTick": 79,
-      "camera": "third_back",
-      "deltaYaw": 0.4
-    }
+    { "fromTick": 0, "toTick": 20, "camera": "first", "yaw": 180, "pitch": 30, "keys": { "use": true } },
+    { "fromTick": 21, "toTick": 45, "camera": "third_back", "commands": ["invasion craft diamond"] },
+    { "fromTick": 46, "toTick": 70, "camera": "third_back", "commands": ["invasion craft iron"] },
+    { "fromTick": 71, "toTick": 95, "camera": "third_back", "commands": ["invasion craft redstone"] },
+    { "fromTick": 96, "toTick": 120, "camera": "third_back", "commands": ["invasion craft lapis"] },
+    { "fromTick": 121, "toTick": 179, "camera": "third_back", "deltaYaw": 0.4 }
   ]
 }

@@ -1,15 +1,13 @@
 {
   "name": "invasion-b23-damping-agent-weak",
-  "description": "B-23: weak damping in catalyst slot stops power rise. continuous + power 5 + damping weak; after wait power should stay ~5 (not climb).",
+  "description": "P1/B-23 play-faithful: continuous + power 5 + weak damping; wait long; power must stay ~5.",
   "launchServer": true,
-  "totalTicks": 180,
-  "totalFrames": 220,
-  "captureEvery": 40,
+  "totalTicks": 500,
+  "totalFrames": 600,
+  "captureEvery": 50,
   "warmupFrames": 40,
   "closeClient": true,
-  "display": {
-    "background": true
-  },
+  "display": { "background": true },
   "commands": [
     "time set day",
     "weather clear",
@@ -21,70 +19,15 @@
     "tp Dev 0 -59 6"
   ],
   "trackedBlocks": [
-    {
-      "label": "nexus",
-      "x": 0,
-      "y": -60,
-      "z": 0
-    }
+    { "label": "nexus", "x": 0, "y": -60, "z": 0 }
   ],
   "actions": [
-    {
-      "fromTick": 0,
-      "toTick": 12,
-      "camera": "first",
-      "yaw": 180,
-      "pitch": 20,
-      "keys": {
-        "use": true
-      }
-    },
-    {
-      "fromTick": 13,
-      "toTick": 28,
-      "camera": "third_back",
-      "commands": [
-        "invasion continuous",
-        "invasion power 5",
-        "invasion damping weak",
-        "invasion nexusstatus"
-      ]
-    },
-    {
-      "fromTick": 29,
-      "toTick": 80,
-      "camera": "third_back",
-      "deltaYaw": 0.3
-    },
-    {
-      "fromTick": 81,
-      "toTick": 90,
-      "camera": "third_back",
-      "commands": [
-        "invasion nexusstatus"
-      ]
-    },
-    {
-      "fromTick": 91,
-      "toTick": 150,
-      "camera": "third_back",
-      "deltaYaw": 0.3
-    },
-    {
-      "fromTick": 151,
-      "toTick": 165,
-      "camera": "third_back",
-      "commands": [
-        "invasion nexusstatus"
-      ]
-    },
-    {
-      "fromTick": 166,
-      "toTick": 179,
-      "camera": "third_back",
-      "commands": [
-        "invasion end"
-      ]
-    }
+    { "fromTick": 0, "toTick": 15, "camera": "first", "yaw": 180, "pitch": 25, "keys": { "use": true } },
+    { "fromTick": 16, "toTick": 35, "camera": "third_back", "commands": ["invasion continuous", "invasion power 5", "invasion damping weak", "invasion nexusstatus"] },
+    { "fromTick": 36, "toTick": 200, "camera": "third_back", "deltaYaw": 0.25 },
+    { "fromTick": 201, "toTick": 220, "camera": "third_back", "commands": ["invasion nexusstatus"] },
+    { "fromTick": 221, "toTick": 420, "camera": "third_back", "deltaYaw": 0.2 },
+    { "fromTick": 421, "toTick": 450, "camera": "third_back", "commands": ["invasion nexusstatus"] },
+    { "fromTick": 451, "toTick": 499, "camera": "third_back", "commands": ["invasion end"] }
   ]
 }

@@ -11,8 +11,10 @@ import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.phys.BlockHitResult;
@@ -58,6 +60,16 @@ public final class InvasionCommand {
                                 .then(Commands.literal("clear").executes(ctx -> setDamping(ctx, "clear"))))
                         .then(Commands.literal("activate")
                                 .then(Commands.literal("strong").executes(InvasionCommand::activateStrong)))
+                        .then(Commands.literal("catalyst")
+                                .then(Commands.literal("strong").executes(ctx -> setCatalyst(ctx, "strong")))
+                                .then(Commands.literal("unstable").executes(ctx -> setCatalyst(ctx, "unstable")))
+                                .then(Commands.literal("stable").executes(ctx -> setCatalyst(ctx, "stable")))
+                                .then(Commands.literal("clear").executes(ctx -> setCatalyst(ctx, "clear"))))
+                        .then(Commands.literal("craft")
+                                .then(Commands.literal("diamond").executes(ctx -> craftFlux(ctx, "flux_to_diamond")))
+                                .then(Commands.literal("iron").executes(ctx -> craftFlux(ctx, "flux_to_iron_ingot")))
+                                .then(Commands.literal("redstone").executes(ctx -> craftFlux(ctx, "flux_to_redstone")))
+                                .then(Commands.literal("lapis").executes(ctx -> craftFlux(ctx, "flux_to_lapis"))))
                         .executes(InvasionCommand::help)
         );
     }
@@ -70,7 +82,9 @@ public final class InvasionCommand {
         src.sendSuccess(() -> Component.literal("/invasion continuous soon [t] — schedule attack in t ticks (test)"), false);
         src.sendSuccess(() -> Component.literal("/invasion power <n>          — set powerLevel (test)"), false);
         src.sendSuccess(() -> Component.literal("/invasion damping weak|strong|clear — catalyst slot (test, P1)"), false);
-        src.sendSuccess(() -> Component.literal("/invasion activate strong — Strong Catalyst → wave 10 (test, P2)"), false);
+        src.sendSuccess(() -> Component.literal("/invasion activate strong — Strong Catalyst skip-timer (test)"), false);
+        src.sendSuccess(() -> Component.literal("/invasion catalyst strong|unstable|stable|clear — fill nexus slot"), false);
+        src.sendSuccess(() -> Component.literal("/invasion craft diamond|iron|redstone|lapis — RecipeManager craft"), false);
         src.sendSuccess(() -> Component.literal("/invasion end            — emergency stop"), false);
         src.sendSuccess(() -> Component.literal("/invasion range <32-128> — set spawn radius"), false);
         src.sendSuccess(() -> Component.literal("/invasion status         — focus nexus active?"), false);
@@ -241,6 +255,139 @@ public final class InvasionCommand {
         NexusTracker.setActiveNexus(nexus);
         src.sendSuccess(() -> Component.literal("Strong Catalyst activation (expect wave 10)"), true);
         return 1;
+    }
+
+    /** Put a catalyst in the nexus input slot (player-like; activation still needs time). */
+    private static int setCatalyst(CommandContext<CommandSourceStack> ctx, String kind) {
+        CommandSourceStack src = ctx.getSource();
+        NexusBlockEntity nexus = resolveNexus(src);
+        if (nexus == null) {
+            src.sendFailure(Component.literal("No focus nexus. Look at / place a nexus nearby."));
+            return 0;
+        }
+        ItemStack stack;
+        switch (kind) {
+            case "strong" -> stack = new ItemStack(ItemRegistry.CATALYST_STRONG.get());
+            case "unstable" -> stack = new ItemStack(ItemRegistry.NEXUS_CATALYST_UNSTABLE.get());
+            case "stable" -> stack = new ItemStack(ItemRegistry.NEXUS_CATALYST_STABLE.get());
+            default -> stack = ItemStack.EMPTY;
+        }
+        nexus.debugSetCatalystSlot(stack);
+        src.sendSuccess(() -> Component.literal("Nexus catalyst slot: " + kind), true);
+        return 1;
+    }
+
+    /**
+     * Craft via the real RecipeManager entry (invasion:flux_to_*), consuming flux from the player.
+     * Play-faithful automated check that datapack recipes are loaded and matchable.
+     */
+    private static int craftFlux(CommandContext<CommandSourceStack> ctx, String recipePath) {
+        CommandSourceStack src = ctx.getSource();
+        ServerPlayer player;
+        try {
+            player = src.getPlayerOrException();
+        } catch (Exception e) {
+            src.sendFailure(Component.literal("Player required for craft"));
+            return 0;
+        }
+        ServerLevel level = player.serverLevel();
+        ResourceLocation id = new ResourceLocation("invasion", recipePath);
+        var opt = level.getRecipeManager().byKey(id);
+        if (opt.isEmpty()) {
+            src.sendFailure(Component.literal("Recipe not found: " + id));
+            return 0;
+        }
+        if (!(opt.get() instanceof net.minecraft.world.item.crafting.CraftingRecipe crafting)) {
+            src.sendFailure(Component.literal("Not a crafting recipe: " + id));
+            return 0;
+        }
+
+        // Build a transient 3x3 from the shaped pattern of known flux recipes.
+        net.minecraft.world.inventory.CraftingContainer container =
+                new net.minecraft.world.inventory.TransientCraftingContainer(
+                        new net.minecraft.world.inventory.AbstractContainerMenu(null, -1) {
+                            @Override
+                            public ItemStack quickMoveStack(Player p, int index) {
+                                return ItemStack.EMPTY;
+                            }
+
+                            @Override
+                            public boolean stillValid(Player p) {
+                                return true;
+                            }
+                        }, 3, 3);
+
+        int fluxNeeded = switch (recipePath) {
+            case "flux_to_diamond" -> 4;
+            case "flux_to_iron_ingot" -> 1;
+            case "flux_to_redstone", "flux_to_lapis" -> 2;
+            default -> 4;
+        };
+        // Pattern placement matching 1.7 / JSON recipes
+        switch (recipePath) {
+            case "flux_to_diamond" -> {
+                container.setItem(1, flux(1));
+                container.setItem(3, flux(1));
+                container.setItem(5, flux(1));
+                container.setItem(7, flux(1));
+            }
+            case "flux_to_iron_ingot" -> container.setItem(4, flux(1));
+            case "flux_to_redstone" -> {
+                container.setItem(3, flux(1));
+                container.setItem(5, flux(1));
+            }
+            case "flux_to_lapis" -> {
+                container.setItem(1, flux(1));
+                container.setItem(7, flux(1));
+            }
+            default -> {
+            }
+        }
+
+        if (!crafting.matches(container, level)) {
+            src.sendFailure(Component.literal("Recipe did not match assembled grid: " + id));
+            return 0;
+        }
+        ItemStack result = crafting.assemble(container, level.registryAccess());
+        if (result.isEmpty()) {
+            src.sendFailure(Component.literal("Recipe produced empty result: " + id));
+            return 0;
+        }
+        if (!player.getInventory().contains(new ItemStack(ItemRegistry.RIFT_FLUX.get()))) {
+            // count flux
+        }
+        int have = 0;
+        for (ItemStack s : player.getInventory().items) {
+            if (s.is(ItemRegistry.RIFT_FLUX.get())) {
+                have += s.getCount();
+            }
+        }
+        if (have < fluxNeeded) {
+            src.sendFailure(Component.literal("Need " + fluxNeeded + " Rift Flux (have " + have + ")"));
+            return 0;
+        }
+        int left = fluxNeeded;
+        for (int i = 0; i < player.getInventory().items.size() && left > 0; i++) {
+            ItemStack s = player.getInventory().items.get(i);
+            if (!s.is(ItemRegistry.RIFT_FLUX.get())) {
+                continue;
+            }
+            int take = Math.min(left, s.getCount());
+            s.shrink(take);
+            left -= take;
+        }
+        if (!player.getInventory().add(result.copy())) {
+            player.drop(result.copy(), false);
+        }
+        src.sendSuccess(
+                () -> Component.literal("Crafted " + result.getCount() + "x " + result.getHoverName().getString()
+                        + " via " + id),
+                true);
+        return 1;
+    }
+
+    private static ItemStack flux(int count) {
+        return new ItemStack(ItemRegistry.RIFT_FLUX.get(), count);
     }
 
     private static int end(CommandContext<CommandSourceStack> ctx) {

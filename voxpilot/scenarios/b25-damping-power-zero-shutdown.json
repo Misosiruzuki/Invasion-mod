@@ -1,59 +1,26 @@
 {
   "name": "invasion-b25-damping-power-zero-shutdown",
-  "description": "B-25: strong damping drains power below 0 and returns nexus to idle. power 8 + damping strong; expect mode=0 / damped shutdown.",
+  "description": "P1/B-25 play-faithful: continuous + power 12 + strong damping until silenced (no /invasion end).",
   "launchServer": true,
-  "totalTicks": 100,
-  "totalFrames": 140,
-  "captureEvery": 25,
+  "totalTicks": 120,
+  "totalFrames": 160,
+  "captureEvery": 20,
   "warmupFrames": 40,
   "closeClient": true,
   "display": { "background": true },
   "commands": [
-    "time set day",
-    "weather clear",
-    "gamemode creative Dev",
+    "time set day", "weather clear", "gamemode creative Dev",
     "tp Dev 0 -60 6",
     "fill -12 -61 -12 12 -61 12 minecraft:stone",
     "fill -12 -60 -12 12 -55 12 minecraft:air",
     "setblock 0 -60 0 invasion:nexus",
     "tp Dev 0 -59 6"
   ],
-  "trackedBlocks": [
-    { "label": "nexus", "x": 0, "y": -60, "z": 0 }
-  ],
+  "trackedBlocks": [ { "label": "nexus", "x": 0, "y": -60, "z": 0 } ],
   "actions": [
-    {
-      "fromTick": 0,
-      "toTick": 12,
-      "camera": "first",
-      "yaw": 180,
-      "pitch": 20,
-      "keys": { "use": true }
-    },
-    {
-      "fromTick": 13,
-      "toTick": 28,
-      "camera": "third_back",
-      "commands": [
-        "invasion continuous",
-        "invasion power 8",
-        "invasion damping strong",
-        "invasion nexusstatus"
-      ]
-    },
-    {
-      "fromTick": 29,
-      "toTick": 69,
-      "camera": "third_back",
-      "deltaYaw": 0.6
-    },
-    {
-      "fromTick": 70,
-      "toTick": 99,
-      "camera": "third_back",
-      "commands": [
-        "invasion nexusstatus"
-      ]
-    }
+    { "fromTick": 0, "toTick": 15, "camera": "first", "yaw": 180, "pitch": 25, "keys": { "use": true } },
+    { "fromTick": 16, "toTick": 35, "camera": "third_back", "commands": ["invasion continuous", "invasion power 12", "invasion damping strong", "invasion nexusstatus"] },
+    { "fromTick": 36, "toTick": 90, "camera": "third_back", "deltaYaw": 0.5 },
+    { "fromTick": 91, "toTick": 119, "camera": "third_back", "commands": ["invasion nexusstatus"] }
   ]
 }
