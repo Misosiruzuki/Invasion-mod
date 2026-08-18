@@ -4,7 +4,7 @@
   "launchServer": true,
   "totalTicks": 580,
   "totalFrames": 650,
-  "captureEvery": 25,
+  "captureEvery": 15,
   "warmupFrames": 40,
   "closeClient": true,
   "display": {
@@ -14,13 +14,13 @@
     "time set day",
     "weather clear",
     "gamemode creative Dev",
-    "tp Dev 0 -60 6",
+    "tp Dev 0 -60 2",
     "fill -12 -61 -12 12 -61 12 minecraft:stone",
     "fill -12 -60 -12 12 -55 12 minecraft:air",
     "setblock 0 -60 0 invasion:nexus",
     "give Dev invasion:nexus_catalyst_stable 1",
     "give Dev invasion:damping_agent_strong 1",
-    "tp Dev 0 -59 6"
+    "tp Dev 0 -59 2"
   ],
   "trackedBlocks": [
     {
@@ -33,7 +33,7 @@
   "actions": [
     {
       "fromTick": 0,
-      "toTick": 15,
+      "toTick": 20,
       "camera": "first",
       "yaw": 180,
       "pitch": 25,
@@ -49,7 +49,9 @@
         "slot": 29,
         "button": 0,
         "type": "quick_move"
-      }
+      },
+      "yaw": 180,
+      "pitch": 35
     },
     {
       "fromTick": 29,
@@ -74,7 +76,7 @@
     },
     {
       "fromTick": 451,
-      "toTick": 465,
+      "toTick": 471,
       "camera": "first",
       "yaw": 180,
       "pitch": 25,
@@ -90,7 +92,9 @@
         "slot": 30,
         "button": 0,
         "type": "quick_move"
-      }
+      },
+      "yaw": 180,
+      "pitch": 35
     },
     {
       "fromTick": 486,
