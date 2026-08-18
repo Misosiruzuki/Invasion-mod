@@ -3,7 +3,7 @@
   "description": "P0: GUI stable catalyst → continuous, then continuous soon for mode=3 probe.",
   "launchServer": true,
   "totalTicks": 520,
-  "totalFrames": 600,
+  "totalFrames": 2180,
   "captureEvery": 15,
   "warmupFrames": 40,
   "closeClient": true,

@@ -3,7 +3,7 @@
   "description": "P0 smoke: give catalysts/damping, open nexus GUI, frame-check GUI opens.",
   "launchServer": true,
   "totalTicks": 100,
-  "totalFrames": 140,
+  "totalFrames": 500,
   "captureEvery": 10,
   "warmupFrames": 40,
   "closeClient": true,

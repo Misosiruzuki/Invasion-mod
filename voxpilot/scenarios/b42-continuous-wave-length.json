@@ -3,7 +3,7 @@
   "description": "B-42: GUI continuous, soon at default power (240s path).",
   "launchServer": true,
   "totalTicks": 520,
-  "totalFrames": 600,
+  "totalFrames": 2180,
   "captureEvery": 15,
   "warmupFrames": 40,
   "closeClient": true,

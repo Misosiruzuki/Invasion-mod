@@ -3,7 +3,7 @@
   "description": "P2/B-27: GUI put Strong Catalyst, wait natural activation, expect wave=10.",
   "launchServer": true,
   "totalTicks": 520,
-  "totalFrames": 600,
+  "totalFrames": 2180,
   "captureEvery": 15,
   "warmupFrames": 40,
   "closeClient": true,

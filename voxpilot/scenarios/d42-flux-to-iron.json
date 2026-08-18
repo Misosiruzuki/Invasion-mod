@@ -3,7 +3,7 @@
   "description": "P3/D-42: crafting GUI, 1 flux center -> iron.",
   "launchServer": true,
   "totalTicks": 100,
-  "totalFrames": 140,
+  "totalFrames": 500,
   "captureEvery": 8,
   "warmupFrames": 40,
   "closeClient": true,

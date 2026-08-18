@@ -3,7 +3,7 @@
   "description": "P2/B-26: creative give Strong Catalyst, open Nexus GUI, place in input slot (no full activation wait).",
   "launchServer": true,
   "totalTicks": 120,
-  "totalFrames": 160,
+  "totalFrames": 580,
   "captureEvery": 10,
   "warmupFrames": 40,
   "closeClient": true,

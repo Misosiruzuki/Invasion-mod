@@ -3,7 +3,7 @@
   "description": "P0: open Nexus GUI, put unstable catalyst, wait natural invasion start, end.",
   "launchServer": true,
   "totalTicks": 480,
-  "totalFrames": 560,
+  "totalFrames": 2020,
   "captureEvery": 15,
   "warmupFrames": 40,
   "closeClient": true,

@@ -3,7 +3,7 @@
   "description": "P3/D-44: crafting GUI, 2 flux vertical -> lapis.",
   "launchServer": true,
   "totalTicks": 120,
-  "totalFrames": 160,
+  "totalFrames": 580,
   "captureEvery": 8,
   "warmupFrames": 40,
   "closeClient": true,

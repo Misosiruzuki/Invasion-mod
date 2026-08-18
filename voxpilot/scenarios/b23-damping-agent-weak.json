@@ -3,7 +3,7 @@
   "description": "P1/B-23: open Nexus GUI, shift-click stable catalyst, wait activation; reopen GUI, put weak damping; power stays flat.",
   "launchServer": true,
   "totalTicks": 900,
-  "totalFrames": 1000,
+  "totalFrames": 3700,
   "captureEvery": 15,
   "warmupFrames": 40,
   "closeClient": true,

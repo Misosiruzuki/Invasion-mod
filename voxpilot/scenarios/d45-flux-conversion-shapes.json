@@ -3,7 +3,7 @@
   "description": "P3/D-45: sequential GUI crafts for all four flux conversions.",
   "launchServer": true,
   "totalTicks": 400,
-  "totalFrames": 480,
+  "totalFrames": 1700,
   "captureEvery": 15,
   "warmupFrames": 40,
   "closeClient": true,

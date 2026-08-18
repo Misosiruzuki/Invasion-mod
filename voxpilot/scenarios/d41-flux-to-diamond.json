@@ -3,7 +3,7 @@
   "description": "P3/D-41: open crafting table GUI, place 4 flux cross, take diamond.",
   "launchServer": true,
   "totalTicks": 160,
-  "totalFrames": 200,
+  "totalFrames": 740,
   "captureEvery": 8,
   "warmupFrames": 40,
   "closeClient": true,

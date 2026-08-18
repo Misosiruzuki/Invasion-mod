@@ -3,7 +3,7 @@
   "description": "P1/B-25: GUI put strong damping after continuous; wait for silenced shutdown (no end command).",
   "launchServer": true,
   "totalTicks": 580,
-  "totalFrames": 650,
+  "totalFrames": 2420,
   "captureEvery": 15,
   "warmupFrames": 40,
   "closeClient": true,

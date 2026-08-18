@@ -3,7 +3,7 @@
   "description": "P1/B-24: GUI continuous via stable catalyst; GUI put strong damping; power drains.",
   "launchServer": true,
   "totalTicks": 620,
-  "totalFrames": 700,
+  "totalFrames": 2580,
   "captureEvery": 15,
   "warmupFrames": 40,
   "closeClient": true,

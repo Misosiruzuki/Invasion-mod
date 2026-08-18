@@ -3,7 +3,7 @@
   "description": "B-40: GUI stable catalyst continuous, soon for attack mode=3, end.",
   "launchServer": true,
   "totalTicks": 520,
-  "totalFrames": 600,
+  "totalFrames": 2180,
   "captureEvery": 15,
   "warmupFrames": 40,
   "closeClient": true,

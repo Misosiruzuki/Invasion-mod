@@ -3,7 +3,7 @@
   "description": "P0: open Nexus GUI, put stable catalyst via shift-click, wait activation, confirm active continuous.",
   "launchServer": true,
   "totalTicks": 480,
-  "totalFrames": 560,
+  "totalFrames": 2020,
   "captureEvery": 15,
   "warmupFrames": 40,
   "closeClient": true,
