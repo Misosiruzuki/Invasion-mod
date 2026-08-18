@@ -1,82 +1,96 @@
 {
   "name": "invasion-b41-continuous-difficulty-power",
-  "description": "B-41 only: set powerLevel=9000 (diff~3) then continuous soon; expect mode=3 with higher wave than power0 baseline.",
+  "description": "B-41: GUI continuous, power 9000, soon, expect higher wave.",
   "launchServer": true,
-  "totalTicks": 140,
-  "totalFrames": 180,
-  "captureEvery": 30,
+  "totalTicks": 520,
+  "totalFrames": 600,
+  "captureEvery": 25,
   "warmupFrames": 40,
   "closeClient": true,
-  "display": { "background": true },
+  "display": {
+    "background": true
+  },
   "commands": [
     "time set night",
     "weather clear",
     "gamemode creative Dev",
     "tp Dev 0 -60 6",
-    "fill -16 -61 -16 16 -61 16 minecraft:stone",
-    "fill -16 -60 -16 16 -55 16 minecraft:air",
+    "fill -12 -61 -12 12 -61 12 minecraft:stone",
+    "fill -12 -60 -12 12 -55 12 minecraft:air",
     "setblock 0 -60 0 invasion:nexus",
+    "give Dev invasion:nexus_catalyst_stable 1",
     "tp Dev 0 -59 6"
   ],
   "trackedBlocks": [
-    { "label": "nexus", "x": 0, "y": -60, "z": 0 }
+    {
+      "label": "nexus",
+      "x": 0,
+      "y": -60,
+      "z": 0
+    }
   ],
   "actions": [
     {
       "fromTick": 0,
-      "toTick": 12,
+      "toTick": 15,
       "camera": "first",
       "yaw": 180,
-      "pitch": 20,
-      "keys": { "use": true }
+      "pitch": 25,
+      "keys": {
+        "use": true
+      }
     },
     {
-      "fromTick": 13,
-      "toTick": 22,
+      "fromTick": 16,
+      "toTick": 28,
+      "camera": "first",
+      "containerClick": {
+        "slot": 29,
+        "button": 0,
+        "type": "quick_move"
+      }
+    },
+    {
+      "fromTick": 29,
+      "toTick": 45,
+      "camera": "first",
+      "closeScreen": true
+    },
+    {
+      "fromTick": 46,
+      "toTick": 430,
+      "camera": "third_back",
+      "deltaYaw": 0.1
+    },
+    {
+      "fromTick": 431,
+      "toTick": 455,
       "camera": "third_back",
       "commands": [
-        "invasion continuous",
         "invasion power 9000",
+        "invasion continuous soon 30",
         "invasion nexusstatus"
       ]
     },
     {
-      "fromTick": 23,
-      "toTick": 32,
+      "fromTick": 456,
+      "toTick": 490,
       "camera": "third_back",
-      "commands": [
-        "invasion continuous soon 30"
-      ]
+      "deltaYaw": 0.4
     },
     {
-      "fromTick": 33,
-      "toTick": 89,
-      "camera": "third_back",
-      "deltaYaw": 0.5
-    },
-    {
-      "fromTick": 90,
-      "toTick": 99,
+      "fromTick": 491,
+      "toTick": 510,
       "camera": "third_back",
       "commands": [
-        "invasion nexusstatus"
-      ]
-    },
-    {
-      "fromTick": 100,
-      "toTick": 114,
-      "camera": "third_back",
-      "commands": [
+        "invasion nexusstatus",
         "invasion end"
       ]
     },
     {
-      "fromTick": 115,
-      "toTick": 139,
-      "camera": "third_back",
-      "commands": [
-        "invasion nexusstatus"
-      ]
+      "fromTick": 511,
+      "toTick": 519,
+      "camera": "third_back"
     }
   ]
 }

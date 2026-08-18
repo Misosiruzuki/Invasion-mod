@@ -1,22 +1,75 @@
 {
   "name": "invasion-d42-flux-to-iron",
-  "description": "P3/D-42 play-faithful: crafting table + flux → iron via RecipeManager.",
+  "description": "P3/D-42: crafting GUI, 1 flux center -> iron.",
   "launchServer": true,
   "totalTicks": 100,
   "totalFrames": 140,
-  "captureEvery": 20,
+  "captureEvery": 8,
   "warmupFrames": 40,
   "closeClient": true,
-  "display": { "background": true },
+  "display": {
+    "background": true
+  },
   "commands": [
-    "time set day", "gamemode creative Dev", "tp Dev 0 -60 4",
+    "time set day",
+    "gamemode creative Dev",
+    "tp Dev 0 -60 4",
     "fill -6 -61 -6 6 -61 6 minecraft:stone",
     "setblock 0 -60 0 minecraft:crafting_table",
-    "give Dev invasion:rift_flux 8", "tp Dev 0 -59 4"
+    "give Dev invasion:rift_flux 8",
+    "tp Dev 0 -59 4"
   ],
   "actions": [
-    { "fromTick": 0, "toTick": 20, "camera": "first", "yaw": 180, "pitch": 30, "keys": { "use": true } },
-    { "fromTick": 21, "toTick": 50, "camera": "third_back", "commands": ["invasion craft iron"] },
-    { "fromTick": 51, "toTick": 99, "camera": "third_back", "deltaYaw": 0.5 }
+    {
+      "fromTick": 0,
+      "toTick": 15,
+      "camera": "first",
+      "yaw": 180,
+      "pitch": 30,
+      "keys": {
+        "use": true
+      }
+    },
+    {
+      "fromTick": 16,
+      "toTick": 19,
+      "camera": "first",
+      "containerClick": {
+        "slot": 37,
+        "button": 0,
+        "type": "pickup"
+      }
+    },
+    {
+      "fromTick": 20,
+      "toTick": 23,
+      "camera": "first",
+      "containerClick": {
+        "slot": 5,
+        "button": 1,
+        "type": "pickup"
+      }
+    },
+    {
+      "fromTick": 24,
+      "toTick": 32,
+      "camera": "first",
+      "containerClick": {
+        "slot": 0,
+        "button": 0,
+        "type": "quick_move"
+      }
+    },
+    {
+      "fromTick": 34,
+      "toTick": 54,
+      "camera": "first"
+    },
+    {
+      "fromTick": 55,
+      "toTick": 70,
+      "camera": "first",
+      "closeScreen": true
+    }
   ]
 }

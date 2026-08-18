@@ -1,25 +1,304 @@
 {
   "name": "invasion-d45-flux-conversion-shapes",
-  "description": "P3/D-45 play-faithful: craft all four flux conversions via RecipeManager.",
+  "description": "P3/D-45: sequential GUI crafts for all four flux conversions.",
   "launchServer": true,
-  "totalTicks": 180,
-  "totalFrames": 220,
-  "captureEvery": 20,
+  "totalTicks": 400,
+  "totalFrames": 480,
+  "captureEvery": 15,
   "warmupFrames": 40,
   "closeClient": true,
-  "display": { "background": true },
+  "display": {
+    "background": true
+  },
   "commands": [
-    "time set day", "gamemode creative Dev", "tp Dev 0 -60 4",
+    "time set day",
+    "gamemode creative Dev",
+    "tp Dev 0 -60 4",
     "fill -6 -61 -6 6 -61 6 minecraft:stone",
     "setblock 0 -60 0 minecraft:crafting_table",
-    "give Dev invasion:rift_flux 32", "tp Dev 0 -59 4"
+    "give Dev invasion:rift_flux 32",
+    "tp Dev 0 -59 4"
   ],
   "actions": [
-    { "fromTick": 0, "toTick": 20, "camera": "first", "yaw": 180, "pitch": 30, "keys": { "use": true } },
-    { "fromTick": 21, "toTick": 45, "camera": "third_back", "commands": ["invasion craft diamond"] },
-    { "fromTick": 46, "toTick": 70, "camera": "third_back", "commands": ["invasion craft iron"] },
-    { "fromTick": 71, "toTick": 95, "camera": "third_back", "commands": ["invasion craft redstone"] },
-    { "fromTick": 96, "toTick": 120, "camera": "third_back", "commands": ["invasion craft lapis"] },
-    { "fromTick": 121, "toTick": 179, "camera": "third_back", "deltaYaw": 0.4 }
+    {
+      "fromTick": 0,
+      "toTick": 15,
+      "camera": "first",
+      "yaw": 180,
+      "pitch": 30,
+      "keys": {
+        "use": true
+      }
+    },
+    {
+      "fromTick": 16,
+      "toTick": 18,
+      "camera": "first",
+      "containerClick": {
+        "slot": 37,
+        "button": 0,
+        "type": "pickup"
+      }
+    },
+    {
+      "fromTick": 19,
+      "toTick": 21,
+      "camera": "first",
+      "containerClick": {
+        "slot": 2,
+        "button": 1,
+        "type": "pickup"
+      }
+    },
+    {
+      "fromTick": 22,
+      "toTick": 24,
+      "camera": "first",
+      "containerClick": {
+        "slot": 37,
+        "button": 0,
+        "type": "pickup"
+      }
+    },
+    {
+      "fromTick": 25,
+      "toTick": 27,
+      "camera": "first",
+      "containerClick": {
+        "slot": 4,
+        "button": 1,
+        "type": "pickup"
+      }
+    },
+    {
+      "fromTick": 28,
+      "toTick": 30,
+      "camera": "first",
+      "containerClick": {
+        "slot": 37,
+        "button": 0,
+        "type": "pickup"
+      }
+    },
+    {
+      "fromTick": 31,
+      "toTick": 33,
+      "camera": "first",
+      "containerClick": {
+        "slot": 6,
+        "button": 1,
+        "type": "pickup"
+      }
+    },
+    {
+      "fromTick": 34,
+      "toTick": 36,
+      "camera": "first",
+      "containerClick": {
+        "slot": 37,
+        "button": 0,
+        "type": "pickup"
+      }
+    },
+    {
+      "fromTick": 37,
+      "toTick": 39,
+      "camera": "first",
+      "containerClick": {
+        "slot": 8,
+        "button": 1,
+        "type": "pickup"
+      }
+    },
+    {
+      "fromTick": 40,
+      "toTick": 48,
+      "camera": "first",
+      "containerClick": {
+        "slot": 0,
+        "button": 0,
+        "type": "quick_move"
+      }
+    },
+    {
+      "fromTick": 49,
+      "toTick": 55,
+      "camera": "first",
+      "closeScreen": true
+    },
+    {
+      "fromTick": 56,
+      "toTick": 70,
+      "camera": "first",
+      "yaw": 180,
+      "pitch": 30,
+      "keys": {
+        "use": true
+      }
+    },
+    {
+      "fromTick": 71,
+      "toTick": 73,
+      "camera": "first",
+      "containerClick": {
+        "slot": 37,
+        "button": 0,
+        "type": "pickup"
+      }
+    },
+    {
+      "fromTick": 74,
+      "toTick": 76,
+      "camera": "first",
+      "containerClick": {
+        "slot": 5,
+        "button": 1,
+        "type": "pickup"
+      }
+    },
+    {
+      "fromTick": 77,
+      "toTick": 85,
+      "camera": "first",
+      "containerClick": {
+        "slot": 0,
+        "button": 0,
+        "type": "quick_move"
+      }
+    },
+    {
+      "fromTick": 86,
+      "toTick": 92,
+      "camera": "first",
+      "closeScreen": true
+    },
+    {
+      "fromTick": 93,
+      "toTick": 107,
+      "camera": "first",
+      "keys": {
+        "use": true
+      }
+    },
+    {
+      "fromTick": 108,
+      "toTick": 110,
+      "camera": "first",
+      "containerClick": {
+        "slot": 37,
+        "button": 0,
+        "type": "pickup"
+      }
+    },
+    {
+      "fromTick": 111,
+      "toTick": 113,
+      "camera": "first",
+      "containerClick": {
+        "slot": 4,
+        "button": 1,
+        "type": "pickup"
+      }
+    },
+    {
+      "fromTick": 114,
+      "toTick": 116,
+      "camera": "first",
+      "containerClick": {
+        "slot": 37,
+        "button": 0,
+        "type": "pickup"
+      }
+    },
+    {
+      "fromTick": 117,
+      "toTick": 119,
+      "camera": "first",
+      "containerClick": {
+        "slot": 6,
+        "button": 1,
+        "type": "pickup"
+      }
+    },
+    {
+      "fromTick": 120,
+      "toTick": 128,
+      "camera": "first",
+      "containerClick": {
+        "slot": 0,
+        "button": 0,
+        "type": "quick_move"
+      }
+    },
+    {
+      "fromTick": 129,
+      "toTick": 135,
+      "camera": "first",
+      "closeScreen": true
+    },
+    {
+      "fromTick": 136,
+      "toTick": 150,
+      "camera": "first",
+      "keys": {
+        "use": true
+      }
+    },
+    {
+      "fromTick": 151,
+      "toTick": 153,
+      "camera": "first",
+      "containerClick": {
+        "slot": 37,
+        "button": 0,
+        "type": "pickup"
+      }
+    },
+    {
+      "fromTick": 154,
+      "toTick": 156,
+      "camera": "first",
+      "containerClick": {
+        "slot": 2,
+        "button": 1,
+        "type": "pickup"
+      }
+    },
+    {
+      "fromTick": 157,
+      "toTick": 159,
+      "camera": "first",
+      "containerClick": {
+        "slot": 37,
+        "button": 0,
+        "type": "pickup"
+      }
+    },
+    {
+      "fromTick": 160,
+      "toTick": 162,
+      "camera": "first",
+      "containerClick": {
+        "slot": 8,
+        "button": 1,
+        "type": "pickup"
+      }
+    },
+    {
+      "fromTick": 163,
+      "toTick": 171,
+      "camera": "first",
+      "containerClick": {
+        "slot": 0,
+        "button": 0,
+        "type": "quick_move"
+      }
+    },
+    {
+      "fromTick": 172,
+      "toTick": 399,
+      "camera": "third_back",
+      "deltaYaw": 0.2
+    }
   ]
 }

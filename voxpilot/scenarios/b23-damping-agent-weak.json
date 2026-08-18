@@ -1,13 +1,15 @@
 {
   "name": "invasion-b23-damping-agent-weak",
-  "description": "P1/B-23 play-faithful: continuous + power 5 + weak damping; wait long; power must stay ~5.",
+  "description": "P1/B-23: GUI put stable catalyst, wait continuous; GUI put weak damping; power stays flat.",
   "launchServer": true,
-  "totalTicks": 500,
-  "totalFrames": 600,
-  "captureEvery": 50,
+  "totalTicks": 700,
+  "totalFrames": 800,
+  "captureEvery": 25,
   "warmupFrames": 40,
   "closeClient": true,
-  "display": { "background": true },
+  "display": {
+    "background": true
+  },
   "commands": [
     "time set day",
     "weather clear",
@@ -16,18 +18,114 @@
     "fill -12 -61 -12 12 -61 12 minecraft:stone",
     "fill -12 -60 -12 12 -55 12 minecraft:air",
     "setblock 0 -60 0 invasion:nexus",
+    "give Dev invasion:nexus_catalyst_stable 1",
+    "give Dev invasion:damping_agent_weak 1",
     "tp Dev 0 -59 6"
   ],
   "trackedBlocks": [
-    { "label": "nexus", "x": 0, "y": -60, "z": 0 }
+    {
+      "label": "nexus",
+      "x": 0,
+      "y": -60,
+      "z": 0
+    }
   ],
   "actions": [
-    { "fromTick": 0, "toTick": 15, "camera": "first", "yaw": 180, "pitch": 25, "keys": { "use": true } },
-    { "fromTick": 16, "toTick": 35, "camera": "third_back", "commands": ["invasion continuous", "invasion power 5", "invasion damping weak", "invasion nexusstatus"] },
-    { "fromTick": 36, "toTick": 200, "camera": "third_back", "deltaYaw": 0.25 },
-    { "fromTick": 201, "toTick": 220, "camera": "third_back", "commands": ["invasion nexusstatus"] },
-    { "fromTick": 221, "toTick": 420, "camera": "third_back", "deltaYaw": 0.2 },
-    { "fromTick": 421, "toTick": 450, "camera": "third_back", "commands": ["invasion nexusstatus"] },
-    { "fromTick": 451, "toTick": 499, "camera": "third_back", "commands": ["invasion end"] }
+    {
+      "fromTick": 0,
+      "toTick": 15,
+      "camera": "first",
+      "yaw": 180,
+      "pitch": 25,
+      "keys": {
+        "use": true
+      }
+    },
+    {
+      "fromTick": 16,
+      "toTick": 28,
+      "camera": "first",
+      "hotbar": 0,
+      "containerClick": {
+        "slot": 29,
+        "button": 0,
+        "type": "quick_move"
+      }
+    },
+    {
+      "fromTick": 29,
+      "toTick": 45,
+      "camera": "first",
+      "closeScreen": true
+    },
+    {
+      "fromTick": 46,
+      "toTick": 430,
+      "camera": "third_back",
+      "deltaYaw": 0.08
+    },
+    {
+      "fromTick": 431,
+      "toTick": 450,
+      "camera": "third_back",
+      "commands": [
+        "invasion power 5",
+        "invasion nexusstatus"
+      ]
+    },
+    {
+      "fromTick": 451,
+      "toTick": 465,
+      "camera": "first",
+      "yaw": 180,
+      "pitch": 25,
+      "keys": {
+        "use": true
+      }
+    },
+    {
+      "fromTick": 466,
+      "toTick": 485,
+      "camera": "first",
+      "hotbar": 1,
+      "containerClick": {
+        "slot": 30,
+        "button": 0,
+        "type": "quick_move"
+      }
+    },
+    {
+      "fromTick": 486,
+      "toTick": 510,
+      "camera": "first"
+    },
+    {
+      "fromTick": 511,
+      "toTick": 525,
+      "camera": "first",
+      "closeScreen": true
+    },
+    {
+      "fromTick": 526,
+      "toTick": 650,
+      "camera": "third_back",
+      "deltaYaw": 0.1
+    },
+    {
+      "fromTick": 651,
+      "toTick": 680,
+      "camera": "third_back",
+      "commands": [
+        "invasion nexusstatus"
+      ]
+    },
+    {
+      "fromTick": 681,
+      "toTick": 699,
+      "camera": "third_back",
+      "commands": [
+        "invasion end"
+      ]
+    }
   ]
 }

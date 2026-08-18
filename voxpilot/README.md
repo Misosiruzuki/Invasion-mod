@@ -18,6 +18,8 @@ Prefer scenarios that mirror real play over pure `give` smoke tests:
 3. Use enough `totalTicks` / `totalFrames` for the behaviour under test (activation is 400 ticks ≈ 20s). VoxPilot is **not** limited to ~100 ticks; set large values as needed (VoxPilot ≥1.2.4 waits up to ~2 hours based on scenario length).
 4. Assert outcomes via chat, `nexusstatus`, tracked block state, and logs — same signals a player would notice.
 5. **Frame PNGs:** capture at interaction moments; reviewers must open screenshots and confirm GUI / block use actually happened (not log-only pass).
+6. Prefer **Nexus/crafting GUI** (`keys.use` + `containerClick`) over `/invasion damping` / `/invasion catalyst` debug commands. Requires VoxPilot ≥ **1.2.6**.
+7. Frame JSON should show `hasContainerScreen=true` / `screen` containing `NexusScreen` or `Crafting*` while GUI is open.
 
 Short smoke scenarios remain allowed only when the checklist item is purely "item exists / loads".
 

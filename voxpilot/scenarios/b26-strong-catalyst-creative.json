@@ -1,15 +1,18 @@
 {
   "name": "invasion-b26-strong-catalyst-creative",
-  "description": "P2/B-26 play-faithful: creative give Strong Catalyst and load into nexus slot.",
+  "description": "P2/B-26: creative give Strong Catalyst, open Nexus GUI, place in input slot (no full activation wait).",
   "launchServer": true,
   "totalTicks": 120,
   "totalFrames": 160,
-  "captureEvery": 20,
+  "captureEvery": 10,
   "warmupFrames": 40,
   "closeClient": true,
-  "display": { "background": true },
+  "display": {
+    "background": true
+  },
   "commands": [
-    "time set day", "weather clear", "gamemode creative Dev",
+    "time set day",
+    "gamemode creative Dev",
     "tp Dev 0 -60 6",
     "fill -12 -61 -12 12 -61 12 minecraft:stone",
     "fill -12 -60 -12 12 -55 12 minecraft:air",
@@ -17,11 +20,47 @@
     "give Dev invasion:catalyst_strong 4",
     "tp Dev 0 -59 6"
   ],
-  "trackedBlocks": [ { "label": "nexus", "x": 0, "y": -60, "z": 0 } ],
+  "trackedBlocks": [
+    {
+      "label": "nexus",
+      "x": 0,
+      "y": -60,
+      "z": 0
+    }
+  ],
   "actions": [
-    { "fromTick": 0, "toTick": 15, "camera": "first", "yaw": 180, "pitch": 25, "keys": { "use": true } },
-    { "fromTick": 16, "toTick": 40, "camera": "third_back", "commands": ["invasion catalyst strong", "invasion nexusstatus"] },
-    { "fromTick": 41, "toTick": 100, "camera": "third_back", "deltaYaw": 0.4 },
-    { "fromTick": 101, "toTick": 119, "camera": "third_back", "commands": ["give Dev invasion:catalyst_strong 1", "invasion nexusstatus"] }
+    {
+      "fromTick": 0,
+      "toTick": 15,
+      "camera": "first",
+      "yaw": 180,
+      "pitch": 25,
+      "keys": {
+        "use": true
+      }
+    },
+    {
+      "fromTick": 16,
+      "toTick": 35,
+      "camera": "first",
+      "containerClick": {
+        "slot": 29,
+        "button": 0,
+        "type": "quick_move"
+      }
+    },
+    {
+      "fromTick": 36,
+      "toTick": 90,
+      "camera": "first",
+      "yaw": 180,
+      "pitch": 25
+    },
+    {
+      "fromTick": 91,
+      "toTick": 119,
+      "camera": "first",
+      "closeScreen": true
+    }
   ]
 }
