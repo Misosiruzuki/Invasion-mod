@@ -8,6 +8,19 @@ JSON scenarios for [VoxPilot](https://github.com/Misosiruzuki/VoxPilot) against 
 
 **Numbering:** One scenario per checklist number (e.g. `b40-…`, `b41-…`, `b42-…`). Do not bundle multiple checklist IDs into a single scenario file.
 
+
+## Play-faithful scenarios (convention)
+
+Prefer scenarios that mirror real play over pure `give` smoke tests:
+
+1. Place / open blocks the player would use (Nexus, crafting table).
+2. Drive mode changes through catalysts, commands that mirror item use, or timed activation — not only status dumps.
+3. Use enough `totalTicks` / `totalFrames` for the behaviour under test (activation is 400 ticks ≈ 20s). VoxPilot is **not** limited to ~100 ticks; set large values as needed (VoxPilot ≥1.2.4 waits up to ~2 hours based on scenario length).
+4. Assert outcomes via chat, `nexusstatus`, tracked block state, and logs — same signals a player would notice.
+
+Short smoke scenarios remain allowed only when the checklist item is purely "item exists / loads".
+
+
 ## Prerequisites
 
 - Java 17
