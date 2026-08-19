@@ -1,9 +1,9 @@
 {
   "name": "invasion-d42-flux-to-iron",
-  "description": "P3/D-42: crafting GUI, 1 flux center -> iron.",
+  "description": "P3/D-42: crafting GUI 1 flux center → iron",
   "launchServer": true,
-  "totalTicks": 100,
-  "totalFrames": 500,
+  "totalTicks": 179,
+  "totalFrames": 816,
   "captureEvery": 8,
   "warmupFrames": 40,
   "closeClient": true,
@@ -13,76 +13,103 @@
   "commands": [
     "time set day",
     "gamemode creative Dev",
-    "tp Dev 0 -60 2",
+    "tp Dev 0 -60 4",
     "fill -6 -61 -6 6 -61 6 minecraft:stone",
     "setblock 0 -60 0 minecraft:crafting_table",
     "give Dev invasion:rift_flux 8",
-    "tp Dev 0 -59 2"
+    "tp Dev 0 -59 4"
   ],
   "actions": [
     {
       "fromTick": 0,
-      "toTick": 15,
+      "toTick": 20,
       "camera": "first",
       "yaw": 180,
-      "pitch": 30
+      "pitch": 35
     },
     {
-      "fromTick": 16,
-      "toTick": 40,
+      "fromTick": 21,
+      "toTick": 45,
       "camera": "first",
       "yaw": 180,
-      "pitch": 30,
+      "pitch": 35,
       "keys": {
         "use": true
       }
     },
     {
-      "fromTick": 16,
-      "toTick": 19,
+      "fromTick": 46,
+      "toTick": 55,
       "camera": "first",
+      "yaw": 180,
+      "pitch": 35
+    },
+    {
+      "fromTick": 56,
+      "toTick": 65,
+      "camera": "first",
+      "yaw": 180,
+      "pitch": 35,
       "containerClick": {
         "slot": 37,
         "button": 0,
         "type": "pickup"
-      },
-      "yaw": 180,
-      "pitch": 35
+      }
     },
     {
-      "fromTick": 20,
-      "toTick": 23,
+      "fromTick": 66,
+      "toTick": 72,
       "camera": "first",
+      "yaw": 180,
+      "pitch": 35,
       "containerClick": {
         "slot": 5,
         "button": 1,
         "type": "pickup"
-      },
-      "yaw": 180,
-      "pitch": 35
+      }
     },
     {
-      "fromTick": 24,
-      "toTick": 32,
+      "fromTick": 74,
+      "toTick": 82,
       "camera": "first",
+      "yaw": 180,
+      "pitch": 35,
+      "containerClick": {
+        "slot": 37,
+        "button": 0,
+        "type": "pickup"
+      }
+    },
+    {
+      "fromTick": 84,
+      "toTick": 99,
+      "camera": "first",
+      "yaw": 180,
+      "pitch": 35,
       "containerClick": {
         "slot": 0,
         "button": 0,
         "type": "quick_move"
-      },
+      }
+    },
+    {
+      "fromTick": 104,
+      "toTick": 129,
+      "camera": "first",
       "yaw": 180,
       "pitch": 35
     },
     {
-      "fromTick": 34,
-      "toTick": 54,
-      "camera": "first"
-    },
-    {
-      "fromTick": 55,
-      "toTick": 70,
+      "fromTick": 134,
+      "toTick": 149,
       "camera": "first",
       "closeScreen": true
+    },
+    {
+      "fromTick": 154,
+      "toTick": 174,
+      "camera": "third_back",
+      "deltaYaw": 0.2
     }
   ]
 }
