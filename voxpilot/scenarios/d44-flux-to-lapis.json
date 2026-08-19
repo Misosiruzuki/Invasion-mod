@@ -13,11 +13,11 @@
   "commands": [
     "time set day",
     "gamemode creative Dev",
-    "tp Dev 0 -60 4",
+    "tp Dev 0 -60 2",
     "fill -6 -61 -6 6 -61 6 minecraft:stone",
     "setblock 0 -60 0 minecraft:crafting_table",
     "give Dev invasion:rift_flux 8",
-    "tp Dev 0 -59 4"
+    "tp Dev 0 -59 2"
   ],
   "actions": [
     {
@@ -25,14 +25,14 @@
       "toTick": 20,
       "camera": "first",
       "yaw": 180,
-      "pitch": 35
+      "pitch": 28
     },
     {
       "fromTick": 21,
       "toTick": 45,
       "camera": "first",
       "yaw": 180,
-      "pitch": 35,
+      "pitch": 28,
       "keys": {
         "use": true
       }
@@ -42,14 +42,14 @@
       "toTick": 55,
       "camera": "first",
       "yaw": 180,
-      "pitch": 35
+      "pitch": 28
     },
     {
       "fromTick": 56,
       "toTick": 65,
       "camera": "first",
       "yaw": 180,
-      "pitch": 35,
+      "pitch": 28,
       "containerClick": {
         "slot": 37,
         "button": 0,
@@ -61,7 +61,7 @@
       "toTick": 72,
       "camera": "first",
       "yaw": 180,
-      "pitch": 35,
+      "pitch": 28,
       "containerClick": {
         "slot": 2,
         "button": 1,
@@ -73,7 +73,7 @@
       "toTick": 80,
       "camera": "first",
       "yaw": 180,
-      "pitch": 35,
+      "pitch": 28,
       "containerClick": {
         "slot": 8,
         "button": 1,
@@ -85,7 +85,7 @@
       "toTick": 90,
       "camera": "first",
       "yaw": 180,
-      "pitch": 35,
+      "pitch": 28,
       "containerClick": {
         "slot": 37,
         "button": 0,
@@ -97,7 +97,7 @@
       "toTick": 107,
       "camera": "first",
       "yaw": 180,
-      "pitch": 35,
+      "pitch": 28,
       "containerClick": {
         "slot": 0,
         "button": 0,
@@ -109,7 +109,7 @@
       "toTick": 137,
       "camera": "first",
       "yaw": 180,
-      "pitch": 35
+      "pitch": 28
     },
     {
       "fromTick": 142,
@@ -120,7 +120,7 @@
     {
       "fromTick": 162,
       "toTick": 182,
-      "camera": "third_back",
+      "camera": "first",
       "deltaYaw": 0.2
     }
   ]
