@@ -50,8 +50,15 @@ public final class ItemRegistry {
     public static final RegistryObject<Item> INFUSED_SWORD = ITEMS.register("infused_sword",
             () -> new ItemSwordInfused(new Item.Properties().stacksTo(1)));
 
+    /** Empty trap (D-17 / C-03 input). */
     public static final RegistryObject<Item> TRAP = ITEMS.register("trap",
-            () -> new ItemTrap(new Item.Properties().stacksTo(16)));
+            () -> new ItemTrap(new Item.Properties().stacksTo(16), ItemTrap.TrapKind.EMPTY));
+    /** Rift trap charged via Nexus (C-03 / D-19). */
+    public static final RegistryObject<Item> TRAP_RIFT = ITEMS.register("trap_rift",
+            () -> new ItemTrap(new Item.Properties().stacksTo(16), ItemTrap.TrapKind.RIFT));
+    /** Flame trap (D-21). */
+    public static final RegistryObject<Item> TRAP_FLAME = ITEMS.register("trap_flame",
+            () -> new ItemTrap(new Item.Properties().stacksTo(16), ItemTrap.TrapKind.FLAME));
 
     public static final RegistryObject<Item> DEBUG_WAND = ITEMS.register("debug_wand",
             () -> new ItemWandDebug(new Item.Properties().stacksTo(1)));

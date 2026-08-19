@@ -58,6 +58,10 @@ public final class InvasionCommand {
                                 .then(Commands.argument("amount", IntegerArgumentType.integer(1, 1000))
                                         .executes(ctx -> damageNexus(ctx.getSource(),
                                                 IntegerArgumentType.getInteger(ctx, "amount")))))
+                        .then(Commands.literal("cook")
+                                .then(Commands.argument("value", IntegerArgumentType.integer(0, 1200))
+                                        .executes(ctx -> setCook(ctx.getSource(),
+                                                IntegerArgumentType.getInteger(ctx, "value")))))
                         .then(Commands.literal("sethp")
                                 .then(Commands.argument("hp", IntegerArgumentType.integer(0, 1000))
                                         .executes(ctx -> setHp(ctx.getSource(),
@@ -469,6 +473,17 @@ public final class InvasionCommand {
         nexus.attackNexus(amount);
         int after = nexus.getHp();
         src.sendSuccess(() -> Component.literal("Damaged nexus " + amount + " (hp " + before + " -> " + after + ")"), true);
+        return 1;
+    }
+
+    private static int setCook(CommandSourceStack src, int value) {
+        NexusBlockEntity nexus = resolveNexus(src);
+        if (nexus == null) {
+            src.sendFailure(Component.literal("No focus nexus"));
+            return 0;
+        }
+        nexus.debugSetCookTime(value);
+        src.sendSuccess(() -> Component.literal("Set cookTime=" + nexus.getCookTime()), true);
         return 1;
     }
 

@@ -58,6 +58,8 @@ public class NexusBlockEntity extends BaseContainerBlockEntity implements INexus
 
     public static final int ACTIVATION_MAX = 400;
     public static final int GENERATION_MAX = 3000;
+    /** 1.7 trap/flux cook threshold (1200 ticks). */
+    public static final int COOK_TRAP_MAX = 1200;
 
     private NonNullList<ItemStack> items = NonNullList.withSize(SLOT_COUNT, ItemStack.EMPTY);
 
@@ -382,6 +384,9 @@ public class NexusBlockEntity extends BaseContainerBlockEntity implements INexus
         mode = NexusMode.INVASION;
         activationTimer = 0;
         currentWave = Math.max(1, startWave);
+        if (currentWave > nexusLevel) {
+            nexusLevel = currentWave;
+        }
         waveRestTimer = 0;
         continuousAttack = false;
         hp = maxHp;
@@ -465,6 +470,31 @@ public class NexusBlockEntity extends BaseContainerBlockEntity implements INexus
             cookTime = 0;
             return;
         }
+        // C-03 / D-19: empty trap → rift trap (1.7: +1 idle, +9 while invasion/continuous active)
+        if (input.is(ItemRegistry.TRAP.get())) {
+            boolean outOk = output.isEmpty()
+                    || (output.is(ItemRegistry.TRAP_RIFT.get())
+                    && output.getCount() < output.getMaxStackSize());
+            if (!outOk) {
+                return;
+            }
+            cookTime = TrapCookLogic.advance(cookTime, mode);
+            if (TrapCookLogic.isComplete(cookTime)) {
+                cookTime = 0;
+                input.shrink(1);
+                if (input.isEmpty()) {
+                    items.set(SLOT_INPUT, ItemStack.EMPTY);
+                }
+                if (output.isEmpty()) {
+                    items.set(SLOT_OUTPUT, new ItemStack(ItemRegistry.TRAP_RIFT.get()));
+                } else {
+                    output.grow(1);
+                }
+                setChanged();
+            }
+            return;
+        }
+        // Stable mixture → stable catalyst (existing short cook)
         boolean canCook = input.is(ItemRegistry.CATALYST_MIXTURE_STABLE.get())
                 && (output.isEmpty() || (output.is(ItemRegistry.NEXUS_CATALYST_STABLE.get())
                 && output.getCount() < output.getMaxStackSize()));
@@ -617,6 +647,16 @@ public class NexusBlockEntity extends BaseContainerBlockEntity implements INexus
     public void debugSetHp(int value) {
         hp = Math.max(0, Math.min(maxHp, value));
         setChanged();
+    }
+
+    /** VoxPilot: advance trap cook near completion. */
+    public void debugSetCookTime(int value) {
+        cookTime = Math.max(0, value);
+        setChanged();
+    }
+
+    public int getCookTime() {
+        return cookTime;
     }
 
     @Override

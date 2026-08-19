@@ -21,7 +21,7 @@
   "item.invasion.strange_bone.tooltip": "リフトの残滓を帯びた骨",
   "item.invasion.infused_sword": "注入された剣",
   "item.invasion.infused_sword.tooltip": "リフトフラックスで鍛えられた剣",
-  "item.invasion.trap": "侵攻トラップ",
+  "item.invasion.trap": "空のトラップ",
   "item.invasion.trap.tooltip": "侵攻モブを捕らえる罠を設置する",
   "item.invasion.trap.pending": "トラップ設置はエンティティ移植待ち (%s, %s, %s)",
   "item.invasion.debug_wand": "デバッグワンド",
@@ -53,5 +53,11 @@
   "message.invasion.nexus.damped_shutdown": "減衰因子によりネクサスは沈黙した。",
   "message.invasion.nexus.invasion_started": "最初のウェーブが間もなく来る！",
   "message.invasion.nexus.destroyed": "ネクサスが破壊された！",
-  "message.invasion.nexus.player_bound": "%sの命がネクサスと結びついた"
+  "message.invasion.nexus.player_bound": "%sの命がネクサスと結びついた",
+  "item.invasion.trap_rift": "次元トラップ",
+  "item.invasion.trap_flame": "炎のトラップ",
+  "item.invasion.trap.tooltip.empty": "ネクサスでチャージすると次元トラップになる",
+  "item.invasion.trap.tooltip.rift": "敵に大ダメージと硬直",
+  "item.invasion.trap.tooltip.flame": "発動時に3×3の炎",
+  "item.invasion.trap.empty_cannot_place": "空のトラップはネクサスでチャージしてから設置"
 }
