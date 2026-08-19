@@ -1,9 +1,9 @@
 {
   "name": "invasion-d44-flux-to-lapis",
-  "description": "P3/D-44: crafting GUI 2 flux vertical → lapis",
+  "description": "P3/D-44: crafting GUI 2 flux vertical → lapis 12",
   "launchServer": true,
-  "totalTicks": 187,
-  "totalFrames": 848,
+  "totalTicks": 220,
+  "totalFrames": 980,
   "captureEvery": 8,
   "warmupFrames": 40,
   "closeClient": true,
@@ -22,14 +22,14 @@
   "actions": [
     {
       "fromTick": 0,
-      "toTick": 20,
+      "toTick": 25,
       "camera": "first",
       "yaw": 180,
       "pitch": 28
     },
     {
-      "fromTick": 21,
-      "toTick": 45,
+      "fromTick": 26,
+      "toTick": 60,
       "camera": "first",
       "yaw": 180,
       "pitch": 28,
@@ -38,15 +38,15 @@
       }
     },
     {
-      "fromTick": 46,
-      "toTick": 55,
+      "fromTick": 61,
+      "toTick": 75,
       "camera": "first",
       "yaw": 180,
       "pitch": 28
     },
     {
-      "fromTick": 56,
-      "toTick": 65,
+      "fromTick": 76,
+      "toTick": 85,
       "camera": "first",
       "yaw": 180,
       "pitch": 28,
@@ -57,8 +57,8 @@
       }
     },
     {
-      "fromTick": 66,
-      "toTick": 72,
+      "fromTick": 86,
+      "toTick": 95,
       "camera": "first",
       "yaw": 180,
       "pitch": 28,
@@ -69,8 +69,8 @@
       }
     },
     {
-      "fromTick": 74,
-      "toTick": 80,
+      "fromTick": 96,
+      "toTick": 105,
       "camera": "first",
       "yaw": 180,
       "pitch": 28,
@@ -81,8 +81,8 @@
       }
     },
     {
-      "fromTick": 82,
-      "toTick": 90,
+      "fromTick": 106,
+      "toTick": 115,
       "camera": "first",
       "yaw": 180,
       "pitch": 28,
@@ -93,8 +93,8 @@
       }
     },
     {
-      "fromTick": 92,
-      "toTick": 107,
+      "fromTick": 116,
+      "toTick": 130,
       "camera": "first",
       "yaw": 180,
       "pitch": 28,
@@ -105,23 +105,23 @@
       }
     },
     {
-      "fromTick": 112,
-      "toTick": 137,
+      "fromTick": 131,
+      "toTick": 155,
       "camera": "first",
       "yaw": 180,
       "pitch": 28
     },
     {
-      "fromTick": 142,
-      "toTick": 157,
+      "fromTick": 156,
+      "toTick": 175,
       "camera": "first",
       "closeScreen": true
     },
     {
-      "fromTick": 162,
-      "toTick": 182,
-      "camera": "first",
-      "deltaYaw": 0.2
+      "fromTick": 176,
+      "toTick": 219,
+      "camera": "third_back",
+      "deltaYaw": 0.15
     }
   ]
 }
