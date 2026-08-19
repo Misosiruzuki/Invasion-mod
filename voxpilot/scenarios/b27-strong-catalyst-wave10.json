@@ -2,8 +2,8 @@
   "name": "invasion-b27-strong-catalyst-wave10",
   "description": "P2/B-27: GUI put Strong Catalyst, wait natural activation, expect wave=10.",
   "launchServer": true,
-  "totalTicks": 520,
-  "totalFrames": 2180,
+  "totalTicks": 600,
+  "totalFrames": 2500,
   "captureEvery": 15,
   "warmupFrames": 40,
   "closeClient": true,
@@ -32,69 +32,72 @@
   "actions": [
     {
       "fromTick": 0,
-      "toTick": 15,
+      "toTick": 20,
       "camera": "first",
       "yaw": 180,
-      "pitch": 25
+      "pitch": 35
     },
     {
-      "fromTick": 16,
-      "toTick": 40,
+      "fromTick": 21,
+      "toTick": 45,
       "camera": "first",
       "yaw": 180,
-      "pitch": 25,
+      "pitch": 35,
       "keys": {
         "use": true
       }
     },
     {
-      "fromTick": 16,
-      "toTick": 30,
+      "fromTick": 46,
+      "toTick": 65,
       "camera": "first",
+      "yaw": 180,
+      "pitch": 35,
+      "hotbar": 0,
       "containerClick": {
         "slot": 29,
         "button": 0,
         "type": "quick_move"
-      },
+      }
+    },
+    {
+      "fromTick": 66,
+      "toTick": 85,
+      "camera": "first",
       "yaw": 180,
       "pitch": 35
     },
     {
-      "fromTick": 31,
-      "toTick": 50,
-      "camera": "first"
-    },
-    {
-      "fromTick": 51,
-      "toTick": 65,
+      "fromTick": 86,
+      "toTick": 100,
       "camera": "first",
       "closeScreen": true
     },
     {
-      "fromTick": 66,
-      "toTick": 450,
+      "fromTick": 101,
+      "toTick": 530,
       "camera": "third_back",
-      "deltaYaw": 0.1
+      "deltaYaw": 0.08
     },
     {
-      "fromTick": 451,
-      "toTick": 470,
+      "fromTick": 531,
+      "toTick": 560,
       "camera": "third_back",
       "commands": [
         "invasion nexusstatus"
       ]
     },
     {
-      "fromTick": 471,
-      "toTick": 500,
+      "fromTick": 561,
+      "toTick": 590,
       "camera": "third_back",
       "commands": [
         "invasion end"
       ]
     },
     {
-      "fromTick": 501,
-      "toTick": 519,
+      "fromTick": 591,
+      "toTick": 599,
       "camera": "third_back",
       "commands": [
         "invasion nexusstatus"

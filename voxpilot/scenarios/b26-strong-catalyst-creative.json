@@ -1,9 +1,9 @@
 {
   "name": "invasion-b26-strong-catalyst-creative",
-  "description": "P2/B-26: creative give Strong Catalyst, open Nexus GUI, place in input slot (no full activation wait).",
+  "description": "P2/B-26: creative give Strong Catalyst, open Nexus GUI, shift-click into input (smoke).",
   "launchServer": true,
-  "totalTicks": 120,
-  "totalFrames": 580,
+  "totalTicks": 160,
+  "totalFrames": 740,
   "captureEvery": 10,
   "warmupFrames": 40,
   "closeClient": true,
@@ -31,45 +31,52 @@
   "actions": [
     {
       "fromTick": 0,
-      "toTick": 15,
+      "toTick": 20,
       "camera": "first",
       "yaw": 180,
-      "pitch": 25
+      "pitch": 35
     },
     {
-      "fromTick": 16,
-      "toTick": 40,
+      "fromTick": 21,
+      "toTick": 45,
       "camera": "first",
       "yaw": 180,
-      "pitch": 25,
+      "pitch": 35,
       "keys": {
         "use": true
       }
     },
     {
-      "fromTick": 16,
-      "toTick": 35,
+      "fromTick": 46,
+      "toTick": 65,
       "camera": "first",
+      "yaw": 180,
+      "pitch": 35,
+      "hotbar": 0,
       "containerClick": {
         "slot": 29,
         "button": 0,
         "type": "quick_move"
-      },
+      }
+    },
+    {
+      "fromTick": 66,
+      "toTick": 110,
+      "camera": "first",
       "yaw": 180,
       "pitch": 35
     },
     {
-      "fromTick": 36,
-      "toTick": 90,
-      "camera": "first",
-      "yaw": 180,
-      "pitch": 25
-    },
-    {
-      "fromTick": 91,
-      "toTick": 119,
+      "fromTick": 111,
+      "toTick": 130,
       "camera": "first",
       "closeScreen": true
+    },
+    {
+      "fromTick": 131,
+      "toTick": 159,
+      "camera": "third_back",
+      "deltaYaw": 0.2
     }
   ]
 }
