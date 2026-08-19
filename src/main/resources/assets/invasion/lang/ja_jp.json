@@ -52,5 +52,6 @@
   "message.invasion.nexus.continuous_calm": "ネクサスは再び静まった。",
   "message.invasion.nexus.damped_shutdown": "減衰因子によりネクサスは沈黙した。",
   "message.invasion.nexus.invasion_started": "最初のウェーブが間もなく来る！",
-  "message.invasion.nexus.destroyed": "ネクサスが破壊された！"
+  "message.invasion.nexus.destroyed": "ネクサスが破壊された！",
+  "message.invasion.nexus.player_bound": "%sの命がネクサスと結びついた"
 }

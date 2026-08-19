@@ -54,6 +54,14 @@ public final class InvasionCommand {
                         .then(Commands.literal("power")
                                 .then(Commands.argument("value", IntegerArgumentType.integer(0, 100000))
                                         .executes(ctx -> setPower(ctx, IntegerArgumentType.getInteger(ctx, "value")))))
+                        .then(Commands.literal("damage")
+                                .then(Commands.argument("amount", IntegerArgumentType.integer(1, 1000))
+                                        .executes(ctx -> damageNexus(ctx.getSource(),
+                                                IntegerArgumentType.getInteger(ctx, "amount")))))
+                        .then(Commands.literal("sethp")
+                                .then(Commands.argument("hp", IntegerArgumentType.integer(0, 1000))
+                                        .executes(ctx -> setHp(ctx.getSource(),
+                                                IntegerArgumentType.getInteger(ctx, "hp")))))
                         .then(Commands.literal("damping")
                                 .then(Commands.literal("weak").executes(ctx -> setDamping(ctx, "weak")))
                                 .then(Commands.literal("strong").executes(ctx -> setDamping(ctx, "strong")))
@@ -81,6 +89,8 @@ public final class InvasionCommand {
         src.sendSuccess(() -> Component.literal("/invasion continuous         — start continuous mode"), false);
         src.sendSuccess(() -> Component.literal("/invasion continuous soon [t] — schedule attack in t ticks (test)"), false);
         src.sendSuccess(() -> Component.literal("/invasion power <n>          — set powerLevel (test)"), false);
+        src.sendSuccess(() -> Component.literal("/invasion damage <n>         — damage focus nexus HP (test P4)"), false);
+        src.sendSuccess(() -> Component.literal("/invasion sethp <n>          — set focus nexus HP (test P4)"), false);
         src.sendSuccess(() -> Component.literal("/invasion damping weak|strong|clear — catalyst slot (test, P1)"), false);
         src.sendSuccess(() -> Component.literal("/invasion activate strong — Strong Catalyst skip-timer (test)"), false);
         src.sendSuccess(() -> Component.literal("/invasion catalyst strong|unstable|stable|clear — fill nexus slot"), false);
@@ -448,4 +458,29 @@ public final class InvasionCommand {
         ctx.getSource().sendSuccess(() -> Component.literal(dump), false);
         return 1;
     }
+
+    private static int damageNexus(CommandSourceStack src, int amount) {
+        NexusBlockEntity nexus = resolveNexus(src);
+        if (nexus == null) {
+            src.sendFailure(Component.literal("No focus nexus"));
+            return 0;
+        }
+        int before = nexus.getHp();
+        nexus.attackNexus(amount);
+        int after = nexus.getHp();
+        src.sendSuccess(() -> Component.literal("Damaged nexus " + amount + " (hp " + before + " -> " + after + ")"), true);
+        return 1;
+    }
+
+    private static int setHp(CommandSourceStack src, int hp) {
+        NexusBlockEntity nexus = resolveNexus(src);
+        if (nexus == null) {
+            src.sendFailure(Component.literal("No focus nexus"));
+            return 0;
+        }
+        nexus.debugSetHp(hp);
+        src.sendSuccess(() -> Component.literal("Set nexus hp=" + nexus.getHp() + "/" + nexus.getMaxHp()), true);
+        return 1;
+    }
+
 }

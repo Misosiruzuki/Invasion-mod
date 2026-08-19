@@ -1,0 +1,99 @@
+{
+  "name": "invasion-b03-nexus-hp-damage",
+  "description": "P4/B-03: invasion on, damage nexus, HP decreases.",
+  "launchServer": true,
+  "totalTicks": 200,
+  "totalFrames": 900,
+  "captureEvery": 10,
+  "warmupFrames": 40,
+  "closeClient": true,
+  "display": {
+    "background": true
+  },
+  "commands": [
+    "time set day",
+    "weather clear",
+    "gamemode survival Dev",
+    "tp Dev 0 -60 2",
+    "fill -12 -61 -12 12 -61 12 minecraft:stone",
+    "fill -12 -60 -12 12 -55 12 minecraft:air",
+    "setblock 0 -60 0 invasion:nexus",
+    "effect give Dev minecraft:resistance 60 255 true",
+    "tp Dev 0 -59 2"
+  ],
+  "trackedBlocks": [
+    {
+      "label": "nexus",
+      "x": 0,
+      "y": -60,
+      "z": 0
+    }
+  ],
+  "actions": [
+    {
+      "fromTick": 0,
+      "toTick": 20,
+      "camera": "first",
+      "yaw": 180,
+      "pitch": 35
+    },
+    {
+      "fromTick": 21,
+      "toTick": 40,
+      "camera": "first",
+      "commands": [
+        "invasion begin 1",
+        "invasion nexusstatus"
+      ]
+    },
+    {
+      "fromTick": 41,
+      "toTick": 60,
+      "camera": "first",
+      "commands": [
+        "invasion sethp 100",
+        "invasion nexusstatus"
+      ]
+    },
+    {
+      "fromTick": 61,
+      "toTick": 90,
+      "camera": "first",
+      "commands": [
+        "invasion damage 25",
+        "invasion nexusstatus"
+      ]
+    },
+    {
+      "fromTick": 91,
+      "toTick": 120,
+      "camera": "first",
+      "commands": [
+        "invasion damage 10",
+        "invasion nexusstatus"
+      ]
+    },
+    {
+      "fromTick": 121,
+      "toTick": 160,
+      "camera": "third_back",
+      "deltaYaw": 0.1
+    },
+    {
+      "fromTick": 161,
+      "toTick": 180,
+      "camera": "third_back",
+      "commands": [
+        "invasion end"
+      ]
+    },
+    {
+      "fromTick": 181,
+      "toTick": 199,
+      "camera": "third_back",
+      "commands": [
+        "invasion nexusstatus"
+      ]
+    }
+  ]
+}

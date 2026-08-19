@@ -23,8 +23,15 @@ import net.minecraft.world.level.block.entity.BaseContainerBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
+import java.util.UUID;
+
+import com.whammich.invasion.entity.EntityIMLiving;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.damagesource.DamageSource;
 
 /**
  * Nexus block entity - invasion and continuous modes (1.7.10 mode integers).
@@ -61,8 +68,10 @@ public class NexusBlockEntity extends BaseContainerBlockEntity implements INexus
     private int nexusKills;
     private int generation;
     private int cookTime;
-    private int maxHp = 100;
-    private int hp = 100;
+    private int maxHp = NexusHpLogic.DEFAULT_MAX_HP;
+    private int hp = NexusHpLogic.DEFAULT_MAX_HP;
+    /** Player UUID -> last bind time (ms). Wiki B-05 / 1.7 boundPlayers. */
+    private final Map<UUID, Long> boundPlayers = new HashMap<>();
     private int mode;
     private boolean activated;
 
@@ -127,6 +136,9 @@ public class NexusBlockEntity extends BaseContainerBlockEntity implements INexus
         nexus.tickCook();
         nexus.tickGeneration();
         nexus.tickWaves();
+        if (nexus.activated) {
+            nexus.bindPlayersInRadius();
+        }
         nexus.syncActiveBlockState(level, pos, state);
     }
 
@@ -516,12 +528,95 @@ public class NexusBlockEntity extends BaseContainerBlockEntity implements INexus
 
     @Override
     public void attackNexus(int damage) {
-        hp = Math.max(0, hp - damage);
-        setChanged();
-        if (hp <= 0 && level != null && !level.isClientSide) {
-            emergencyStop();
-            notifyNearby(Component.translatable("message.invasion.nexus.destroyed"));
+        if (level != null && level.isClientSide) {
+            return;
         }
+        int before = hp;
+        hp = NexusHpLogic.applyDamage(hp, damage);
+        setChanged();
+        if (NexusHpLogic.shouldEndInvasion(hp) && before > 0) {
+            theEnd();
+        }
+    }
+
+    /**
+     * Wiki B-04/B-05 + 1.7 theEnd: end invasion, kill linked players, kill invasion mobs.
+     * Block entity and block remain for reactivation.
+     */
+    private void theEnd() {
+        if (level == null || level.isClientSide) {
+            return;
+        }
+        notifyNearby(Component.translatable("message.invasion.nexus.destroyed"));
+        killLinkedPlayers();
+        killAllInvasionMobs();
+        emergencyStop();
+        hp = 0;
+        setChanged();
+        LogHelper.info("Nexus destroyed (theEnd) @ {}", worldPosition);
+    }
+
+    /** Bind players currently inside spawnRadius+10 (1.7 bindPlayers). */
+    public void bindPlayersInRadius() {
+        if (level == null || level.isClientSide || !activated) {
+            return;
+        }
+        AABB box = radiusBox();
+        long now = System.currentTimeMillis();
+        for (Player player : level.getEntitiesOfClass(Player.class, box)) {
+            UUID id = player.getUUID();
+            Long prev = boundPlayers.get(id);
+            if (prev == null || now - prev > NexusHpLogic.BIND_FRESH_MS) {
+                notifyNearby(Component.translatable("message.invasion.nexus.player_bound", player.getName()));
+            }
+            boundPlayers.put(id, now);
+        }
+    }
+
+    private AABB radiusBox() {
+        int half = NexusHpLogic.bindHalfExtent(spawnRadius);
+        BlockPos p = worldPosition;
+        return new AABB(
+                p.getX() - half, p.getY() - half, p.getZ() - half,
+                p.getX() + half + 1, p.getY() + half + 1, p.getZ() + half + 1);
+    }
+
+    private void killLinkedPlayers() {
+        if (!(level instanceof ServerLevel server)) {
+            return;
+        }
+        long now = System.currentTimeMillis();
+        AABB box = radiusBox();
+        DamageSource magic = server.damageSources().magic();
+        for (Player player : server.getEntitiesOfClass(Player.class, box.inflate(8))) {
+            boolean inRadius = box.contains(player.position());
+            Long boundAt = boundPlayers.get(player.getUUID());
+            if (NexusHpLogic.shouldKillPlayerOnDestroy(inRadius, now, boundAt)) {
+                player.hurt(magic, 500.0F);
+            }
+        }
+        boundPlayers.clear();
+    }
+
+    private void killAllInvasionMobs() {
+        if (level == null || level.isClientSide) {
+            return;
+        }
+        AABB box = radiusBox();
+        DamageSource magic = level instanceof ServerLevel s ? s.damageSources().magic() : null;
+        for (EntityIMLiving mob : level.getEntitiesOfClass(EntityIMLiving.class, box)) {
+            if (magic != null) {
+                mob.hurt(magic, 500.0F);
+            } else {
+                mob.discard();
+            }
+        }
+    }
+
+    /** Test / VoxPilot: set HP without ending. */
+    public void debugSetHp(int value) {
+        hp = Math.max(0, Math.min(maxHp, value));
+        setChanged();
     }
 
     @Override

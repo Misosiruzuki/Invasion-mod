@@ -1,0 +1,91 @@
+{
+  "name": "invasion-b05-nexus-death-link",
+  "description": "P4/B-05: player in radius dies when nexus HP hits 0.",
+  "launchServer": true,
+  "totalTicks": 240,
+  "totalFrames": 1100,
+  "captureEvery": 10,
+  "warmupFrames": 40,
+  "closeClient": true,
+  "display": {
+    "background": true
+  },
+  "commands": [
+    "time set day",
+    "weather clear",
+    "gamemode survival Dev",
+    "tp Dev 0 -60 2",
+    "fill -12 -61 -12 12 -61 12 minecraft:stone",
+    "fill -12 -60 -12 12 -55 12 minecraft:air",
+    "setblock 0 -60 0 invasion:nexus",
+    "tp Dev 0 -59 2"
+  ],
+  "trackedBlocks": [
+    {
+      "label": "nexus",
+      "x": 0,
+      "y": -60,
+      "z": 0
+    }
+  ],
+  "actions": [
+    {
+      "fromTick": 0,
+      "toTick": 30,
+      "camera": "first",
+      "yaw": 180,
+      "pitch": 35
+    },
+    {
+      "fromTick": 31,
+      "toTick": 60,
+      "camera": "first",
+      "commands": [
+        "invasion begin 1"
+      ]
+    },
+    {
+      "fromTick": 61,
+      "toTick": 100,
+      "camera": "first",
+      "yaw": 180,
+      "pitch": 35
+    },
+    {
+      "fromTick": 101,
+      "toTick": 120,
+      "camera": "first",
+      "commands": [
+        "invasion sethp 3",
+        "invasion nexusstatus"
+      ]
+    },
+    {
+      "fromTick": 121,
+      "toTick": 150,
+      "camera": "first",
+      "commands": [
+        "invasion damage 10"
+      ]
+    },
+    {
+      "fromTick": 151,
+      "toTick": 200,
+      "camera": "third_back",
+      "deltaYaw": 0.1
+    },
+    {
+      "fromTick": 201,
+      "toTick": 230,
+      "camera": "third_back",
+      "commands": [
+        "invasion nexusstatus"
+      ]
+    },
+    {
+      "fromTick": 231,
+      "toTick": 239,
+      "camera": "third_back"
+    }
+  ]
+}

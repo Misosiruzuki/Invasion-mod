@@ -52,5 +52,6 @@
   "message.invasion.nexus.continuous_calm": "The nexus grows calm again.",
   "message.invasion.nexus.damped_shutdown": "The nexus is silenced by damping.",
   "message.invasion.nexus.invasion_started": "The first wave is coming soon!",
-  "message.invasion.nexus.destroyed": "The nexus is destroyed!"
+  "message.invasion.nexus.destroyed": "The nexus is destroyed!",
+  "message.invasion.nexus.player_bound": "%s's life is now bound to the nexus"
 }
