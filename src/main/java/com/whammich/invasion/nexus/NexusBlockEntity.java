@@ -655,6 +655,17 @@ public class NexusBlockEntity extends BaseContainerBlockEntity implements INexus
         setChanged();
     }
 
+    /** VoxPilot / test: put empty trap in input slot. */
+    public void debugSetInputTrap() {
+        items.set(SLOT_INPUT, new ItemStack(ItemRegistry.TRAP.get()));
+        cookTime = 0;
+        setChanged();
+    }
+
+    public ItemStack debugGetOutput() {
+        return items.get(SLOT_OUTPUT).copy();
+    }
+
     public void debugAddKills(int n) {
         for (int i = 0; i < n; i++) {
             registerMobDied();
