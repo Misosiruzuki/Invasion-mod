@@ -1,0 +1,75 @@
+/*
+ * Decompiled with CFR 0.152.
+ * 
+ * Could not load the following classes:
+ *  net.minecraft.block.Block
+ */
+package invmod.common.entity;
+
+import invmod.common.util.IPosition;
+import net.minecraft.block.Block;
+
+public class ModifyBlockEntry
+implements IPosition {
+    private int xCoord;
+    private int yCoord;
+    private int zCoord;
+    private Block oldBlock;
+    private Block newBlock;
+    private int newBlockMeta;
+    private int cost;
+
+    public ModifyBlockEntry(int x, int y, int z, Block block) {
+        this(x, y, z, block, 0, 0, null);
+    }
+
+    public ModifyBlockEntry(int x, int y, int z, Block planks, int cost) {
+        this(x, y, z, planks, cost, 0, null);
+    }
+
+    public ModifyBlockEntry(int x, int y, int z, Block block, int cost, int newBlockMeta, Block oldBlock) {
+        this.xCoord = x;
+        this.yCoord = y;
+        this.zCoord = z;
+        this.newBlock = block;
+        this.cost = cost;
+        this.newBlockMeta = newBlockMeta;
+        this.oldBlock = oldBlock;
+    }
+
+    @Override
+    public int getXCoord() {
+        return this.xCoord;
+    }
+
+    @Override
+    public int getYCoord() {
+        return this.yCoord;
+    }
+
+    @Override
+    public int getZCoord() {
+        return this.zCoord;
+    }
+
+    public Block getNewBlock() {
+        return this.newBlock;
+    }
+
+    public int getNewBlockMeta() {
+        return this.newBlockMeta;
+    }
+
+    public int getCost() {
+        return this.cost;
+    }
+
+    public Block getOldBlock() {
+        return this.oldBlock;
+    }
+
+    public void setOldBlock(Block block) {
+        this.oldBlock = block;
+    }
+}
+
