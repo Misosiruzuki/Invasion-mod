@@ -1,9 +1,9 @@
 {
   "name": "invasion-d21-flame-trap-fire",
-  "description": "P5/D-21: place flame trap, trigger makes 3x3 fire.",
+  "description": "P5/D-21: place flame trap, zombie triggers, 3x3 fire.",
   "launchServer": true,
-  "totalTicks": 240,
-  "totalFrames": 1000,
+  "totalTicks": 300,
+  "totalFrames": 1300,
   "captureEvery": 8,
   "warmupFrames": 40,
   "closeClient": true,
@@ -13,52 +13,95 @@
   "commands": [
     "time set day",
     "gamemode creative Dev",
-    "tp Dev 0 -60 3",
+    "tp Dev 0.5 -59 4.5",
     "fill -6 -61 -6 6 -61 6 minecraft:stone",
     "fill -6 -60 -6 6 -55 6 minecraft:air",
-    "give Dev invasion:trap_flame 2",
-    "tp Dev 0 -59 2"
+    "tp Dev 0.5 -59 0.5"
+  ],
+  "trackedBlocks": [
+    {
+      "label": "center",
+      "x": 0,
+      "y": -60,
+      "z": 0
+    },
+    {
+      "label": "n",
+      "x": 0,
+      "y": -60,
+      "z": -1
+    },
+    {
+      "label": "s",
+      "x": 0,
+      "y": -60,
+      "z": 1
+    },
+    {
+      "label": "e",
+      "x": 1,
+      "y": -60,
+      "z": 0
+    },
+    {
+      "label": "w",
+      "x": -1,
+      "y": -60,
+      "z": 0
+    }
   ],
   "actions": [
     {
       "fromTick": 0,
-      "toTick": 25,
-      "camera": "first",
-      "yaw": 180,
-      "pitch": 55
+      "toTick": 15,
+      "camera": "third_back",
+      "yaw": 0,
+      "pitch": 40
     },
     {
-      "fromTick": 26,
-      "toTick": 55,
-      "camera": "first",
-      "yaw": 180,
-      "pitch": 55,
-      "keys": {
-        "use": true
-      }
-    },
-    {
-      "fromTick": 56,
-      "toTick": 90,
-      "camera": "first",
+      "fromTick": 16,
+      "toTick": 40,
+      "camera": "third_back",
       "commands": [
-        "summon minecraft:zombie 0 -59 1"
+        "invasion placetrap flame"
       ]
     },
     {
-      "fromTick": 91,
-      "toTick": 160,
+      "fromTick": 41,
+      "toTick": 60,
+      "camera": "third_back",
+      "commands": [
+        "tp Dev 4 -59 4"
+      ]
+    },
+    {
+      "fromTick": 61,
+      "toTick": 100,
+      "camera": "third_back"
+    },
+    {
+      "fromTick": 101,
+      "toTick": 130,
+      "camera": "third_back",
+      "commands": [
+        "summon minecraft:zombie 0.5 -59 0.5 {NoAI:1b,Health:40f,PersistenceRequired:1b}"
+      ]
+    },
+    {
+      "fromTick": 131,
+      "toTick": 220,
       "camera": "third_back",
       "deltaYaw": 0.1
     },
     {
-      "fromTick": 161,
-      "toTick": 200,
-      "camera": "third_back"
+      "fromTick": 221,
+      "toTick": 270,
+      "camera": "third_back",
+      "deltaYaw": 0.05
     },
     {
-      "fromTick": 201,
-      "toTick": 239,
+      "fromTick": 271,
+      "toTick": 299,
       "camera": "third_back"
     }
   ]
