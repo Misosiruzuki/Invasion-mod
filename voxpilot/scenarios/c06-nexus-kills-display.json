@@ -1,0 +1,92 @@
+{
+  "name": "invasion-c06-nexus-kills-display",
+  "description": "P5/C-06: GUI shows cumulative kills after registerMobDied path via damage kills status.",
+  "launchServer": true,
+  "totalTicks": 220,
+  "totalFrames": 980,
+  "captureEvery": 8,
+  "warmupFrames": 40,
+  "closeClient": true,
+  "display": {
+    "background": true
+  },
+  "commands": [
+    "time set day",
+    "gamemode creative Dev",
+    "tp Dev 0 -60 2",
+    "fill -6 -61 -6 6 -61 6 minecraft:stone",
+    "setblock 0 -60 0 invasion:nexus",
+    "tp Dev 0 -59 2"
+  ],
+  "trackedBlocks": [
+    {
+      "label": "nexus",
+      "x": 0,
+      "y": -60,
+      "z": 0
+    }
+  ],
+  "actions": [
+    {
+      "fromTick": 0,
+      "toTick": 20,
+      "camera": "first",
+      "yaw": 180,
+      "pitch": 28
+    },
+    {
+      "fromTick": 21,
+      "toTick": 50,
+      "camera": "first",
+      "commands": [
+        "invasion begin 1",
+        "invasion nexusstatus"
+      ]
+    },
+    {
+      "fromTick": 51,
+      "toTick": 80,
+      "camera": "first",
+      "commands": [
+        "invasion addkills 7",
+        "invasion nexusstatus"
+      ]
+    },
+    {
+      "fromTick": 81,
+      "toTick": 110,
+      "camera": "first",
+      "yaw": 180,
+      "pitch": 28,
+      "keys": {
+        "use": true
+      }
+    },
+    {
+      "fromTick": 111,
+      "toTick": 160,
+      "camera": "first",
+      "yaw": 180,
+      "pitch": 28
+    },
+    {
+      "fromTick": 161,
+      "toTick": 180,
+      "camera": "first",
+      "closeScreen": true
+    },
+    {
+      "fromTick": 181,
+      "toTick": 200,
+      "camera": "third_back",
+      "commands": [
+        "invasion end"
+      ]
+    },
+    {
+      "fromTick": 201,
+      "toTick": 219,
+      "camera": "third_back"
+    }
+  ]
+}

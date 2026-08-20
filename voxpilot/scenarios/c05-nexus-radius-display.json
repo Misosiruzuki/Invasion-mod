@@ -1,0 +1,85 @@
+{
+  "name": "invasion-c05-nexus-radius-display",
+  "description": "P5/C-05: GUI shows R: spawn radius (set to 64).",
+  "launchServer": true,
+  "totalTicks": 200,
+  "totalFrames": 900,
+  "captureEvery": 8,
+  "warmupFrames": 40,
+  "closeClient": true,
+  "display": {
+    "background": true
+  },
+  "commands": [
+    "time set day",
+    "gamemode creative Dev",
+    "tp Dev 0 -60 2",
+    "fill -6 -61 -6 6 -61 6 minecraft:stone",
+    "setblock 0 -60 0 invasion:nexus",
+    "tp Dev 0 -59 2"
+  ],
+  "trackedBlocks": [
+    {
+      "label": "nexus",
+      "x": 0,
+      "y": -60,
+      "z": 0
+    }
+  ],
+  "actions": [
+    {
+      "fromTick": 0,
+      "toTick": 20,
+      "camera": "first",
+      "yaw": 180,
+      "pitch": 28
+    },
+    {
+      "fromTick": 21,
+      "toTick": 50,
+      "camera": "first",
+      "commands": [
+        "invasion range 64",
+        "invasion begin 1",
+        "invasion nexusstatus"
+      ]
+    },
+    {
+      "fromTick": 51,
+      "toTick": 80,
+      "camera": "first",
+      "yaw": 180,
+      "pitch": 28,
+      "keys": {
+        "use": true
+      }
+    },
+    {
+      "fromTick": 81,
+      "toTick": 140,
+      "camera": "first",
+      "yaw": 180,
+      "pitch": 28
+    },
+    {
+      "fromTick": 141,
+      "toTick": 160,
+      "camera": "first",
+      "closeScreen": true
+    },
+    {
+      "fromTick": 161,
+      "toTick": 180,
+      "camera": "third_back",
+      "commands": [
+        "invasion nexusstatus",
+        "invasion end"
+      ]
+    },
+    {
+      "fromTick": 181,
+      "toTick": 199,
+      "camera": "third_back"
+    }
+  ]
+}

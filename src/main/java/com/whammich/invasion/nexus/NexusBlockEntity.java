@@ -655,6 +655,14 @@ public class NexusBlockEntity extends BaseContainerBlockEntity implements INexus
         setChanged();
     }
 
+    public void debugAddKills(int n) {
+        for (int i = 0; i < n; i++) {
+            registerMobDied();
+        }
+        setChanged();
+        NexusTracker.syncStatus(this);
+    }
+
     public int getCookTime() {
         return cookTime;
     }

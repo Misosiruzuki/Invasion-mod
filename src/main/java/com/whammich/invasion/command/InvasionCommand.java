@@ -58,6 +58,10 @@ public final class InvasionCommand {
                                 .then(Commands.argument("amount", IntegerArgumentType.integer(1, 1000))
                                         .executes(ctx -> damageNexus(ctx.getSource(),
                                                 IntegerArgumentType.getInteger(ctx, "amount")))))
+                        .then(Commands.literal("addkills")
+                                .then(Commands.argument("n", IntegerArgumentType.integer(1, 1000))
+                                        .executes(ctx -> addKills(ctx.getSource(),
+                                                IntegerArgumentType.getInteger(ctx, "n")))))
                         .then(Commands.literal("cook")
                                 .then(Commands.argument("value", IntegerArgumentType.integer(0, 1200))
                                         .executes(ctx -> setCook(ctx.getSource(),
@@ -473,6 +477,17 @@ public final class InvasionCommand {
         nexus.attackNexus(amount);
         int after = nexus.getHp();
         src.sendSuccess(() -> Component.literal("Damaged nexus " + amount + " (hp " + before + " -> " + after + ")"), true);
+        return 1;
+    }
+
+    private static int addKills(CommandSourceStack src, int n) {
+        NexusBlockEntity nexus = resolveNexus(src);
+        if (nexus == null) {
+            src.sendFailure(Component.literal("No focus nexus"));
+            return 0;
+        }
+        nexus.debugAddKills(n);
+        src.sendSuccess(() -> Component.literal("Added kills, total=" + nexus.getNexusKills()), true);
         return 1;
     }
 
