@@ -20,7 +20,7 @@
   "item.invasion.strange_bone": "奇妙な骨",
   "item.invasion.strange_bone.tooltip": "リフトの残滓を帯びた骨",
   "item.invasion.infused_sword": "注入された剣",
-  "item.invasion.infused_sword.tooltip": "リフトフラックスで鍛えられた剣",
+  "item.invasion.infused_sword.tooltip": "敵への攻撃でゲージ蓄積。満タン時に右クリックでハート3回復（スニークで満腹度回復）。",
   "item.invasion.trap": "空のトラップ",
   "item.invasion.trap.tooltip": "侵攻モブを捕らえる罠を設置する",
   "item.invasion.trap.pending": "トラップ設置はエンティティ移植待ち (%s, %s, %s)",
@@ -59,5 +59,6 @@
   "item.invasion.trap.tooltip.empty": "ネクサスでチャージすると次元トラップになる",
   "item.invasion.trap.tooltip.rift": "敵に大ダメージと硬直",
   "item.invasion.trap.tooltip.flame": "発動時に3×3の炎",
-  "item.invasion.trap.empty_cannot_place": "空のトラップはネクサスでチャージしてから設置"
+  "item.invasion.trap.empty_cannot_place": "空のトラップはネクサスでチャージしてから設置",
+  "item.invasion.infused_sword.charge": "チャージ: %s / %s"
 }

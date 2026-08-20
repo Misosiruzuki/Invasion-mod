@@ -20,7 +20,7 @@
   "item.invasion.strange_bone": "Strange Bone",
   "item.invasion.strange_bone.tooltip": "An odd bone with residual rift energy",
   "item.invasion.infused_sword": "Infused Sword",
-  "item.invasion.infused_sword.tooltip": "Tempered with Rift Flux",
+  "item.invasion.infused_sword.tooltip": "Hits charge the gauge. When full, right-click to heal 3 hearts (sneak: restore food).",
   "item.invasion.trap": "Empty Trap",
   "item.invasion.trap.tooltip": "Places a trap that snare invaders",
   "item.invasion.trap.pending": "Trap placement pending entity port (%s, %s, %s)",
@@ -59,5 +59,6 @@
   "item.invasion.trap.tooltip.empty": "Charge in a Nexus to create a Rift Trap",
   "item.invasion.trap.tooltip.rift": "Triggers on invaders: heavy damage and stun",
   "item.invasion.trap.tooltip.flame": "Triggers: 3x3 fire",
-  "item.invasion.trap.empty_cannot_place": "Empty traps must be charged in a Nexus first"
+  "item.invasion.trap.empty_cannot_place": "Empty traps must be charged in a Nexus first",
+  "item.invasion.infused_sword.charge": "Charge: %s / %s"
 }
