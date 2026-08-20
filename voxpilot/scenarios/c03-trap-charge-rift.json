@@ -1,0 +1,128 @@
+{
+  "name": "invasion-c03-trap-charge-rift",
+  "description": "P5/C-03: empty trap in left slot cooks to rift trap on right (GUI).",
+  "launchServer": true,
+  "totalTicks": 280,
+  "totalFrames": 1200,
+  "captureEvery": 8,
+  "warmupFrames": 40,
+  "closeClient": true,
+  "display": {
+    "background": true
+  },
+  "commands": [
+    "time set day",
+    "gamemode creative Dev",
+    "tp Dev 0 -60 2",
+    "fill -6 -61 -6 6 -61 6 minecraft:stone",
+    "setblock 0 -60 0 invasion:nexus",
+    "give Dev invasion:trap 4",
+    "tp Dev 0 -59 2"
+  ],
+  "trackedBlocks": [
+    {
+      "label": "nexus",
+      "x": 0,
+      "y": -60,
+      "z": 0
+    }
+  ],
+  "actions": [
+    {
+      "fromTick": 0,
+      "toTick": 25,
+      "camera": "first",
+      "yaw": 180,
+      "pitch": 28
+    },
+    {
+      "fromTick": 26,
+      "toTick": 50,
+      "camera": "first",
+      "commands": [
+        "invasion begin 1"
+      ]
+    },
+    {
+      "fromTick": 51,
+      "toTick": 80,
+      "camera": "first",
+      "yaw": 180,
+      "pitch": 28,
+      "keys": {
+        "use": true
+      }
+    },
+    {
+      "fromTick": 81,
+      "toTick": 95,
+      "camera": "first",
+      "yaw": 180,
+      "pitch": 28
+    },
+    {
+      "fromTick": 96,
+      "toTick": 105,
+      "camera": "first",
+      "containerClick": {
+        "slot": 37,
+        "button": 0,
+        "type": "pickup"
+      }
+    },
+    {
+      "fromTick": 106,
+      "toTick": 115,
+      "camera": "first",
+      "containerClick": {
+        "slot": 0,
+        "button": 0,
+        "type": "pickup"
+      }
+    },
+    {
+      "fromTick": 116,
+      "toTick": 140,
+      "camera": "first",
+      "commands": [
+        "invasion cook 1190"
+      ]
+    },
+    {
+      "fromTick": 141,
+      "toTick": 200,
+      "camera": "first",
+      "yaw": 180,
+      "pitch": 28
+    },
+    {
+      "fromTick": 201,
+      "toTick": 220,
+      "camera": "first",
+      "commands": [
+        "invasion nexusstatus"
+      ]
+    },
+    {
+      "fromTick": 221,
+      "toTick": 250,
+      "camera": "first",
+      "yaw": 180,
+      "pitch": 28
+    },
+    {
+      "fromTick": 251,
+      "toTick": 265,
+      "camera": "first",
+      "closeScreen": true
+    },
+    {
+      "fromTick": 266,
+      "toTick": 279,
+      "camera": "third_back",
+      "commands": [
+        "invasion end"
+      ]
+    }
+  ]
+}
