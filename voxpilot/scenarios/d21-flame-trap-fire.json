@@ -1,0 +1,65 @@
+{
+  "name": "invasion-d21-flame-trap-fire",
+  "description": "P5/D-21: place flame trap, trigger makes 3x3 fire.",
+  "launchServer": true,
+  "totalTicks": 240,
+  "totalFrames": 1000,
+  "captureEvery": 8,
+  "warmupFrames": 40,
+  "closeClient": true,
+  "display": {
+    "background": true
+  },
+  "commands": [
+    "time set day",
+    "gamemode creative Dev",
+    "tp Dev 0 -60 3",
+    "fill -6 -61 -6 6 -61 6 minecraft:stone",
+    "fill -6 -60 -6 6 -55 6 minecraft:air",
+    "give Dev invasion:trap_flame 2",
+    "tp Dev 0 -59 2"
+  ],
+  "actions": [
+    {
+      "fromTick": 0,
+      "toTick": 25,
+      "camera": "first",
+      "yaw": 180,
+      "pitch": 55
+    },
+    {
+      "fromTick": 26,
+      "toTick": 55,
+      "camera": "first",
+      "yaw": 180,
+      "pitch": 55,
+      "keys": {
+        "use": true
+      }
+    },
+    {
+      "fromTick": 56,
+      "toTick": 90,
+      "camera": "first",
+      "commands": [
+        "summon minecraft:zombie 0 -59 1"
+      ]
+    },
+    {
+      "fromTick": 91,
+      "toTick": 160,
+      "camera": "third_back",
+      "deltaYaw": 0.1
+    },
+    {
+      "fromTick": 161,
+      "toTick": 200,
+      "camera": "third_back"
+    },
+    {
+      "fromTick": 201,
+      "toTick": 239,
+      "camera": "third_back"
+    }
+  ]
+}

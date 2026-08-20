@@ -1,0 +1,74 @@
+{
+  "name": "invasion-d18-rift-trap-trigger-reuse",
+  "description": "P5/D-18+D-20: place rift trap, enemy triggers, empty trap drops for reuse.",
+  "launchServer": true,
+  "totalTicks": 260,
+  "totalFrames": 1100,
+  "captureEvery": 8,
+  "warmupFrames": 40,
+  "closeClient": true,
+  "display": {
+    "background": true
+  },
+  "commands": [
+    "time set day",
+    "gamemode creative Dev",
+    "tp Dev 0 -60 3",
+    "fill -6 -61 -6 6 -61 6 minecraft:stone",
+    "fill -6 -60 -6 6 -55 6 minecraft:air",
+    "setblock 0 -60 0 invasion:nexus",
+    "give Dev invasion:trap_rift 2",
+    "tp Dev 0 -59 2"
+  ],
+  "actions": [
+    {
+      "fromTick": 0,
+      "toTick": 25,
+      "camera": "first",
+      "yaw": 180,
+      "pitch": 40
+    },
+    {
+      "fromTick": 26,
+      "toTick": 50,
+      "camera": "first",
+      "yaw": 180,
+      "pitch": 55,
+      "keys": {
+        "use": true
+      }
+    },
+    {
+      "fromTick": 51,
+      "toTick": 80,
+      "camera": "first",
+      "yaw": 180,
+      "pitch": 40
+    },
+    {
+      "fromTick": 81,
+      "toTick": 110,
+      "camera": "third_back",
+      "commands": [
+        "summon minecraft:zombie 0 -59 1 {NoAI:0,Health:20}"
+      ]
+    },
+    {
+      "fromTick": 111,
+      "toTick": 180,
+      "camera": "third_back",
+      "deltaYaw": 0.15
+    },
+    {
+      "fromTick": 181,
+      "toTick": 220,
+      "camera": "third_back",
+      "deltaYaw": 0.1
+    },
+    {
+      "fromTick": 221,
+      "toTick": 259,
+      "camera": "third_back"
+    }
+  ]
+}
