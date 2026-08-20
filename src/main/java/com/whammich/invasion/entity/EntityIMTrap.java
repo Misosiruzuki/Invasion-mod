@@ -1,6 +1,7 @@
 package com.whammich.invasion.entity;
 
 import com.whammich.invasion.registry.ItemRegistry;
+import com.whammich.invasion.util.LogHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
@@ -18,19 +19,19 @@ import net.minecraft.world.phys.AABB;
 
 /**
  * Armed trap entity (1.7 EntityIMTrap parity for D-18/D-20/D-21).
- * TYPE_RIFT: damage + brief slow on hostiles; drops empty trap.
- * TYPE_FLAME: 3x3 fire, then empty trap.
  */
 public class EntityIMTrap extends Entity {
     public static final int TYPE_RIFT = 1;
     public static final int TYPE_FLAME = 2;
+    private static final int ARM_TIME = 60;
 
     private static final EntityDataAccessor<Integer> DATA_TYPE =
             SynchedEntityData.defineId(EntityIMTrap.class, EntityDataSerializers.INT);
+    private static final EntityDataAccessor<Boolean> DATA_EMPTY =
+            SynchedEntityData.defineId(EntityIMTrap.class, EntityDataSerializers.BOOLEAN);
 
-    private static final int ARM_TIME = 60;
     private int life = 6000;
-    private int ticks;
+    private int ticksLived;
     private boolean triggered;
 
     public EntityIMTrap(EntityType<? extends EntityIMTrap> type, Level level) {
@@ -48,43 +49,54 @@ public class EntityIMTrap extends Entity {
     }
 
     public boolean isEmpty() {
-        return false;
+        return entityData.get(DATA_EMPTY);
+    }
+
+    private void setEmpty(boolean empty) {
+        entityData.set(DATA_EMPTY, empty);
     }
 
     @Override
     protected void defineSynchedData() {
         entityData.define(DATA_TYPE, TYPE_RIFT);
+        entityData.define(DATA_EMPTY, false);
     }
 
     @Override
     public void tick() {
         super.tick();
-        if (level().isClientSide || triggered) {
+        // Keep bounding box centered (noPhysics can leave it stale on some versions)
+        double w = 0.4;
+        double h = 0.25;
+        setBoundingBox(new AABB(getX() - w, getY(), getZ() - w, getX() + w, getY() + h, getZ() + w));
+
+        if (level().isClientSide) {
             return;
         }
-        ticks++;
+        ticksLived++;
         life--;
         if (life <= 0) {
             discard();
             return;
         }
-        if (ticks < ARM_TIME) {
+        if (isEmpty() || triggered) {
             return;
         }
-        AABB box = getBoundingBox().inflate(0.6, 0.8, 0.6);
-        for (LivingEntity living : level().getEntitiesOfClass(LivingEntity.class, box)) {
-            if (living instanceof Player player && player.isCreative()) {
-                continue;
-            }
-            // Prefer invasion mobs; still trigger on other non-creative livings
-            if (living instanceof EntityIMLiving || !(living instanceof Player)) {
-                trigger(living);
-                return;
-            }
+        if (ticksLived < ARM_TIME) {
+            return;
+        }
+        AABB box = getBoundingBox().inflate(0.5, 0.75, 0.5);
+        for (LivingEntity living : level().getEntitiesOfClass(LivingEntity.class, box, e -> e.isAlive() && !(e instanceof Player p && p.isCreative()))) {
             if (living instanceof Player) {
-                trigger(living);
-                return;
+                continue; // 1.7 focuses on mobs; survival players still can step later
             }
+            LogHelper.info("Trap id={} type={} triggered by {}", getId(), getTrapType(), living.getName().getString());
+            trigger(living);
+            return;
+        }
+        if (ticksLived == ARM_TIME || ticksLived % 40 == 0) {
+            int n = level().getEntitiesOfClass(LivingEntity.class, box).size();
+            LogHelper.info("Trap id={} armed tick={} nearbyLiving={}", getId(), ticksLived, n);
         }
     }
 
@@ -103,7 +115,7 @@ public class EntityIMTrap extends Entity {
             }
             victim.hurt(damageSources().onFire(), 6.0F);
         } else {
-            // Rift: heavy magic damage + brief slow
+            // Rift: magic damage + stun-like slow for nearby hostiles
             victim.hurt(damageSources().magic(), 12.0F);
             victim.setDeltaMovement(victim.getDeltaMovement().multiply(0.2, 0.5, 0.2));
             victim.hurtMarked = true;
@@ -111,28 +123,36 @@ public class EntityIMTrap extends Entity {
                 if (nearby == victim || nearby instanceof Player) {
                     continue;
                 }
+                nearby.hurt(damageSources().magic(), 8.0F);
                 nearby.setDeltaMovement(nearby.getDeltaMovement().multiply(0.15, 0.4, 0.15));
                 nearby.hurtMarked = true;
             }
         }
-        // D-18: drop empty trap for reuse
+        // D-18: become empty and drop empty trap for reuse
+        setEmpty(true);
         ItemEntity drop = new ItemEntity(level(), getX(), getY() + 0.2, getZ(),
                 new ItemStack(ItemRegistry.TRAP.get()));
+        drop.setPickUpDelay(10);
         level().addFreshEntity(drop);
+        LogHelper.info("Trap id={} fired type={} dropped empty trap", getId(), type);
         discard();
     }
 
     @Override
     protected void readAdditionalSaveData(CompoundTag tag) {
         life = tag.getInt("Life");
+        ticksLived = tag.getInt("TicksLived");
         setTrapType(tag.getInt("TrapType"));
+        setEmpty(tag.getBoolean("Empty"));
         triggered = tag.getBoolean("Triggered");
     }
 
     @Override
     protected void addAdditionalSaveData(CompoundTag tag) {
         tag.putInt("Life", life);
+        tag.putInt("TicksLived", ticksLived);
         tag.putInt("TrapType", getTrapType());
+        tag.putBoolean("Empty", isEmpty());
         tag.putBoolean("Triggered", triggered);
     }
 }

@@ -500,9 +500,11 @@ public final class InvasionCommand {
                 return 0;
             }
             int trapType = "flame".equalsIgnoreCase(type) ? EntityIMTrap.TYPE_FLAME : EntityIMTrap.TYPE_RIFT;
+            // Sit on top of the block under the command source feet (stone platform top).
             double x = Math.floor(pos.x) + 0.5;
-            double y = Math.floor(pos.y) + 0.05;
             double z = Math.floor(pos.z) + 0.5;
+            int floorY = (int) Math.floor(pos.y) - 1;
+            double y = floorY + 1.05;
             trap.setPos(x, y, z);
             trap.setTrapType(trapType);
             level.addFreshEntity(trap);
