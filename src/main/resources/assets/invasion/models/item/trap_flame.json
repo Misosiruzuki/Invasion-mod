@@ -1,6 +1,6 @@
 {
   "parent": "minecraft:item/generated",
   "textures": {
-    "layer0": "invasion:item/trap"
+    "layer0": "invasion:item/trap_flame"
   }
 }
