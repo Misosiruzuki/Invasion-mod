@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "   ",
+    " # ",
+    " X "
+  ],
+  "key": {
+    "#": { "item": "minecraft:lava_bucket" },
+    "X": { "item": "invasion:trap" }
+  },
+  "result": { "item": "invasion:trap_flame", "count": 1 }
+}
