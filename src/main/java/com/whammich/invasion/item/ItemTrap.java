@@ -50,7 +50,15 @@ public class ItemTrap extends Item {
             }
             return InteractionResult.FAIL;
         }
-        BlockPos place = context.getClickedPos().relative(context.getClickedFace());
+        BlockPos clicked = context.getClickedPos();
+        BlockPos place = clicked.relative(context.getClickedFace());
+        // Prefer standing on the top face like 1.7 (y + 1 on the block)
+        if (context.getClickedFace().getAxis().isHorizontal()) {
+            place = clicked.above();
+        }
+        if (!level.getBlockState(place).isAir() && !level.getBlockState(place).canBeReplaced()) {
+            place = clicked.above();
+        }
         EntityIMTrap trap = EntityRegistry.TRAP.get().create(level);
         if (trap == null) {
             return InteractionResult.FAIL;
@@ -62,7 +70,7 @@ public class ItemTrap extends Item {
         if (player != null && !player.getAbilities().instabuild) {
             context.getItemInHand().shrink(1);
         }
-        return InteractionResult.CONSUME;
+        return InteractionResult.sidedSuccess(level.isClientSide);
     }
 
     @Override

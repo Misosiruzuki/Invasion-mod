@@ -28,7 +28,9 @@ public class EntityIMTrap extends Entity {
     private static final EntityDataAccessor<Integer> DATA_TYPE =
             SynchedEntityData.defineId(EntityIMTrap.class, EntityDataSerializers.INT);
 
+    private static final int ARM_TIME = 60;
     private int life = 6000;
+    private int ticks;
     private boolean triggered;
 
     public EntityIMTrap(EntityType<? extends EntityIMTrap> type, Level level) {
@@ -58,9 +60,13 @@ public class EntityIMTrap extends Entity {
         if (level().isClientSide || triggered) {
             return;
         }
+        ticks++;
         life--;
         if (life <= 0) {
             discard();
+            return;
+        }
+        if (ticks < ARM_TIME) {
             return;
         }
         AABB box = getBoundingBox().inflate(0.35);

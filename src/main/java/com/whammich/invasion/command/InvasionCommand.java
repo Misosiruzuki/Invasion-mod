@@ -2,8 +2,11 @@ package com.whammich.invasion.command;
 
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
+import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.context.CommandContext;
 import com.whammich.invasion.nexus.NexusBlockEntity;
+import com.whammich.invasion.registry.EntityRegistry;
+import com.whammich.invasion.entity.EntityIMTrap;
 import com.whammich.invasion.nexus.NexusTracker;
 import com.whammich.invasion.registry.ItemRegistry;
 import com.whammich.invasion.util.LogHelper;
@@ -58,6 +61,10 @@ public final class InvasionCommand {
                                 .then(Commands.argument("amount", IntegerArgumentType.integer(1, 1000))
                                         .executes(ctx -> damageNexus(ctx.getSource(),
                                                 IntegerArgumentType.getInteger(ctx, "amount")))))
+                        .then(Commands.literal("placetrap")
+                                .then(Commands.argument("type", StringArgumentType.word())
+                                        .executes(ctx -> placeTrap(ctx.getSource(),
+                                                StringArgumentType.getString(ctx, "type")))))
                         .then(Commands.literal("puttrap")
                                 .executes(ctx -> putTrap(ctx.getSource())))
                         .then(Commands.literal("addkills")
@@ -480,6 +487,28 @@ public final class InvasionCommand {
         int after = nexus.getHp();
         src.sendSuccess(() -> Component.literal("Damaged nexus " + amount + " (hp " + before + " -> " + after + ")"), true);
         return 1;
+    }
+
+
+    private static int placeTrap(CommandSourceStack src, String type) {
+        try {
+            var level = src.getLevel();
+            var pos = src.getPosition();
+            EntityIMTrap trap = EntityRegistry.TRAP.get().create(level);
+            if (trap == null) {
+                src.sendFailure(Component.literal("Failed to create trap entity"));
+                return 0;
+            }
+            int trapType = "flame".equalsIgnoreCase(type) ? EntityIMTrap.TYPE_FLAME : EntityIMTrap.TYPE_RIFT;
+            trap.setPos(Math.floor(pos.x) + 0.5, Math.floor(pos.y), Math.floor(pos.z) + 0.5);
+            trap.setTrapType(trapType);
+            level.addFreshEntity(trap);
+            src.sendSuccess(() -> Component.literal("Placed " + type + " trap at " + trap.blockPosition()), true);
+            return 1;
+        } catch (Exception e) {
+            src.sendFailure(Component.literal("placeTrap error: " + e.getMessage()));
+            return 0;
+        }
     }
 
     private static int putTrap(CommandSourceStack src) {
