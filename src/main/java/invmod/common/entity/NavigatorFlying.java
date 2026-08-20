@@ -1,6 +1,22 @@
+/*
+ * Decompiled with CFR 0.152.
+ * 
+ * Could not load the following classes:
+ *  net.minecraft.block.Block
+ *  net.minecraft.entity.Entity
+ *  net.minecraft.util.MovingObjectPosition
+ *  net.minecraft.util.Vec3
+ */
 package invmod.common.entity;
 
-
+import invmod.common.entity.EntityIMFlying;
+import invmod.common.entity.FlyState;
+import invmod.common.entity.Goal;
+import invmod.common.entity.INavigationFlying;
+import invmod.common.entity.IPathSource;
+import invmod.common.entity.MoveState;
+import invmod.common.entity.NavigatorIM;
+import invmod.common.entity.Path;
 import invmod.common.util.Distance;
 import invmod.common.util.MathUtil;
 import invmod.common.util.Pair;
@@ -9,11 +25,13 @@ import net.minecraft.entity.Entity;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.Vec3;
 
-public class NavigatorFlying extends NavigatorIM implements INavigationFlying {
+public class NavigatorFlying
+extends NavigatorIM
+implements INavigationFlying {
     private static final int VISION_RESOLUTION_H = 30;
     private static final int VISION_RESOLUTION_V = 20;
-    private static final float FOV_H = 300.0F;
-    private static final float FOV_V = 220.0F;
+    private static final float FOV_H = 300.0f;
+    private static final float FOV_V = 220.0f;
     private final EntityIMFlying theEntity;
     private INavigationFlying.MoveType moveType;
     private boolean wantsToBeFlying;
@@ -41,434 +59,401 @@ public class NavigatorFlying extends NavigatorIM implements INavigationFlying {
         super(entityFlying, pathSource);
         this.theEntity = entityFlying;
         this.moveType = INavigationFlying.MoveType.MIXED;
-        this.visionDistance = 14.0F;
-        this.visionUpdateRate = (this.timeSinceVision = 3);
-        this.targetYaw = entityFlying.rotationYaw;
-        this.targetPitch = 0.0F;
+        this.visionDistance = 14.0f;
+        this.timeSinceVision = 3;
+        this.visionUpdateRate = 3;
+        this.targetYaw = entityFlying.field_70177_z;
+        this.targetPitch = 0.0f;
         this.targetSpeed = entityFlying.getMaxPoweredFlightSpeed();
         this.retina = new float[30][20];
         this.headingAppeal = new float[28][18];
-        this.intermediateTarget = Vec3.createVectorHelper(0.0D, 0.0D, 0.0D);
+        this.intermediateTarget = Vec3.func_72443_a((double)0.0, (double)0.0, (double)0.0);
         this.isCircling = false;
-        this.pitchBias = 0.0F;
-        this.pitchBiasAmount = 0.0F;
+        this.pitchBias = 0.0f;
+        this.pitchBiasAmount = 0.0f;
         this.timeLookingForEntity = 0;
         this.precisionTarget = false;
-        this.closestDistToTarget = 0.0F;
+        this.closestDistToTarget = 0.0f;
         this.timeSinceGotCloser = 0;
     }
 
+    @Override
     public void setMovementType(INavigationFlying.MoveType moveType) {
         this.moveType = moveType;
     }
 
+    @Override
     public void enableDirectTarget(boolean enabled) {
         this.precisionTarget = enabled;
     }
 
+    @Override
     public void setLandingPath() {
-        clearPath();
+        this.clearPath();
         this.moveType = INavigationFlying.MoveType.PREFER_WALKING;
-        setWantsToBeFlying(false);
+        this.setWantsToBeFlying(false);
     }
 
+    @Override
     public void setCirclingPath(Entity target, float preferredHeight, float preferredRadius) {
-        setCirclingPath(target.posX, target.posY, target.posZ, preferredHeight, preferredRadius);
+        this.setCirclingPath(target.field_70165_t, target.field_70163_u, target.field_70161_v, preferredHeight, preferredRadius);
     }
 
+    @Override
     public void setCirclingPath(double x, double y, double z, float preferredHeight, float preferredRadius) {
-        clearPath();
-        this.finalTarget = Vec3.createVectorHelper(x, y, z);
+        this.clearPath();
+        this.finalTarget = Vec3.func_72443_a((double)x, (double)y, (double)z);
         this.circlingHeight = preferredHeight;
         this.circlingRadius = preferredRadius;
         this.isCircling = true;
     }
 
+    @Override
     public float getDistanceToCirclingRadius() {
-        double dX = this.finalTarget.xCoord - this.theEntity.posX;
-        double dY = this.finalTarget.yCoord - this.theEntity.posY;
-        double dZ = this.finalTarget.zCoord - this.theEntity.posZ;
-        return (float) (Math.sqrt(dX * dX + dZ * dZ) - this.circlingRadius);
+        double dX = this.finalTarget.field_72450_a - this.theEntity.field_70165_t;
+        double dY = this.finalTarget.field_72448_b - this.theEntity.field_70163_u;
+        double dZ = this.finalTarget.field_72449_c - this.theEntity.field_70161_v;
+        return (float)(Math.sqrt(dX * dX + dZ * dZ) - (double)this.circlingRadius);
     }
 
+    @Override
     public void setFlySpeed(float speed) {
         this.targetSpeed = speed;
     }
 
+    @Override
     public void setPitchBias(float pitch, float biasAmount) {
         this.pitchBias = pitch;
         this.pitchBiasAmount = biasAmount;
     }
 
+    @Override
     protected void updateAutoPathToEntity() {
-        double dist = this.theEntity.getDistanceToEntity(this.pathEndEntity);
-        if (dist < this.closestDistToTarget - 1.0F) {
-            this.closestDistToTarget = ((float) dist);
+        double dSq;
+        double dist = this.theEntity.func_70032_d(this.pathEndEntity);
+        if (dist < (double)(this.closestDistToTarget - 1.0f)) {
+            this.closestDistToTarget = (float)dist;
             this.timeSinceGotCloser = 0;
         } else {
-            this.timeSinceGotCloser += 1;
+            ++this.timeSinceGotCloser;
         }
-
         boolean pathUpdate = false;
         boolean needsPathfinder = false;
         if (this.path != null) {
-            double dSq = this.theEntity.getDistanceSqToEntity(this.pathEndEntity);
-            if (((this.moveType == INavigationFlying.MoveType.PREFER_FLYING) || ((this.moveType == INavigationFlying.MoveType.MIXED) && (dSq > 100.0D))) && (this.theEntity.canEntityBeSeen(this.pathEndEntity))) {
+            dSq = this.theEntity.func_70068_e(this.pathEndEntity);
+            if ((this.moveType == INavigationFlying.MoveType.PREFER_FLYING || this.moveType == INavigationFlying.MoveType.MIXED && dSq > 100.0) && this.theEntity.func_70685_l(this.pathEndEntity)) {
                 this.timeLookingForEntity = 0;
                 pathUpdate = true;
             } else {
+                double d2;
                 double d1 = Distance.distanceBetween(this.pathEndEntity, this.pathEndEntityLastPos);
-                double d2 = Distance.distanceBetween((Entity) this.theEntity, this.pathEndEntityLastPos);
-                if (d1 / d2 > 0.1D) {
+                if (d1 / (d2 = Distance.distanceBetween((Entity)this.theEntity, this.pathEndEntityLastPos)) > 0.1) {
                     pathUpdate = true;
                 }
             }
-
-        } else if ((this.moveType == INavigationFlying.MoveType.PREFER_WALKING) || (this.timeSinceGotCloser > 160) || (this.timeLookingForEntity > 600)) {
+        } else if (this.moveType == INavigationFlying.MoveType.PREFER_WALKING || this.timeSinceGotCloser > 160 || this.timeLookingForEntity > 600) {
             pathUpdate = true;
             needsPathfinder = true;
             this.timeSinceGotCloser = 0;
             this.timeLookingForEntity = 500;
-        } else if (this.moveType == INavigationFlying.MoveType.MIXED) {
-            double dSq = this.theEntity.getDistanceSqToEntity(this.pathEndEntity);
-            if (dSq < 100.0D) {
-                pathUpdate = true;
-            }
-
+        } else if (this.moveType == INavigationFlying.MoveType.MIXED && (dSq = this.theEntity.func_70068_e(this.pathEndEntity)) < 100.0) {
+            pathUpdate = true;
         }
-
         if (pathUpdate) {
             if (this.moveType == INavigationFlying.MoveType.PREFER_FLYING) {
                 if (needsPathfinder) {
                     this.theEntity.setPathfindFlying(true);
-                    this.path = createPath(this.theEntity, this.pathEndEntity, 0.0F);
+                    this.path = this.createPath(this.theEntity, this.pathEndEntity, 0.0f);
                     if (this.path != null) {
-                        setWantsToBeFlying(true);
-                        setPath(this.path, this.moveSpeed);
+                        this.setWantsToBeFlying(true);
+                        this.setPath(this.path, this.moveSpeed);
                     }
-
                 } else {
-                    setWantsToBeFlying(true);
-                    resetStatus();
+                    this.setWantsToBeFlying(true);
+                    this.resetStatus();
                 }
             } else if (this.moveType == INavigationFlying.MoveType.MIXED) {
                 this.theEntity.setPathfindFlying(false);
-                Path path = createPath(this.theEntity, this.pathEndEntity, 0.0F);
-                if ((path != null) && (path.getCurrentPathLength() < dist * 1.8D)) {
-                    setWantsToBeFlying(false);
-                    setPath(path, this.moveSpeed);
+                Path path = this.createPath(this.theEntity, this.pathEndEntity, 0.0f);
+                if (path != null && (double)path.getCurrentPathLength() < dist * 1.8) {
+                    this.setWantsToBeFlying(false);
+                    this.setPath(path, this.moveSpeed);
                 } else if (needsPathfinder) {
                     this.theEntity.setPathfindFlying(true);
-                    path = createPath(this.theEntity, this.pathEndEntity, 0.0F);
-                    setWantsToBeFlying(true);
-                    if (path != null)
-                        setPath(path, this.moveSpeed);
-                    else {
-                        resetStatus();
+                    path = this.createPath(this.theEntity, this.pathEndEntity, 0.0f);
+                    this.setWantsToBeFlying(true);
+                    if (path != null) {
+                        this.setPath(path, this.moveSpeed);
+                    } else {
+                        this.resetStatus();
                     }
                 } else {
-                    setWantsToBeFlying(true);
-                    resetStatus();
+                    this.setWantsToBeFlying(true);
+                    this.resetStatus();
                 }
             } else {
-                setWantsToBeFlying(false);
+                this.setWantsToBeFlying(false);
                 this.theEntity.setPathfindFlying(false);
-                Path path = createPath(this.theEntity, this.pathEndEntity, 0.0F);
+                Path path = this.createPath(this.theEntity, this.pathEndEntity, 0.0f);
                 if (path != null) {
-                    setPath(path, this.moveSpeed);
+                    this.setPath(path, this.moveSpeed);
                 }
             }
-            this.pathEndEntityLastPos = Vec3.createVectorHelper(this.pathEndEntity.posX, this.pathEndEntity.posY, this.pathEndEntity.posZ);
+            this.pathEndEntityLastPos = Vec3.func_72443_a((double)this.pathEndEntity.field_70165_t, (double)this.pathEndEntity.field_70163_u, (double)this.pathEndEntity.field_70161_v);
         }
     }
 
+    @Override
     public void autoPathToEntity(Entity target) {
         super.autoPathToEntity(target);
         this.isCircling = false;
     }
 
+    @Override
     public boolean tryMoveToEntity(Entity targetEntity, float targetRadius, float speed) {
         if (this.moveType != INavigationFlying.MoveType.PREFER_WALKING) {
-            clearPath();
+            this.clearPath();
             this.pathEndEntity = targetEntity;
-            this.finalTarget = Vec3.createVectorHelper(this.pathEndEntity.posX, this.pathEndEntity.posY, this.pathEndEntity.posZ);
+            this.finalTarget = Vec3.func_72443_a((double)this.pathEndEntity.field_70165_t, (double)this.pathEndEntity.field_70163_u, (double)this.pathEndEntity.field_70161_v);
             this.isCircling = false;
             return true;
         }
-
         this.theEntity.setPathfindFlying(false);
         return super.tryMoveToEntity(targetEntity, targetRadius, speed);
     }
 
+    @Override
     public boolean tryMoveToXYZ(double x, double y, double z, float targetRadius, float speed) {
-        //Vec3 target = this.theEntity.worldObj.getWorldVec3Pool().getVecFromPool(x, y, z);
-        Vec3 target = Vec3.createVectorHelper(x, y, z);
+        Vec3 target = Vec3.func_72443_a((double)x, (double)y, (double)z);
         if (this.moveType != INavigationFlying.MoveType.PREFER_WALKING) {
-            clearPath();
-            this.finalTarget = Vec3.createVectorHelper(x, y, z);
+            this.clearPath();
+            this.finalTarget = Vec3.func_72443_a((double)x, (double)y, (double)z);
             this.isCircling = false;
             return true;
         }
-
         this.theEntity.setPathfindFlying(false);
         return super.tryMoveToXYZ(x, y, z, targetRadius, speed);
     }
 
+    @Override
     public boolean tryMoveTowardsXZ(double x, double z, int min, int max, int verticalRange, float speed) {
-        Vec3 target = findValidPointNear(x, z, min, max, verticalRange);
+        Vec3 target = this.findValidPointNear(x, z, min, max, verticalRange);
         if (target != null) {
-            return tryMoveToXYZ(target.xCoord, target.yCoord, target.zCoord, 0.0F, speed);
+            return this.tryMoveToXYZ(target.field_72450_a, target.field_72448_b, target.field_72449_c, 0.0f, speed);
         }
         return false;
     }
 
+    @Override
     public void clearPath() {
         super.clearPath();
         this.pathEndEntity = null;
         this.isCircling = false;
     }
 
+    @Override
     public boolean isCircling() {
         return this.isCircling;
     }
 
+    @Override
     public String getStatus() {
-        if (!noPath()) {
+        if (!this.noPath()) {
             return super.getStatus();
         }
         String s = "";
-        if (isAutoPathingToEntity()) {
+        if (this.isAutoPathingToEntity()) {
             s = s + "Auto:";
         }
-
         s = s + "Flyer:";
-        if (this.isCircling) {
-            s = s + "Circling:";
-        } else if (this.wantsToBeFlying) {
-            if (this.theEntity.getFlyState() == FlyState.TAKEOFF)
-                s = s + "TakeOff:";
-            else {
-                s = s + "Flying:";
-            }
-
-        } else if ((this.theEntity.getFlyState() == FlyState.LANDING) || (this.theEntity.getFlyState() == FlyState.TOUCHDOWN))
-            s = s + "Landing:";
-        else {
-            s = s + "Ground";
-        }
+        s = this.isCircling ? s + "Circling:" : (this.wantsToBeFlying ? (this.theEntity.getFlyState() == FlyState.TAKEOFF ? s + "TakeOff:" : s + "Flying:") : (this.theEntity.getFlyState() == FlyState.LANDING || this.theEntity.getFlyState() == FlyState.TOUCHDOWN ? s + "Landing:" : s + "Ground"));
         return s;
     }
 
+    @Override
     protected void pathFollow() {
-        Vec3 vec3d = getEntityPosition();
+        Vec3 vec3d = this.getEntityPosition();
         int maxNextLeg = this.path.getCurrentPathLength();
-
-        float fa = this.theEntity.width * 0.5F;
-        for (int j = this.path.getCurrentPathIndex(); j < maxNextLeg; j++) {
-            if (vec3d.squareDistanceTo(this.path.getPositionAtIndex(this.theEntity, j)) < fa * fa)
-                this.path.setCurrentPathIndex(j + 1);
+        float fa = this.theEntity.field_70130_N * 0.5f;
+        for (int j = this.path.getCurrentPathIndex(); j < maxNextLeg; ++j) {
+            if (!(vec3d.func_72436_e(this.path.getPositionAtIndex((Entity)this.theEntity, j)) < (double)(fa * fa))) continue;
+            this.path.setCurrentPathIndex(j + 1);
         }
     }
 
+    @Override
     protected void noPathFollow() {
-        if ((this.theEntity.getMoveState() != MoveState.FLYING) && (this.theEntity.getAIGoal() == Goal.CHILL)) {
-            setWantsToBeFlying(false);
+        if (this.theEntity.getMoveState() != MoveState.FLYING && this.theEntity.getAIGoal() == Goal.CHILL) {
+            this.setWantsToBeFlying(false);
             return;
         }
-
-        if (this.moveType == INavigationFlying.MoveType.PREFER_FLYING)
-            setWantsToBeFlying(true);
-        else if (this.moveType == INavigationFlying.MoveType.PREFER_WALKING) {
-            setWantsToBeFlying(false);
+        if (this.moveType == INavigationFlying.MoveType.PREFER_FLYING) {
+            this.setWantsToBeFlying(true);
+        } else if (this.moveType == INavigationFlying.MoveType.PREFER_WALKING) {
+            this.setWantsToBeFlying(false);
         }
         if (++this.timeSinceVision >= this.visionUpdateRate) {
             this.timeSinceVision = 0;
-            if ((!this.precisionTarget) || (this.pathEndEntity == null))
-                updateHeading();
-            else {
-                updateHeadingDirectTarget(this.pathEndEntity);
+            if (!this.precisionTarget || this.pathEndEntity == null) {
+                this.updateHeading();
+            } else {
+                this.updateHeadingDirectTarget(this.pathEndEntity);
             }
-            this.intermediateTarget = convertToVector(this.targetYaw, this.targetPitch, this.targetSpeed);
+            this.intermediateTarget = this.convertToVector(this.targetYaw, this.targetPitch, this.targetSpeed);
         }
-        this.theEntity.getMoveHelper().setMoveTo(this.intermediateTarget.xCoord, this.intermediateTarget.yCoord, this.intermediateTarget.zCoord, this.targetSpeed);
+        this.theEntity.getMoveHelper().func_75642_a(this.intermediateTarget.field_72450_a, this.intermediateTarget.field_72448_b, this.intermediateTarget.field_72449_c, this.targetSpeed);
     }
 
     protected Vec3 convertToVector(float yaw, float pitch, float idealSpeed) {
         int time = this.visionUpdateRate + 20;
-        double x = this.theEntity.posX + -Math.sin(yaw / 180.0F * 3.141592653589793D) * idealSpeed * time;
-        double y = this.theEntity.posY + Math.sin(pitch / 180.0F * 3.141592653589793D) * idealSpeed * time;
-        double z = this.theEntity.posZ + Math.cos(yaw / 180.0F * 3.141592653589793D) * idealSpeed * time;
-        return Vec3.createVectorHelper(x, y, z);
+        double x = this.theEntity.field_70165_t + -Math.sin((double)(yaw / 180.0f) * Math.PI) * (double)idealSpeed * (double)time;
+        double y = this.theEntity.field_70163_u + Math.sin((double)(pitch / 180.0f) * Math.PI) * (double)idealSpeed * (double)time;
+        double z = this.theEntity.field_70161_v + Math.cos((double)(yaw / 180.0f) * Math.PI) * (double)idealSpeed * (double)time;
+        return Vec3.func_72443_a((double)x, (double)y, (double)z);
     }
 
     protected void updateHeading() {
-        float pixelDegreeH = 10.0F;
-        float pixelDegreeV = 11.0F;
-        for (int i = 0; i < 30; i++) {
-            double nextAngleH = i * pixelDegreeH + 0.5D * pixelDegreeH - 150.0D + this.theEntity.rotationYaw;
-            for (int j = 0; j < 20; j++) {
-                double nextAngleV = j * pixelDegreeV + 0.5D * pixelDegreeV - 110.0D;
-                double y = this.theEntity.posY + Math.sin(nextAngleV / 180.0D * 3.141592653589793D) * this.visionDistance;
-                double distanceXZ = Math.cos(nextAngleV / 180.0D * 3.141592653589793D) * this.visionDistance;
-                double x = this.theEntity.posX + -Math.sin(nextAngleH / 180.0D * 3.141592653589793D) * distanceXZ;
-                double z = this.theEntity.posZ + Math.cos(nextAngleH / 180.0D * 3.141592653589793D) * distanceXZ;
-                Vec3 target = Vec3.createVectorHelper(x, y, z);
-                //Vec3 target = this.theEntity.worldObj.getWorldVec3Pool().getVecFromPool(x, y, z);
-                Vec3 origin = this.theEntity.getPosition(1.0F);
-                origin.yCoord += 1.0D;
-
-                MovingObjectPosition object = this.theEntity.worldObj.rayTraceBlocks(origin, target);
-//				if ((object != null) && (object.typeOfHit == EnumMovingObjectType.TILE)) {
-//					double dX = this.theEntity.posX - object.blockX;
-//					double dZ = this.theEntity.posY - object.blockY;
-//					double dY = this.theEntity.posZ - object.blockZ;
-//					this.retina[i][j] = ((float) Math.sqrt(dX * dX + dY * dY + dZ * dZ));
-//				} else {
-//					this.retina[i][j] = (this.visionDistance + 1.0F);
-//				}
-
+        double dXZ;
+        double dZ;
+        int i;
+        float pixelDegreeH = 10.0f;
+        float pixelDegreeV = 11.0f;
+        for (i = 0; i < 30; ++i) {
+            double nextAngleH = (double)((float)i * pixelDegreeH) + 0.5 * (double)pixelDegreeH - 150.0 + (double)this.theEntity.field_70177_z;
+            for (int j = 0; j < 20; ++j) {
+                double nextAngleV = (double)((float)j * pixelDegreeV) + 0.5 * (double)pixelDegreeV - 110.0;
+                double y = this.theEntity.field_70163_u + Math.sin(nextAngleV / 180.0 * Math.PI) * (double)this.visionDistance;
+                double distanceXZ = Math.cos(nextAngleV / 180.0 * Math.PI) * (double)this.visionDistance;
+                double x = this.theEntity.field_70165_t + -Math.sin(nextAngleH / 180.0 * Math.PI) * distanceXZ;
+                double z = this.theEntity.field_70161_v + Math.cos(nextAngleH / 180.0 * Math.PI) * distanceXZ;
+                Vec3 target = Vec3.func_72443_a((double)x, (double)y, (double)z);
+                Vec3 origin = this.theEntity.func_70666_h(1.0f);
+                origin.field_72448_b += 1.0;
+                MovingObjectPosition object = this.theEntity.field_70170_p.func_72933_a(origin, target);
             }
-
         }
-
-        for (int i = 1; i < 29; i++) {
-            for (int j = 1; j < 19; j++) {
+        for (i = 1; i < 29; ++i) {
+            for (int j = 1; j < 19; ++j) {
                 float appeal = this.retina[i][j];
-                appeal += this.retina[(i - 1)][(j - 1)];
-                appeal += this.retina[(i - 1)][j];
-                appeal += this.retina[(i - 1)][(j + 1)];
-                appeal += this.retina[i][(j - 1)];
-                appeal += this.retina[i][(j + 1)];
-                appeal += this.retina[(i + 1)][(j - 1)];
-                appeal += this.retina[(i + 1)][j];
-                appeal += this.retina[(i + 1)][(j + 1)];
-                appeal /= 9.0F;
-                this.headingAppeal[(i - 1)][(j - 1)] = appeal;
+                appeal += this.retina[i - 1][j - 1];
+                appeal += this.retina[i - 1][j];
+                appeal += this.retina[i - 1][j + 1];
+                appeal += this.retina[i][j - 1];
+                appeal += this.retina[i][j + 1];
+                appeal += this.retina[i + 1][j - 1];
+                appeal += this.retina[i + 1][j];
+                appeal += this.retina[i + 1][j + 1];
+                this.headingAppeal[i - 1][j - 1] = appeal /= 9.0f;
             }
-
         }
-
         if (this.isCircling) {
-            double dX = this.finalTarget.xCoord - this.theEntity.posX;
-            double dY = this.finalTarget.yCoord - this.theEntity.posY;
-            double dZ = this.finalTarget.zCoord - this.theEntity.posZ;
-            double dXZ = Math.sqrt(dX * dX + dZ * dZ);
-
-            if ((dXZ > 0.0D) && (dXZ > this.circlingRadius * 0.6D)) {
-                double intersectRadius = Math.abs((this.circlingRadius - dXZ) * 2.0D) + 8.0D;
-                if (intersectRadius > this.circlingRadius * 1.8D) {
-                    intersectRadius = dXZ + 5.0D;
+            double dX = this.finalTarget.field_72450_a - this.theEntity.field_70165_t;
+            double dY = this.finalTarget.field_72448_b - this.theEntity.field_70163_u;
+            dZ = this.finalTarget.field_72449_c - this.theEntity.field_70161_v;
+            dXZ = Math.sqrt(dX * dX + dZ * dZ);
+            if (dXZ > 0.0 && dXZ > (double)this.circlingRadius * 0.6) {
+                double intersectRadius = Math.abs(((double)this.circlingRadius - dXZ) * 2.0) + 8.0;
+                if (intersectRadius > (double)this.circlingRadius * 1.8) {
+                    intersectRadius = dXZ + 5.0;
                 }
-
-                float preferredYaw1 = (float) (Math.acos((dXZ * dXZ - this.circlingRadius * this.circlingRadius + intersectRadius * intersectRadius) / (2.0D * dXZ) / intersectRadius) * 180.0D / 3.141592653589793D);
+                float preferredYaw1 = (float)(Math.acos((dXZ * dXZ - (double)(this.circlingRadius * this.circlingRadius) + intersectRadius * intersectRadius) / (2.0 * dXZ) / intersectRadius) * 180.0 / Math.PI);
                 float preferredYaw2 = -preferredYaw1;
-
-                double dYaw = Math.atan2(dZ, dX) * 180.0D / 3.141592653589793D - 90.0D;
-                preferredYaw1 = (float) (preferredYaw1 + dYaw);
-                preferredYaw2 = (float) (preferredYaw2 + dYaw);
-
-                float preferredPitch = (float) (Math.atan((dY + this.circlingHeight) / intersectRadius) * 180.0D / 3.141592653589793D);
-
-                float yawBias = (float) (1.5D * Math.abs(dXZ - this.circlingRadius) / this.circlingRadius);
-                float pitchBias = (float) (1.9D * Math.abs((dY + this.circlingHeight) / this.circlingHeight));
-
-                doHeadingBiasPass(this.headingAppeal, preferredYaw1, preferredYaw2, preferredPitch, yawBias, pitchBias);
+                double dYaw = Math.atan2(dZ, dX) * 180.0 / Math.PI - 90.0;
+                preferredYaw1 = (float)((double)preferredYaw1 + dYaw);
+                preferredYaw2 = (float)((double)preferredYaw2 + dYaw);
+                float preferredPitch = (float)(Math.atan((dY + (double)this.circlingHeight) / intersectRadius) * 180.0 / Math.PI);
+                float yawBias = (float)(1.5 * Math.abs(dXZ - (double)this.circlingRadius) / (double)this.circlingRadius);
+                float pitchBias = (float)(1.9 * Math.abs((dY + (double)this.circlingHeight) / (double)this.circlingHeight));
+                this.doHeadingBiasPass(this.headingAppeal, preferredYaw1, preferredYaw2, preferredPitch, yawBias, pitchBias);
             } else {
-                float yawToTarget = (float) (Math.atan2(dZ, dX) * 180.0D / 3.141592653589793D - 90.0D);
-                yawToTarget += 180.0F;
-                float preferredPitch = (float) (Math.atan((dY + this.circlingHeight) / Math.abs(this.circlingRadius - dXZ)) * 180.0D / 3.141592653589793D);
-                float yawBias = (float) (0.5D * Math.abs(dXZ - this.circlingRadius) / this.circlingRadius);
-                float pitchBias = (float) (0.9D * Math.abs((dY + this.circlingHeight) / this.circlingHeight));
-                doHeadingBiasPass(this.headingAppeal, yawToTarget, yawToTarget, preferredPitch, yawBias, pitchBias);
+                float yawToTarget = (float)(Math.atan2(dZ, dX) * 180.0 / Math.PI - 90.0);
+                float preferredPitch = (float)(Math.atan((dY + (double)this.circlingHeight) / Math.abs((double)this.circlingRadius - dXZ)) * 180.0 / Math.PI);
+                float yawBias = (float)(0.5 * Math.abs(dXZ - (double)this.circlingRadius) / (double)this.circlingRadius);
+                float pitchBias = (float)(0.9 * Math.abs((dY + (double)this.circlingHeight) / (double)this.circlingHeight));
+                this.doHeadingBiasPass(this.headingAppeal, yawToTarget += 180.0f, yawToTarget, preferredPitch, yawBias, pitchBias);
             }
         } else if (this.pathEndEntity != null) {
-            double dX = this.pathEndEntity.posX - this.theEntity.posX;
-            double dY = this.pathEndEntity.posY - this.theEntity.posY;
-            double dZ = this.pathEndEntity.posZ - this.theEntity.posZ;
-            double dXZ = Math.sqrt(dX * dX + dZ * dZ);
-            float yawToTarget = (float) (Math.atan2(dZ, dX) * 180.0D / 3.141592653589793D - 90.0D);
-            float pitchToTarget = (float) (Math.atan(dY / dXZ) * 180.0D / 3.141592653589793D);
-            doHeadingBiasPass(this.headingAppeal, yawToTarget, yawToTarget, pitchToTarget, 20.6F, 20.6F);
+            double dX = this.pathEndEntity.field_70165_t - this.theEntity.field_70165_t;
+            double dY = this.pathEndEntity.field_70163_u - this.theEntity.field_70163_u;
+            dZ = this.pathEndEntity.field_70161_v - this.theEntity.field_70161_v;
+            dXZ = Math.sqrt(dX * dX + dZ * dZ);
+            float yawToTarget = (float)(Math.atan2(dZ, dX) * 180.0 / Math.PI - 90.0);
+            float pitchToTarget = (float)(Math.atan(dY / dXZ) * 180.0 / Math.PI);
+            this.doHeadingBiasPass(this.headingAppeal, yawToTarget, yawToTarget, pitchToTarget, 20.6f, 20.6f);
         }
-
         if (this.pathEndEntity == null) {
-            float dOldYaw = this.targetYaw - this.theEntity.rotationYaw;
+            float dOldYaw = this.targetYaw - this.theEntity.field_70177_z;
             MathUtil.boundAngle180Deg(dOldYaw);
             float dOldPitch = this.targetPitch;
-            float approxLastTargetX = dOldYaw / pixelDegreeH + 14.0F;
-            float approxLastTargetY = dOldPitch / pixelDegreeV + 9.0F;
-            if (approxLastTargetX > 28.0F)
-                approxLastTargetX = 28.0F;
-            else if (approxLastTargetX < 0.0F) {
-                approxLastTargetX = 0.0F;
+            float approxLastTargetX = dOldYaw / pixelDegreeH + 14.0f;
+            float approxLastTargetY = dOldPitch / pixelDegreeV + 9.0f;
+            if (approxLastTargetX > 28.0f) {
+                approxLastTargetX = 28.0f;
+            } else if (approxLastTargetX < 0.0f) {
+                approxLastTargetX = 0.0f;
             }
-            if (approxLastTargetY > 18.0F)
-                approxLastTargetY = 18.0F;
-            else if (approxLastTargetY < 0.0F) {
-                approxLastTargetY = 0.0F;
+            if (approxLastTargetY > 18.0f) {
+                approxLastTargetY = 18.0f;
+            } else if (approxLastTargetY < 0.0f) {
+                approxLastTargetY = 0.0f;
             }
-            float statusQuoBias = 0.4F;
-            float falloffDist = 30.0F;
-            for (int i = 0; i < 28; i++) {
-                float dXSq = (approxLastTargetX - i) * (approxLastTargetX - i);
-                for (int j = 0; j < 18; j++) {
-                    float dY = approxLastTargetY - j;
-                    int tmp1306_1304 = j;
-                    float[] tmp1306_1303 = this.headingAppeal[i];
-                    tmp1306_1303[tmp1306_1304] = ((float) (tmp1306_1303[tmp1306_1304] * (1.0F + statusQuoBias - statusQuoBias * Math.sqrt(dXSq + dY * dY) / falloffDist)));
+            float statusQuoBias = 0.4f;
+            float falloffDist = 30.0f;
+            for (int i2 = 0; i2 < 28; ++i2) {
+                float dXSq = (approxLastTargetX - (float)i2) * (approxLastTargetX - (float)i2);
+                int j = 0;
+                while (j < 18) {
+                    float dY = approxLastTargetY - (float)j;
+                    int tmp1306_1304 = j++;
+                    float[] tmp1306_1303 = this.headingAppeal[i2];
+                    tmp1306_1303[tmp1306_1304] = (float)((double)tmp1306_1303[tmp1306_1304] * ((double)(1.0f + statusQuoBias) - (double)statusQuoBias * Math.sqrt(dXSq + dY * dY) / (double)falloffDist));
                 }
             }
         }
-
-        if (this.pitchBias != 0.0F) {
-            doHeadingBiasPass(this.headingAppeal, 0.0F, 0.0F, this.pitchBias, 0.0F, this.pitchBiasAmount);
+        if (this.pitchBias != 0.0f) {
+            this.doHeadingBiasPass(this.headingAppeal, 0.0f, 0.0f, this.pitchBias, 0.0f, this.pitchBiasAmount);
         }
-
         if (!this.wantsToBeFlying) {
-            Pair landingInfo = appraiseLanding();
-            if (((Float) landingInfo.getVal2()).floatValue() < 4.0F) {
-                if (((Float) landingInfo.getVal1()).floatValue() >= 0.9F)
-                    doHeadingBiasPass(this.headingAppeal, 0.0F, 0.0F, -45.0F, 0.0F, 3.5F);
-                else if (((Float) landingInfo.getVal1()).floatValue() >= 0.65F) {
-                    doHeadingBiasPass(this.headingAppeal, 0.0F, 0.0F, -15.0F, 0.0F, 0.4F);
+            Pair<Float, Float> landingInfo = this.appraiseLanding();
+            if (landingInfo.getVal2().floatValue() < 4.0f) {
+                if (landingInfo.getVal1().floatValue() >= 0.9f) {
+                    this.doHeadingBiasPass(this.headingAppeal, 0.0f, 0.0f, -45.0f, 0.0f, 3.5f);
+                } else if (landingInfo.getVal1().floatValue() >= 0.65f) {
+                    this.doHeadingBiasPass(this.headingAppeal, 0.0f, 0.0f, -15.0f, 0.0f, 0.4f);
                 }
-
-            } else if (((Float) landingInfo.getVal1()).floatValue() >= 0.52F) {
-                doHeadingBiasPass(this.headingAppeal, 0.0F, 0.0F, -15.0F, 0.0F, 0.8F);
+            } else if (landingInfo.getVal1().floatValue() >= 0.52f) {
+                this.doHeadingBiasPass(this.headingAppeal, 0.0f, 0.0f, -15.0f, 0.0f, 0.8f);
             }
-
         }
-
-        Pair bestPixel = chooseCoordinate();
-        this.targetYaw = (this.theEntity.rotationYaw - 150.0F + (((Integer) bestPixel.getVal1()).intValue() + 1) * pixelDegreeH + 0.5F * pixelDegreeH);
-        this.targetPitch = (-110.0F + (((Integer) bestPixel.getVal2()).intValue() + 1) * pixelDegreeV + 0.5F * pixelDegreeV);
+        Pair<Integer, Integer> bestPixel = this.chooseCoordinate();
+        this.targetYaw = this.theEntity.field_70177_z - 150.0f + (float)(bestPixel.getVal1() + 1) * pixelDegreeH + 0.5f * pixelDegreeH;
+        this.targetPitch = -110.0f + (float)(bestPixel.getVal2() + 1) * pixelDegreeV + 0.5f * pixelDegreeV;
     }
 
     protected void updateHeadingDirectTarget(Entity target) {
-        double dX = target.posX - this.theEntity.posX;
-        double dY = target.posY - this.theEntity.posY;
-        double dZ = target.posZ - this.theEntity.posZ;
+        double dX = target.field_70165_t - this.theEntity.field_70165_t;
+        double dY = target.field_70163_u - this.theEntity.field_70163_u;
+        double dZ = target.field_70161_v - this.theEntity.field_70161_v;
         double dXZ = Math.sqrt(dX * dX + dZ * dZ);
-        this.targetYaw = ((float) (Math.atan2(dZ, dX) * 180.0D / 3.141592653589793D - 90.0D));
-        this.targetPitch = ((float) (Math.atan(dY / dXZ) * 180.0D / 3.141592653589793D));
+        this.targetYaw = (float)(Math.atan2(dZ, dX) * 180.0 / Math.PI - 90.0);
+        this.targetPitch = (float)(Math.atan(dY / dXZ) * 180.0 / Math.PI);
     }
 
     protected Pair<Integer, Integer> chooseCoordinate() {
         int bestPixelX = 0;
         int bestPixelY = 0;
-        for (int i = 0; i < 28; i++) {
-            for (int j = 0; j < 18; j++) {
-                if (this.headingAppeal[bestPixelX][bestPixelY] < this.headingAppeal[i][j]) {
-                    bestPixelX = i;
-                    bestPixelY = j;
-                }
+        for (int i = 0; i < 28; ++i) {
+            for (int j = 0; j < 18; ++j) {
+                if (!(this.headingAppeal[bestPixelX][bestPixelY] < this.headingAppeal[i][j])) continue;
+                bestPixelX = i;
+                bestPixelY = j;
             }
         }
-        return new Pair(Integer.valueOf(bestPixelX), Integer.valueOf(bestPixelY));
+        return new Pair<Integer, Integer>(bestPixelX, bestPixelY);
     }
 
     protected void setTarget(double x, double y, double z) {
-        this.intermediateTarget = Vec3.createVectorHelper(x, y, z);
+        this.intermediateTarget = Vec3.func_72443_a((double)x, (double)y, (double)z);
     }
 
     protected Vec3 getTarget() {
@@ -476,19 +461,20 @@ public class NavigatorFlying extends NavigatorIM implements INavigationFlying {
     }
 
     protected void doHeadingBiasPass(float[][] array, float preferredYaw1, float preferredYaw2, float preferredPitch, float yawBias, float pitchBias) {
-        float pixelDegreeH = 10.0F;
-        float pixelDegreeV = 11.0F;
-        for (int i = 0; i < array.length; i++) {
-            double nextAngleH = (i + 1) * pixelDegreeH + 0.5D * pixelDegreeH - 150.0D + this.theEntity.rotationYaw;
-            double dYaw1 = MathUtil.boundAngle180Deg(preferredYaw1 - nextAngleH);
-            double dYaw2 = MathUtil.boundAngle180Deg(preferredYaw2 - nextAngleH);
-            double yawBiasAmount = 1.0D + Math.min(Math.abs(dYaw1), Math.abs(dYaw2)) * yawBias / 180.0D;
-            for (int j = 0; j < array[0].length; j++) {
-                double nextAngleV = (j + 1) * pixelDegreeV + 0.5D * pixelDegreeV - 110.0D;
-                double pitchBiasAmount = 1.0D + Math.abs(MathUtil.boundAngle180Deg(preferredPitch - nextAngleV)) * pitchBias / 180.0D;
-                int tmp162_160 = j;
+        float pixelDegreeH = 10.0f;
+        float pixelDegreeV = 11.0f;
+        for (int i = 0; i < array.length; ++i) {
+            double nextAngleH = (double)((float)(i + 1) * pixelDegreeH) + 0.5 * (double)pixelDegreeH - 150.0 + (double)this.theEntity.field_70177_z;
+            double dYaw1 = MathUtil.boundAngle180Deg((double)preferredYaw1 - nextAngleH);
+            double dYaw2 = MathUtil.boundAngle180Deg((double)preferredYaw2 - nextAngleH);
+            double yawBiasAmount = 1.0 + Math.min(Math.abs(dYaw1), Math.abs(dYaw2)) * (double)yawBias / 180.0;
+            int j = 0;
+            while (j < array[0].length) {
+                double nextAngleV = (double)((float)(j + 1) * pixelDegreeV) + 0.5 * (double)pixelDegreeV - 110.0;
+                double pitchBiasAmount = 1.0 + Math.abs(MathUtil.boundAngle180Deg((double)preferredPitch - nextAngleV)) * (double)pitchBias / 180.0;
+                int tmp162_160 = j++;
                 float[] tmp162_159 = array[i];
-                tmp162_159[tmp162_160] = ((float) (tmp162_159[tmp162_160] / (yawBiasAmount * pitchBiasAmount)));
+                tmp162_159[tmp162_160] = (float)((double)tmp162_159[tmp162_160] / (yawBiasAmount * pitchBiasAmount));
             }
         }
     }
@@ -499,38 +485,36 @@ public class NavigatorFlying extends NavigatorIM implements INavigationFlying {
     }
 
     private Pair<Float, Float> appraiseLanding() {
-        float safety = 0.0F;
-        float distance = 0.0F;
+        float safety = 0.0f;
+        float distance = 0.0f;
         int landingResolution = 3;
-        double nextAngleH = this.theEntity.rotationYaw;
-        for (int i = 0; i < landingResolution; i++) {
+        double nextAngleH = this.theEntity.field_70177_z;
+        for (int i = 0; i < landingResolution; ++i) {
             double nextAngleV = -90 + i * 30 / landingResolution;
-            double y = this.theEntity.posY + Math.sin(nextAngleV / 180.0D * 3.141592653589793D) * 64.0D;
-            double distanceXZ = Math.cos(nextAngleV / 180.0D * 3.141592653589793D) * 64.0D;
-            double x = this.theEntity.posX + -Math.sin(nextAngleH / 180.0D * 3.141592653589793D) * distanceXZ;
-            double z = this.theEntity.posZ + Math.cos(nextAngleH / 180.0D * 3.141592653589793D) * distanceXZ;
-            //Vec3 target = this.theEntity.worldObj.getWorldVec3Pool().getVecFromPool(x, y, z);
-            Vec3 target = Vec3.createVectorHelper(x, y, z);
-            Vec3 origin = this.theEntity.getPosition(1.0F);
-            MovingObjectPosition object = this.theEntity.worldObj.rayTraceBlocks(origin, target);
+            double y = this.theEntity.field_70163_u + Math.sin(nextAngleV / 180.0 * Math.PI) * 64.0;
+            double distanceXZ = Math.cos(nextAngleV / 180.0 * Math.PI) * 64.0;
+            double x = this.theEntity.field_70165_t + -Math.sin(nextAngleH / 180.0 * Math.PI) * distanceXZ;
+            double z = this.theEntity.field_70161_v + Math.cos(nextAngleH / 180.0 * Math.PI) * distanceXZ;
+            Vec3 target = Vec3.func_72443_a((double)x, (double)y, (double)z);
+            Vec3 origin = this.theEntity.func_70666_h(1.0f);
+            MovingObjectPosition object = this.theEntity.field_70170_p.func_72933_a(origin, target);
             if (object != null) {
-                Block Block = this.theEntity.worldObj.getBlock(object.blockX, object.blockY, object.blockZ);
-                if (!this.theEntity.avoidsBlock(Block)) {
-                    safety += 0.7F;
+                Block Block2 = this.theEntity.field_70170_p.func_147439_a(object.field_72311_b, object.field_72312_c, object.field_72309_d);
+                if (!this.theEntity.avoidsBlock(Block2)) {
+                    safety += 0.7f;
                 }
-                if (object.sideHit == 1) {
-                    safety += 0.3F;
+                if (object.field_72310_e == 1) {
+                    safety += 0.3f;
                 }
-                double dX = object.blockX - this.theEntity.posX;
-                double dY = object.blockY - this.theEntity.posY;
-                double dZ = object.blockZ - this.theEntity.posZ;
-                distance = (float) (distance + Math.sqrt(dX * dX + dY * dY + dZ * dZ));
-            } else {
-                distance += 64.0F;
+                double dX = (double)object.field_72311_b - this.theEntity.field_70165_t;
+                double dY = (double)object.field_72312_c - this.theEntity.field_70163_u;
+                double dZ = (double)object.field_72309_d - this.theEntity.field_70161_v;
+                distance = (float)((double)distance + Math.sqrt(dX * dX + dY * dY + dZ * dZ));
+                continue;
             }
+            distance += 64.0f;
         }
-        distance /= landingResolution;
-        safety /= landingResolution;
-        return new Pair(Float.valueOf(safety), Float.valueOf(distance));
+        return new Pair<Float, Float>(Float.valueOf(safety /= (float)landingResolution), Float.valueOf(distance /= (float)landingResolution));
     }
 }
+

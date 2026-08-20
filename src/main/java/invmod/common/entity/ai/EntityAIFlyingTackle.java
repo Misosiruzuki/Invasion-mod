@@ -1,6 +1,11 @@
+/*
+ * Decompiled with CFR 0.152.
+ * 
+ * Could not load the following classes:
+ *  net.minecraft.entity.EntityLivingBase
+ *  net.minecraft.entity.ai.EntityAIBase
+ */
 package invmod.common.entity.ai;
-
-//NOOB HAUS: Done
 
 import invmod.common.entity.EntityIMFlying;
 import invmod.common.entity.Goal;
@@ -9,7 +14,8 @@ import invmod.common.entity.MoveState;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.ai.EntityAIBase;
 
-public class EntityAIFlyingTackle extends EntityAIBase {
+public class EntityAIFlyingTackle
+extends EntityAIBase {
     private EntityIMFlying theEntity;
     private int time;
 
@@ -18,34 +24,31 @@ public class EntityAIFlyingTackle extends EntityAIBase {
         this.time = 0;
     }
 
-    public boolean shouldExecute() {
+    public boolean func_75250_a() {
         return this.theEntity.getAIGoal() == Goal.TACKLE_TARGET;
     }
 
-    public boolean continueExecuting() {
-        EntityLivingBase target = this.theEntity.getAttackTarget();
-        if ((target == null) || (target.isDead)) {
+    public boolean func_75253_b() {
+        EntityLivingBase target = this.theEntity.func_70638_az();
+        if (target == null || target.field_70128_L) {
             this.theEntity.transitionAIGoal(Goal.NONE);
             return false;
         }
-
-        if (this.theEntity.getAIGoal() != Goal.TACKLE_TARGET) {
-            return false;
-        }
-        return true;
+        return this.theEntity.getAIGoal() == Goal.TACKLE_TARGET;
     }
 
-    public void startExecuting() {
+    public void func_75249_e() {
         this.time = 0;
-        EntityLivingBase target = this.theEntity.getAttackTarget();
+        EntityLivingBase target = this.theEntity.func_70638_az();
         if (target != null) {
             this.theEntity.getNavigatorNew().setMovementType(INavigationFlying.MoveType.PREFER_WALKING);
         }
     }
 
-    public void updateTask() {
+    public void func_75246_d() {
         if (this.theEntity.getMoveState() != MoveState.FLYING) {
             this.theEntity.transitionAIGoal(Goal.MELEE_TARGET);
         }
     }
 }
+

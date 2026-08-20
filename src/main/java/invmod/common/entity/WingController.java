@@ -1,7 +1,13 @@
+/*
+ * Decompiled with CFR 0.152.
+ */
 package invmod.common.entity;
 
-import com.whammich.invasion.client.render.animation.AnimationAction;
-import com.whammich.invasion.client.render.animation.AnimationState;
+import invmod.client.render.animation.AnimationAction;
+import invmod.client.render.animation.AnimationState;
+import invmod.common.entity.EntityIMBird;
+import invmod.common.entity.FlyState;
+import invmod.common.entity.MoveState;
 
 public class WingController {
     private EntityIMBird theEntity;
@@ -15,8 +21,8 @@ public class WingController {
         this.theEntity = entity;
         this.animationFlap = stateObject;
         this.timeAttacking = 0;
-        this.flapEffort = 1.0F;
-        this.flapEffortSamples = new float[]{1.0F, 1.0F, 1.0F, 1.0F, 1.0F, 1.0F};
+        this.flapEffort = 1.0f;
+        this.flapEffortSamples = new float[]{1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f};
         this.sampleIndex = 0;
     }
 
@@ -24,52 +30,44 @@ public class WingController {
         AnimationAction currAnimation = this.animationFlap.getCurrentAction();
         AnimationAction nextAnimation = this.animationFlap.getNextSetAction();
         boolean wingAttack = this.theEntity.isAttackingWithWings();
-        if (!wingAttack)
-            this.timeAttacking = 0;
-        else {
-            this.timeAttacking += 1;
-        }
-        if (this.theEntity.ticksExisted % 5 == 0) {
+        this.timeAttacking = !wingAttack ? 0 : ++this.timeAttacking;
+        if (this.theEntity.field_70173_aa % 5 == 0) {
             if (++this.sampleIndex >= this.flapEffortSamples.length) {
                 this.sampleIndex = 0;
             }
             float sample = this.theEntity.getThrustEffort();
-            this.flapEffort -= this.flapEffortSamples[this.sampleIndex] / this.flapEffortSamples.length;
-            this.flapEffort += sample / this.flapEffortSamples.length;
+            this.flapEffort -= this.flapEffortSamples[this.sampleIndex] / (float)this.flapEffortSamples.length;
+            this.flapEffort += sample / (float)this.flapEffortSamples.length;
             this.flapEffortSamples[this.sampleIndex] = sample;
         }
-
         if (this.theEntity.getFlyState() != FlyState.GROUNDED) {
             if (currAnimation == AnimationAction.WINGTUCK) {
-                ensureAnimation(this.animationFlap, AnimationAction.WINGSPREAD, 2.2F, true);
+                this.ensureAnimation(this.animationFlap, AnimationAction.WINGSPREAD, 2.2f, true);
             } else if (this.theEntity.isThrustOn()) {
-                ensureAnimation(this.animationFlap, AnimationAction.WINGFLAP, 2.0F * this.flapEffort, false);
+                this.ensureAnimation(this.animationFlap, AnimationAction.WINGFLAP, 2.0f * this.flapEffort, false);
             } else {
-                ensureAnimation(this.animationFlap, AnimationAction.WINGGLIDE, 0.7F, false);
+                this.ensureAnimation(this.animationFlap, AnimationAction.WINGGLIDE, 0.7f, false);
             }
-
         } else {
             boolean wingsActive = false;
             if (this.theEntity.getMoveState() == MoveState.RUNNING) {
                 if (currAnimation == AnimationAction.WINGTUCK) {
-                    ensureAnimation(this.animationFlap, AnimationAction.WINGSPREAD, 2.2F, true);
+                    this.ensureAnimation(this.animationFlap, AnimationAction.WINGSPREAD, 2.2f, true);
                 } else {
-                    ensureAnimation(this.animationFlap, AnimationAction.WINGFLAP, 1.0F, false);
-                    if ((!wingAttack) && (currAnimation == AnimationAction.WINGSPREAD) && (this.animationFlap.getCurrentAnimationPercent() >= 0.65F)) {
+                    this.ensureAnimation(this.animationFlap, AnimationAction.WINGFLAP, 1.0f, false);
+                    if (!wingAttack && currAnimation == AnimationAction.WINGSPREAD && this.animationFlap.getCurrentAnimationPercent() >= 0.65f) {
                         this.animationFlap.setPaused(true);
                     }
                 }
                 wingsActive = true;
             }
-
             if (wingAttack) {
-                float speed = (float) (1.0D / Math.min(this.timeAttacking / 40 * 0.6D + 0.4D, 1.0D));
-                ensureAnimation(this.animationFlap, AnimationAction.WINGFLAP, speed, false);
+                float speed = (float)(1.0 / Math.min((double)(this.timeAttacking / 40) * 0.6 + 0.4, 1.0));
+                this.ensureAnimation(this.animationFlap, AnimationAction.WINGFLAP, speed, false);
                 wingsActive = true;
             }
-
             if (!wingsActive) {
-                ensureAnimation(this.animationFlap, AnimationAction.WINGTUCK, 1.8F, true);
+                this.ensureAnimation(this.animationFlap, AnimationAction.WINGTUCK, 1.8f, true);
             }
         }
         this.animationFlap.update();
@@ -85,3 +83,4 @@ public class WingController {
         }
     }
 }
+

@@ -1,5 +1,19 @@
+/*
+ * Decompiled with CFR 0.152.
+ */
 package invmod.common.nexus;
 
 public enum IMEntityType {
-    ZOMBIE, ZOMBIEPIGMAN, SPIDER, SKELETON, PIG_ENGINEER, THROWER, IMP, PIG_ZOMBIE, BURROWER, CREEPER;
+    ZOMBIE,
+    ZOMBIEPIGMAN,
+    SPIDER,
+    SKELETON,
+    PIG_ENGINEER,
+    THROWER,
+    IMP,
+    PIG_ZOMBIE,
+    BURROWER,
+    CREEPER;
+
 }
+

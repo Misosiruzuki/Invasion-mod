@@ -1,11 +1,21 @@
+/*
+ * Decompiled with CFR 0.152.
+ * 
+ * Could not load the following classes:
+ *  net.minecraft.entity.Entity
+ *  net.minecraft.entity.EntityLivingBase
+ *  net.minecraft.entity.ai.EntityAIBase
+ */
 package invmod.common.entity.ai;
 
 import invmod.common.entity.EntityIMLiving;
 import invmod.common.entity.Goal;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.ai.EntityAIBase;
 
-public class EntityAIMeleeAttack<T extends EntityLivingBase> extends EntityAIBase {
+public class EntityAIMeleeAttack<T extends EntityLivingBase>
+extends EntityAIBase {
     private EntityIMLiving theEntity;
     private Class<? extends T> targetClass;
     private float attackRange;
@@ -16,21 +26,21 @@ public class EntityAIMeleeAttack<T extends EntityLivingBase> extends EntityAIBas
         this.theEntity = entity;
         this.targetClass = targetClass;
         this.attackDelay = attackDelay;
-        this.attackRange = 0.6F;
+        this.attackRange = 0.6f;
         this.nextAttack = 0;
     }
 
-    public boolean shouldExecute() {
-        EntityLivingBase target = this.theEntity.getAttackTarget();
-        return (target != null) && (this.theEntity.getAIGoal() == Goal.MELEE_TARGET) && (this.theEntity.getDistanceToEntity(target) < (this.attackRange + this.theEntity.width + target.width) * 4.0F) && (target.getClass().isAssignableFrom(this.targetClass));
+    public boolean func_75250_a() {
+        EntityLivingBase target = this.theEntity.func_70638_az();
+        return target != null && this.theEntity.getAIGoal() == Goal.MELEE_TARGET && this.theEntity.func_70032_d((Entity)target) < (this.attackRange + this.theEntity.field_70130_N + target.field_70130_N) * 4.0f && target.getClass().isAssignableFrom(this.targetClass);
     }
 
-    public void updateTask() {
-        EntityLivingBase target = this.theEntity.getAttackTarget();
-        if (canAttackEntity(target)) {
-            attackEntity(target);
+    public void func_75246_d() {
+        EntityLivingBase target = this.theEntity.func_70638_az();
+        if (this.canAttackEntity(target)) {
+            this.attackEntity(target);
         }
-        setAttackTime(getAttackTime() - 1);
+        this.setAttackTime(this.getAttackTime() - 1);
     }
 
     public Class<? extends T> getTargetClass() {
@@ -38,14 +48,14 @@ public class EntityAIMeleeAttack<T extends EntityLivingBase> extends EntityAIBas
     }
 
     protected void attackEntity(EntityLivingBase target) {
-        this.theEntity.attackEntityAsMob(target);
-        setAttackTime(getAttackDelay());
+        this.theEntity.func_70652_k((Entity)target);
+        this.setAttackTime(this.getAttackDelay());
     }
 
     protected boolean canAttackEntity(EntityLivingBase target) {
-        if (getAttackTime() <= 0) {
-            double d = this.theEntity.width + this.attackRange;
-            return this.theEntity.getDistanceSq(target.posX, target.boundingBox.minY, target.posZ) < d * d;
+        if (this.getAttackTime() <= 0) {
+            double d = this.theEntity.field_70130_N + this.attackRange;
+            return this.theEntity.func_70092_e(target.field_70165_t, target.field_70121_D.field_72338_b, target.field_70161_v) < d * d;
         }
         return false;
     }
@@ -66,3 +76,4 @@ public class EntityAIMeleeAttack<T extends EntityLivingBase> extends EntityAIBas
         this.attackDelay = time;
     }
 }
+

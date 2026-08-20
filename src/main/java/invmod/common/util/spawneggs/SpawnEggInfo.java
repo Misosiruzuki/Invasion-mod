@@ -1,9 +1,14 @@
+/*
+ * Decompiled with CFR 0.152.
+ * 
+ * Could not load the following classes:
+ *  net.minecraft.nbt.NBTTagCompound
+ */
 package invmod.common.util.spawneggs;
 
 import net.minecraft.nbt.NBTTagCompound;
 
 public class SpawnEggInfo {
-
     public final short eggID;
     public final String mobID;
     public final String displayName;
@@ -23,5 +28,5 @@ public class SpawnEggInfo {
     public SpawnEggInfo(short eggID, String mobID, NBTTagCompound compound, int primaryColor, int secondaryColor) {
         this(eggID, mobID, null, compound, primaryColor, secondaryColor);
     }
-
 }
+

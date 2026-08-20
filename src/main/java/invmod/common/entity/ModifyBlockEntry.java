@@ -1,9 +1,16 @@
+/*
+ * Decompiled with CFR 0.152.
+ * 
+ * Could not load the following classes:
+ *  net.minecraft.block.Block
+ */
 package invmod.common.entity;
 
 import invmod.common.util.IPosition;
 import net.minecraft.block.Block;
 
-public class ModifyBlockEntry implements IPosition {
+public class ModifyBlockEntry
+implements IPosition {
     private int xCoord;
     private int yCoord;
     private int zCoord;
@@ -30,14 +37,17 @@ public class ModifyBlockEntry implements IPosition {
         this.oldBlock = oldBlock;
     }
 
+    @Override
     public int getXCoord() {
         return this.xCoord;
     }
 
+    @Override
     public int getYCoord() {
         return this.yCoord;
     }
 
+    @Override
     public int getZCoord() {
         return this.zCoord;
     }
@@ -62,3 +72,4 @@ public class ModifyBlockEntry implements IPosition {
         this.oldBlock = block;
     }
 }
+

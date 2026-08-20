@@ -1,10 +1,16 @@
+/*
+ * Decompiled with CFR 0.152.
+ * 
+ * Could not load the following classes:
+ *  net.minecraft.entity.Entity
+ */
 package invmod.common.util;
 
+import java.util.Comparator;
 import net.minecraft.entity.Entity;
 
-import java.util.Comparator;
-
-public class ComparatorEntityDistanceFrom implements Comparator<Entity> {
+public class ComparatorEntityDistanceFrom
+implements Comparator<Entity> {
     private double x;
     private double y;
     private double z;
@@ -15,14 +21,17 @@ public class ComparatorEntityDistanceFrom implements Comparator<Entity> {
         this.z = z;
     }
 
+    @Override
     public int compare(Entity entity1, Entity entity2) {
-        double d1 = (this.x - entity1.posX) * (this.x - entity1.posX) + (this.y - entity1.posY) * (this.y - entity1.posY) + (this.z - entity1.posZ) * (this.z - entity1.posZ);
-        double d2 = (this.x - entity2.posX) * (this.x - entity2.posX) + (this.y - entity2.posY) * (this.y - entity2.posY) + (this.z - entity2.posZ) * (this.z - entity2.posZ);
-        if (d1 > d2)
+        double d1 = (this.x - entity1.field_70165_t) * (this.x - entity1.field_70165_t) + (this.y - entity1.field_70163_u) * (this.y - entity1.field_70163_u) + (this.z - entity1.field_70161_v) * (this.z - entity1.field_70161_v);
+        double d2 = (this.x - entity2.field_70165_t) * (this.x - entity2.field_70165_t) + (this.y - entity2.field_70163_u) * (this.y - entity2.field_70163_u) + (this.z - entity2.field_70161_v) * (this.z - entity2.field_70161_v);
+        if (d1 > d2) {
             return -1;
+        }
         if (d1 < d2) {
             return 1;
         }
         return 0;
     }
 }
+

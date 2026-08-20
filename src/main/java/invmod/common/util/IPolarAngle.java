@@ -1,5 +1,9 @@
+/*
+ * Decompiled with CFR 0.152.
+ */
 package invmod.common.util;
 
-public abstract interface IPolarAngle {
-    public abstract int getAngle();
+public interface IPolarAngle {
+    public int getAngle();
 }
+

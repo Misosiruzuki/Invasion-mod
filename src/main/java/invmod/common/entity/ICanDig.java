@@ -1,17 +1,25 @@
+/*
+ * Decompiled with CFR 0.152.
+ * 
+ * Could not load the following classes:
+ *  net.minecraft.block.Block
+ *  net.minecraft.world.IBlockAccess
+ */
 package invmod.common.entity;
 
 import invmod.common.util.IPosition;
 import net.minecraft.block.Block;
 import net.minecraft.world.IBlockAccess;
 
-public abstract interface ICanDig {
-    public abstract IPosition[] getBlockRemovalOrder(int paramInt1, int paramInt2, int paramInt3);
+public interface ICanDig {
+    public IPosition[] getBlockRemovalOrder(int var1, int var2, int var3);
 
-    public abstract float getBlockRemovalCost(int paramInt1, int paramInt2, int paramInt3);
+    public float getBlockRemovalCost(int var1, int var2, int var3);
 
-    public abstract boolean canClearBlock(int paramInt1, int paramInt2, int paramInt3);
+    public boolean canClearBlock(int var1, int var2, int var3);
 
-    public abstract void onBlockRemoved(int paramInt1, int paramInt2, int paramInt3, Block block);
+    public void onBlockRemoved(int var1, int var2, int var3, Block var4);
 
-    public abstract IBlockAccess getTerrain();
+    public IBlockAccess getTerrain();
 }
+

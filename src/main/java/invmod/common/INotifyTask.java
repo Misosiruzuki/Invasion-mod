@@ -1,5 +1,9 @@
+/*
+ * Decompiled with CFR 0.152.
+ */
 package invmod.common;
 
-public abstract interface INotifyTask {
-    public abstract void notifyTask(int paramInt);
+public interface INotifyTask {
+    public void notifyTask(int var1);
 }
+

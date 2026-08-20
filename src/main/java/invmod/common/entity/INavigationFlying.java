@@ -1,27 +1,39 @@
+/*
+ * Decompiled with CFR 0.152.
+ * 
+ * Could not load the following classes:
+ *  net.minecraft.entity.Entity
+ */
 package invmod.common.entity;
 
+import invmod.common.entity.INavigation;
 import net.minecraft.entity.Entity;
 
-public abstract interface INavigationFlying extends INavigation {
-    public abstract void setMovementType(MoveType paramMoveType);
+public interface INavigationFlying
+extends INavigation {
+    public void setMovementType(MoveType var1);
 
-    public abstract void setLandingPath();
+    public void setLandingPath();
 
-    public abstract void setCirclingPath(Entity paramEntity, float paramFloat1, float paramFloat2);
+    public void setCirclingPath(Entity var1, float var2, float var3);
 
-    public abstract void setCirclingPath(double paramDouble1, double paramDouble2, double paramDouble3, float paramFloat1, float paramFloat2);
+    public void setCirclingPath(double var1, double var3, double var5, float var7, float var8);
 
-    public abstract float getDistanceToCirclingRadius();
+    public float getDistanceToCirclingRadius();
 
-    public abstract boolean isCircling();
+    public boolean isCircling();
 
-    public abstract void setFlySpeed(float paramFloat);
+    public void setFlySpeed(float var1);
 
-    public abstract void setPitchBias(float paramFloat1, float paramFloat2);
+    public void setPitchBias(float var1, float var2);
 
-    public abstract void enableDirectTarget(boolean paramBoolean);
+    public void enableDirectTarget(boolean var1);
 
     public static enum MoveType {
-        PREFER_WALKING, MIXED, PREFER_FLYING;
+        PREFER_WALKING,
+        MIXED,
+        PREFER_FLYING;
+
     }
 }
+

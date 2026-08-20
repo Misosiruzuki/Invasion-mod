@@ -1,67 +1,67 @@
+/*
+ * Decompiled with CFR 0.152.
+ */
 package invmod.common.util;
 
-import invmod.Invasion;
-
+import invmod.common.mod_Invasion;
+import invmod.common.util.ISelect;
+import invmod.common.util.Pair;
+import invmod.common.util.SingleSelection;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-public class RandomSelectionPool<EntityIMLiving> implements ISelect<EntityIMLiving> {
-    private List<Pair<ISelect<EntityIMLiving>, Float>> pool;
-    private float totalWeight;
-    private Random rand;
-
-    public RandomSelectionPool() {
-        this.pool = new ArrayList();
-        this.totalWeight = 0.0F;
-        this.rand = new Random();
-    }
+public class RandomSelectionPool<EntityIMLiving>
+implements ISelect<EntityIMLiving> {
+    private List<Pair<ISelect<EntityIMLiving>, Float>> pool = new ArrayList<Pair<ISelect<EntityIMLiving>, Float>>();
+    private float totalWeight = 0.0f;
+    private Random rand = new Random();
 
     public void addEntry(EntityIMLiving entry, float weight) {
-        SingleSelection selection = new SingleSelection(entry);
-        addEntry(selection, weight);
+        SingleSelection<EntityIMLiving> selection = new SingleSelection<EntityIMLiving>(entry);
+        this.addEntry((ISelect<EntityIMLiving>)selection, weight);
     }
 
     public void addEntry(ISelect<EntityIMLiving> entry, float weight) {
-        this.pool.add(new Pair(entry, Float.valueOf(weight)));
+        this.pool.add(new Pair<ISelect<EntityIMLiving>, Float>(entry, Float.valueOf(weight)));
         this.totalWeight += weight;
     }
 
+    @Override
     public EntityIMLiving selectNext() {
         float r = this.rand.nextFloat() * this.totalWeight;
-        for (Pair entry : this.pool) {
-            if (r < ((Float) entry.getVal2()).floatValue()) {
-                return (EntityIMLiving) ((ISelect) entry.getVal1()).selectNext();
+        for (Pair<ISelect<EntityIMLiving>, Float> entry : this.pool) {
+            if (r < entry.getVal2().floatValue()) {
+                return entry.getVal1().selectNext();
             }
-
-            r -= ((Float) entry.getVal2()).floatValue();
+            r -= entry.getVal2().floatValue();
         }
-
         if (this.pool.size() > 0) {
-            Invasion.log("RandomSelectionPool invalid setup or rounding error. Failing safe.");
-            return (EntityIMLiving) ((ISelect) ((Pair) this.pool.get(0)).getVal1()).selectNext();
+            mod_Invasion.log("RandomSelectionPool invalid setup or rounding error. Failing safe.");
+            return this.pool.get(0).getVal1().selectNext();
         }
         return null;
     }
 
     public RandomSelectionPool<EntityIMLiving> clone() {
-        RandomSelectionPool clone = new RandomSelectionPool();
-        for (Pair entry : this.pool) {
-            clone.addEntry((ISelect) entry.getVal1(), ((Float) entry.getVal2()).floatValue());
+        RandomSelectionPool<EntityIMLiving> clone = new RandomSelectionPool<EntityIMLiving>();
+        for (Pair<ISelect<EntityIMLiving>, Float> entry : this.pool) {
+            clone.addEntry(entry.getVal1(), entry.getVal2().floatValue());
         }
-
         return clone;
     }
 
+    @Override
     public void reset() {
     }
 
     public String toString() {
-        String s = "RandomSelectionPool@" + Integer.toHexString(hashCode()) + "#Size=" + this.pool.size();
-        for (int i = 0; i < this.pool.size(); i++) {
-            s = s + "\n\tEntry " + i + "   Weight: " + ((Pair) this.pool.get(i)).getVal2();
-            s = s + "\n\t" + ((ISelect) ((Pair) this.pool.get(i)).getVal1()).toString();
+        String s = "RandomSelectionPool@" + Integer.toHexString(this.hashCode()) + "#Size=" + this.pool.size();
+        for (int i = 0; i < this.pool.size(); ++i) {
+            s = s + "\n\tEntry " + i + "   Weight: " + this.pool.get(i).getVal2();
+            s = s + "\n\t" + this.pool.get(i).getVal1().toString();
         }
         return s;
     }
 }
+

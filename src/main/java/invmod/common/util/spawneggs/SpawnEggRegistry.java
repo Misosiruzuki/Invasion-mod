@@ -1,19 +1,24 @@
+/*
+ * Decompiled with CFR 0.152.
+ */
 package invmod.common.util.spawneggs;
 
+import invmod.common.util.spawneggs.SpawnEggInfo;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class SpawnEggRegistry {
-
     private static final Map<Short, SpawnEggInfo> eggs = new LinkedHashMap<Short, SpawnEggInfo>();
 
     public static void registerSpawnEgg(SpawnEggInfo info) throws IllegalArgumentException {
-        if (info == null)
+        if (info == null) {
             throw new IllegalArgumentException("SpawnEggInfo cannot be null");
-        if (!isValidSpawnEggID(info.eggID))
+        }
+        if (!SpawnEggRegistry.isValidSpawnEggID(info.eggID)) {
             throw new IllegalArgumentException("Duplicate spawn egg with id " + info.eggID);
+        }
         eggs.put(info.eggID, info);
     }
 
@@ -29,3 +34,4 @@ public class SpawnEggRegistry {
         return Collections.unmodifiableCollection(eggs.values());
     }
 }
+

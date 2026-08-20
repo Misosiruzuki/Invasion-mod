@@ -1,6 +1,11 @@
+/*
+ * Decompiled with CFR 0.152.
+ * 
+ * Could not load the following classes:
+ *  net.minecraft.entity.Entity
+ *  net.minecraft.entity.ai.EntityAIBase
+ */
 package invmod.common.entity.ai;
-
-//NOOB HAUS: DONE
 
 import invmod.common.entity.EntityIMEgg;
 import invmod.common.entity.EntityIMLiving;
@@ -9,8 +14,8 @@ import invmod.common.entity.ISpawnsOffspring;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.ai.EntityAIBase;
 
-public class EntityAILayEgg extends EntityAIBase {
-
+public class EntityAILayEgg
+extends EntityAIBase {
     private static final int EGG_LAY_TIME = 45;
     private static final int INITIAL_EGG_DELAY = 25;
     private static final int NEXT_EGG_DELAY = 230;
@@ -30,44 +35,34 @@ public class EntityAILayEgg extends EntityAIBase {
         this.eggCount += eggs;
     }
 
-    @Override
-    public boolean shouldExecute() {
-        if ((this.theEntity.getAIGoal() == Goal.TARGET_ENTITY) && (this.eggCount > 0) && (this.theEntity.getEntitySenses().canSee(this.theEntity.getAttackTarget()))) {
-            return true;
-        }
-        return false;
+    public boolean func_75250_a() {
+        return this.theEntity.getAIGoal() == Goal.TARGET_ENTITY && this.eggCount > 0 && this.theEntity.func_70635_at().func_75522_a((Entity)this.theEntity.func_70638_az());
     }
 
-    @Override
-    public void startExecuting() {
+    public void func_75249_e() {
         this.time = 25;
     }
 
-    @Override
-    public void updateTask() {
-        this.time -= 1;
+    public void func_75246_d() {
+        --this.time;
         if (this.time <= 0) {
             if (!this.isLaying) {
                 this.isLaying = true;
                 this.time = 45;
-                setMutexBits(1);
+                this.func_75248_a(1);
             } else {
                 this.isLaying = false;
-                this.eggCount -= 1;
+                --this.eggCount;
                 this.time = 230;
-                setMutexBits(0);
-                layEgg();
+                this.func_75248_a(0);
+                this.layEgg();
             }
         }
     }
 
     private void layEgg() {
-        Entity[] contents;
-        if ((this.theEntity instanceof ISpawnsOffspring))
-            contents = ((ISpawnsOffspring) this.theEntity).getOffspring(null);
-        else {
-            contents = null;
-        }
-        this.theEntity.worldObj.spawnEntityInWorld(new EntityIMEgg(this.theEntity, contents, 125));
+        Entity[] contents = this.theEntity instanceof ISpawnsOffspring ? ((ISpawnsOffspring)((Object)this.theEntity)).getOffspring(null) : null;
+        this.theEntity.field_70170_p.func_72838_d((Entity)new EntityIMEgg((Entity)this.theEntity, contents, 125));
     }
 }
+

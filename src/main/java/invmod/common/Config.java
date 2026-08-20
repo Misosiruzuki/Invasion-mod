@@ -1,41 +1,55 @@
+/*
+ * Decompiled with CFR 0.152.
+ */
 package invmod.common;
 
-import invmod.Invasion;
-
-import java.io.*;
+import invmod.common.mod_Invasion;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.Properties;
 
 public class Config {
     protected Properties properties;
 
+    /*
+     * WARNING - Removed try catching itself - possible behaviour change.
+     */
     public void loadConfig(File configFile) {
-        Invasion.log("Loading config");
-        this.properties = new Properties();
-        try {
-            if (!configFile.exists()) {
-                Invasion.log("Config not found. Creating file 'invasion_config.txt' in minecraft directory");
-                if (!configFile.createNewFile())
-                    Invasion.log("Unable to create new config file.");
-            } else {
+        block8: {
+            mod_Invasion.log("Loading config");
+            this.properties = new Properties();
+            try {
+                if (!configFile.exists()) {
+                    mod_Invasion.log("Config not found. Creating file 'invasion_config.txt' in minecraft directory");
+                    if (!configFile.createNewFile()) {
+                        mod_Invasion.log("Unable to create new config file.");
+                    }
+                    break block8;
+                }
                 FileReader configRead = new FileReader(configFile);
                 try {
                     this.properties.load(configRead);
-                } finally {
+                }
+                finally {
                     configRead.close();
                 }
             }
-
-        } catch (FileNotFoundException e) {
-            Invasion.log(e.getMessage());
-            Invasion.log("Proceeding with default config");
-        } catch (IOException e) {
-            Invasion.log(e.getMessage());
-            Invasion.log("Proceeding with default config");
+            catch (FileNotFoundException e) {
+                mod_Invasion.log(e.getMessage());
+                mod_Invasion.log("Proceeding with default config");
+            }
+            catch (IOException e) {
+                mod_Invasion.log(e.getMessage());
+                mod_Invasion.log("Proceeding with default config");
+            }
         }
     }
 
     public void writeProperty(BufferedWriter writer, String key) throws IOException {
-        writeProperty(writer, key, null);
+        this.writeProperty(writer, key, null);
     }
 
     public void writeProperty(BufferedWriter writer, String key, String comment) throws IOException {
@@ -43,7 +57,6 @@ public class Config {
             writer.write("# " + comment);
             writer.newLine();
         }
-
         writer.write(key + "=" + this.properties.getProperty(key));
         writer.newLine();
     }
@@ -61,7 +74,6 @@ public class Config {
         if (!property.equals("null")) {
             return Integer.parseInt(property);
         }
-
         this.properties.setProperty(keyName, Integer.toString(defaultValue));
         return defaultValue;
     }
@@ -71,7 +83,6 @@ public class Config {
         if (!property.equals("null")) {
             return Float.parseFloat(property);
         }
-
         this.properties.setProperty(keyName, Float.toString(defaultValue));
         return defaultValue;
     }
@@ -81,7 +92,6 @@ public class Config {
         if (!property.equals("null")) {
             return Boolean.parseBoolean(property);
         }
-
         this.properties.setProperty(keyName, Boolean.toString(defaultValue));
         return defaultValue;
     }
@@ -91,8 +101,8 @@ public class Config {
         if (!property.equals("null")) {
             return property;
         }
-
         this.properties.setProperty(keyName, defaultValue);
         return defaultValue;
     }
 }
+

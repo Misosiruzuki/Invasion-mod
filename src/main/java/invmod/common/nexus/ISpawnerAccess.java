@@ -1,11 +1,18 @@
+/*
+ * Decompiled with CFR 0.152.
+ */
 package invmod.common.nexus;
 
-public abstract interface ISpawnerAccess {
-    public abstract boolean attemptSpawn(EntityConstruct paramEntityConstruct, int paramInt1, int paramInt2);
+import invmod.common.nexus.EntityConstruct;
+import invmod.common.nexus.SpawnType;
 
-    public abstract int getNumberOfPointsInRange(int paramInt1, int paramInt2, SpawnType paramSpawnType);
+public interface ISpawnerAccess {
+    public boolean attemptSpawn(EntityConstruct var1, int var2, int var3);
 
-    public abstract void sendSpawnAlert(String paramString);
+    public int getNumberOfPointsInRange(int var1, int var2, SpawnType var3);
 
-    public abstract void noSpawnPointNotice();
+    public void sendSpawnAlert(String var1);
+
+    public void noSpawnPointNotice();
 }
+

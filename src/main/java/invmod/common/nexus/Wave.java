@@ -1,5 +1,10 @@
+/*
+ * Decompiled with CFR 0.152.
+ */
 package invmod.common.nexus;
 
+import invmod.common.nexus.ISpawnerAccess;
+import invmod.common.nexus.WaveEntry;
 import java.util.List;
 
 public class Wave {
@@ -23,9 +28,8 @@ public class Wave {
         int numberOfSpawns = 0;
         this.elapsed += elapsedMillis;
         for (WaveEntry entry : this.entries) {
-            if ((this.elapsed >= entry.getTimeBegin()) && (this.elapsed < entry.getTimeEnd())) {
-                numberOfSpawns += entry.doNextSpawns(elapsedMillis, spawner);
-            }
+            if (this.elapsed < entry.getTimeBegin() || this.elapsed >= entry.getTimeEnd()) continue;
+            numberOfSpawns += entry.doNextSpawns(elapsedMillis, spawner);
         }
         return numberOfSpawns;
     }
@@ -65,3 +69,4 @@ public class Wave {
         return total;
     }
 }
+

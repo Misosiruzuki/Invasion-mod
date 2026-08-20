@@ -1,9 +1,19 @@
+/*
+ * Decompiled with CFR 0.152.
+ */
 package invmod.common.nexus;
 
-import invmod.Invasion;
+import invmod.common.mod_Invasion;
+import invmod.common.nexus.EntityConstruct;
+import invmod.common.nexus.IEntityIMPattern;
+import invmod.common.nexus.ISpawnerAccess;
+import invmod.common.nexus.SpawnType;
 import invmod.common.util.ISelect;
-
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Random;
 
 public class WaveEntry {
     private int timeBegin;
@@ -18,8 +28,8 @@ public class WaveEntry {
     private int minPointsInRange;
     private int nextAlert;
     private ISelect<IEntityIMPattern> mobPool;
-    private List<EntityConstruct> spawnList;
-    private Map<Integer, String> alerts;
+    private List<EntityConstruct> spawnList = new ArrayList<EntityConstruct>();
+    private Map<Integer, String> alerts = new HashMap<Integer, String>();
 
     public WaveEntry(int timeBegin, int timeEnd, int amount, int granularity, ISelect<IEntityIMPattern> mobPool) {
         this(timeBegin, timeEnd, amount, granularity, mobPool, -180, 180, 1);
@@ -27,15 +37,14 @@ public class WaveEntry {
 
     public WaveEntry(int timeBegin, int timeEnd, int amount, int granularity, ISelect<IEntityIMPattern> mobPool, int angleRange, int minPointsInRange) {
         this(timeBegin, timeEnd, amount, granularity, mobPool, 0, 0, minPointsInRange);
-        this.minAngle = (new Random().nextInt(360) - 180);
-        this.maxAngle = (this.minAngle + angleRange);
-        while (this.maxAngle > 180)
+        this.minAngle = new Random().nextInt(360) - 180;
+        this.maxAngle = this.minAngle + angleRange;
+        while (this.maxAngle > 180) {
             this.maxAngle -= 360;
+        }
     }
 
     public WaveEntry(int timeBegin, int timeEnd, int amount, int granularity, ISelect<IEntityIMPattern> mobPool, int minAngle, int maxAngle, int minPointsInRange) {
-        this.spawnList = new ArrayList();
-        this.alerts = new HashMap();
         this.timeBegin = timeBegin;
         this.timeEnd = timeEnd;
         this.amount = amount;
@@ -47,56 +56,51 @@ public class WaveEntry {
         this.amountQueued = 0;
         this.elapsed = 0;
         this.toNextSpawn = 0;
-        this.nextAlert = 2147483647;
+        this.nextAlert = Integer.MAX_VALUE;
     }
 
     public int doNextSpawns(int elapsedMillis, ISpawnerAccess spawner) {
         this.toNextSpawn -= elapsedMillis;
         if (this.nextAlert <= this.elapsed - this.toNextSpawn) {
-            sendNextAlert(spawner);
+            this.sendNextAlert(spawner);
         }
-
         if (this.toNextSpawn <= 0) {
+            int amountToSpawn;
             this.elapsed += this.granularity;
             this.toNextSpawn += this.granularity;
             if (this.toNextSpawn < 0) {
                 this.elapsed -= this.toNextSpawn;
                 this.toNextSpawn = 0;
             }
-
-            int amountToSpawn = Math.round(this.amount * this.elapsed / (this.timeEnd - this.timeBegin)) - this.amountQueued;
-            if (amountToSpawn > 0) {
+            if ((amountToSpawn = Math.round(this.amount * this.elapsed / (this.timeEnd - this.timeBegin)) - this.amountQueued) > 0) {
                 if (amountToSpawn + this.amountQueued > this.amount) {
                     amountToSpawn = this.amount - this.amountQueued;
                 }
                 while (amountToSpawn > 0) {
-                    IEntityIMPattern pattern = (IEntityIMPattern) this.mobPool.selectNext();
+                    IEntityIMPattern pattern = this.mobPool.selectNext();
                     if (pattern != null) {
                         EntityConstruct mobConstruct = pattern.generateEntityConstruct(this.minAngle, this.maxAngle);
-                        if (mobConstruct != null) {
-                            amountToSpawn--;
-                            this.amountQueued += 1;
-                            this.spawnList.add(mobConstruct);
-                        }
-                    } else {
-                        Invasion.log("A selection pool in wave entry " + toString() + " returned empty");
-                        Invasion.log("Pool: " + this.mobPool.toString());
+                        if (mobConstruct == null) continue;
+                        --amountToSpawn;
+                        ++this.amountQueued;
+                        this.spawnList.add(mobConstruct);
+                        continue;
                     }
+                    mod_Invasion.log("A selection pool in wave entry " + this.toString() + " returned empty");
+                    mod_Invasion.log("Pool: " + this.mobPool.toString());
                 }
             }
         }
-
         if (this.spawnList.size() > 0) {
             int numberOfSpawns = 0;
             if (spawner.getNumberOfPointsInRange(this.minAngle, this.maxAngle, SpawnType.HUMANOID) >= this.minPointsInRange) {
-                for (int i = this.spawnList.size() - 1; i >= 0; i--) {
-                    if (spawner.attemptSpawn((EntityConstruct) this.spawnList.get(i), this.minAngle, this.maxAngle)) {
-                        numberOfSpawns++;
-                        this.spawnList.remove(i);
-                    }
+                for (int i = this.spawnList.size() - 1; i >= 0; --i) {
+                    if (!spawner.attemptSpawn(this.spawnList.get(i), this.minAngle, this.maxAngle)) continue;
+                    ++numberOfSpawns;
+                    this.spawnList.remove(i);
                 }
             } else {
-                reviseSpawnAngles(spawner);
+                this.reviseSpawnAngles(spawner);
             }
             return numberOfSpawns;
         }
@@ -130,67 +134,64 @@ public class WaveEntry {
     }
 
     public void addAlert(String message, int timeElapsed) {
-        this.alerts.put(Integer.valueOf(timeElapsed), message);
-        if (timeElapsed < this.nextAlert)
+        this.alerts.put(timeElapsed, message);
+        if (timeElapsed < this.nextAlert) {
             this.nextAlert = timeElapsed;
+        }
     }
 
-    @Override
     public String toString() {
-        return "WaveEntry@" + Integer.toHexString(hashCode()) + "#time=" + this.timeBegin + "-" + this.timeEnd + "#amount=" + this.amount;
+        return "WaveEntry@" + Integer.toHexString(this.hashCode()) + "#time=" + this.timeBegin + "-" + this.timeEnd + "#amount=" + this.amount;
     }
 
     private void sendNextAlert(ISpawnerAccess spawner) {
-        String message = (String) this.alerts.remove(Integer.valueOf(this.nextAlert));
+        String message = this.alerts.remove(this.nextAlert);
         if (message != null) {
             spawner.sendSpawnAlert(message);
         }
-        this.nextAlert = 2147483647;
+        this.nextAlert = Integer.MAX_VALUE;
         if (this.alerts.size() > 0) {
             for (Integer key : this.alerts.keySet()) {
-                if (key.intValue() < this.nextAlert)
-                    this.nextAlert = key.intValue();
+                if (key >= this.nextAlert) continue;
+                this.nextAlert = key;
             }
         }
     }
 
     private void reviseSpawnAngles(ISpawnerAccess spawner) {
-        int angleRange = this.maxAngle - this.minAngle;
-        while (angleRange < 0)
-            angleRange += 360;
+        int angleRange;
+        for (angleRange = this.maxAngle - this.minAngle; angleRange < 0; angleRange += 360) {
+        }
         if (angleRange == 0) {
             angleRange = 360;
         }
-        List validAngles = new ArrayList();
-
+        ArrayList<Integer> validAngles = new ArrayList<Integer>();
         for (int angle = -180; angle < 180; angle += angleRange) {
             int nextAngle = angle + angleRange;
-            if (nextAngle >= 180)
+            if (nextAngle >= 180) {
                 nextAngle -= 360;
-            if (spawner.getNumberOfPointsInRange(angle, nextAngle, SpawnType.HUMANOID) >= this.minPointsInRange) {
-                validAngles.add(Integer.valueOf(angle));
             }
+            if (spawner.getNumberOfPointsInRange(angle, nextAngle, SpawnType.HUMANOID) < this.minPointsInRange) continue;
+            validAngles.add(angle);
         }
         if (validAngles.size() > 0) {
-            this.minAngle = ((Integer) validAngles.get(new Random().nextInt(validAngles.size()))).intValue();
-            this.maxAngle = (this.minAngle + angleRange);
+            this.minAngle = (Integer)validAngles.get(new Random().nextInt(validAngles.size()));
+            this.maxAngle = this.minAngle + angleRange;
             while (this.maxAngle >= 180) {
                 this.maxAngle -= 360;
             }
         }
-
         if (this.minPointsInRange > 1) {
-            Invasion.log("Can't find a direction with enough spawn points: " + this.minPointsInRange + ". Lowering requirement.");
-
+            mod_Invasion.log("Can't find a direction with enough spawn points: " + this.minPointsInRange + ". Lowering requirement.");
             this.minPointsInRange = 1;
         } else if (this.maxAngle - this.minAngle < 360) {
-            Invasion.log("Can't find a direction with enough spawn points: " + this.minPointsInRange + ". Switching to 360 degree mode for this entry");
-
+            mod_Invasion.log("Can't find a direction with enough spawn points: " + this.minPointsInRange + ". Switching to 360 degree mode for this entry");
             this.minAngle = -180;
             this.maxAngle = 180;
         } else {
-            Invasion.log("Wave entry cannot find a single spawn point");
+            mod_Invasion.log("Wave entry cannot find a single spawn point");
             spawner.noSpawnPointNotice();
         }
     }
 }
+

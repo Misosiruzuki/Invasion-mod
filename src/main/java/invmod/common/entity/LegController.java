@@ -1,7 +1,13 @@
+/*
+ * Decompiled with CFR 0.152.
+ */
 package invmod.common.entity;
 
-import com.whammich.invasion.client.render.animation.AnimationAction;
-import com.whammich.invasion.client.render.animation.AnimationState;
+import invmod.client.render.animation.AnimationAction;
+import invmod.client.render.animation.AnimationState;
+import invmod.common.entity.EntityIMBird;
+import invmod.common.entity.FlyState;
+import invmod.common.entity.MoveState;
 
 public class LegController {
     private EntityIMBird theEntity;
@@ -15,55 +21,53 @@ public class LegController {
         this.theEntity = entity;
         this.animationRun = stateObject;
         this.timeAttacking = 0;
-        this.flapEffort = 1.0F;
-        this.flapEffortSamples = new float[]{1.0F, 1.0F, 1.0F, 1.0F, 1.0F, 1.0F};
+        this.flapEffort = 1.0f;
+        this.flapEffortSamples = new float[]{1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f};
         this.sampleIndex = 0;
     }
 
     public void update() {
         AnimationAction currAnimation = this.animationRun.getCurrentAction();
         if (this.theEntity.getMoveState() == MoveState.RUNNING) {
-            double dX = this.theEntity.posX - this.theEntity.lastTickPosX;
-            double dZ = this.theEntity.posZ - this.theEntity.lastTickPosZ;
+            double dX = this.theEntity.field_70165_t - this.theEntity.field_70142_S;
+            double dZ = this.theEntity.field_70161_v - this.theEntity.field_70136_U;
             double dist = Math.sqrt(dX * dX + dZ * dZ);
-            float speed = 0.2F + (float) dist * 1.3F;
-
+            float speed = 0.2f + (float)dist * 1.3f;
             if (this.animationRun.getNextSetAction() != AnimationAction.RUN) {
-                if (dist >= 1.E-005D) {
+                if (dist >= 1.0E-5) {
                     if (currAnimation == AnimationAction.STAND) {
-                        ensureAnimation(this.animationRun, AnimationAction.STAND_TO_RUN, speed, false);
+                        this.ensureAnimation(this.animationRun, AnimationAction.STAND_TO_RUN, speed, false);
                     } else if (currAnimation == AnimationAction.STAND_TO_RUN) {
-                        ensureAnimation(this.animationRun, AnimationAction.RUN, speed, false);
+                        this.ensureAnimation(this.animationRun, AnimationAction.RUN, speed, false);
                     } else {
-                        ensureAnimation(this.animationRun, AnimationAction.STAND, 1.0F, true);
+                        this.ensureAnimation(this.animationRun, AnimationAction.STAND, 1.0f, true);
                     }
                 }
             } else {
                 this.animationRun.setAnimationSpeed(speed);
-                if (dist < 1.E-005D) {
-                    ensureAnimation(this.animationRun, AnimationAction.STAND, 0.2F, true);
+                if (dist < 1.0E-5) {
+                    this.ensureAnimation(this.animationRun, AnimationAction.STAND, 0.2f, true);
                 }
             }
         } else if (this.theEntity.getMoveState() == MoveState.STANDING) {
-            ensureAnimation(this.animationRun, AnimationAction.STAND, 1.0F, true);
+            this.ensureAnimation(this.animationRun, AnimationAction.STAND, 1.0f, true);
         } else if (this.theEntity.getMoveState() == MoveState.FLYING) {
             if (this.theEntity.getClawsForward()) {
                 if (currAnimation == AnimationAction.STAND) {
-                    ensureAnimation(this.animationRun, AnimationAction.LEGS_CLAW_ATTACK_P1, 1.5F, true);
+                    this.ensureAnimation(this.animationRun, AnimationAction.LEGS_CLAW_ATTACK_P1, 1.5f, true);
                 } else if (this.animationRun.getNextSetAction() != AnimationAction.LEGS_CLAW_ATTACK_P1) {
-                    ensureAnimation(this.animationRun, AnimationAction.STAND, 1.5F, true);
+                    this.ensureAnimation(this.animationRun, AnimationAction.STAND, 1.5f, true);
                 }
-            } else if (((this.theEntity.getFlyState() == FlyState.FLYING) || (this.theEntity.getFlyState() == FlyState.LANDING)) && (currAnimation != AnimationAction.LEGS_RETRACT)) {
+            } else if ((this.theEntity.getFlyState() == FlyState.FLYING || this.theEntity.getFlyState() == FlyState.LANDING) && currAnimation != AnimationAction.LEGS_RETRACT) {
                 if (currAnimation == AnimationAction.STAND) {
-                    ensureAnimation(this.animationRun, AnimationAction.LEGS_RETRACT, 1.0F, true);
+                    this.ensureAnimation(this.animationRun, AnimationAction.LEGS_RETRACT, 1.0f, true);
                 } else if (currAnimation == AnimationAction.LEGS_CLAW_ATTACK_P1) {
-                    ensureAnimation(this.animationRun, AnimationAction.LEGS_CLAW_ATTACK_P2, 1.0F, true);
+                    this.ensureAnimation(this.animationRun, AnimationAction.LEGS_CLAW_ATTACK_P2, 1.0f, true);
                 } else {
-                    ensureAnimation(this.animationRun, AnimationAction.STAND, 1.0F, true);
+                    this.ensureAnimation(this.animationRun, AnimationAction.STAND, 1.0f, true);
                 }
             }
         }
-
         this.animationRun.update();
     }
 
@@ -77,3 +81,4 @@ public class LegController {
         }
     }
 }
+

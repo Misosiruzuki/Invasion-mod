@@ -1,38 +1,48 @@
+/*
+ * Decompiled with CFR 0.152.
+ * 
+ * Could not load the following classes:
+ *  net.minecraft.entity.Entity
+ *  net.minecraft.entity.EntityList
+ *  net.minecraft.world.World
+ */
 package invmod.common;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.HashSet;
+import java.util.Set;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
 import net.minecraft.world.World;
 
-import java.io.*;
-import java.util.HashSet;
-import java.util.Set;
-
 public class SimplyID {
     private static int nextSimplyID;
-    private static Set<String> loadedIDs = new HashSet();
-    private static String loadedWorld = null;
-    private static File file = null;
-    private static PrintWriter writer = null;
+    private static Set<String> loadedIDs;
+    private static String loadedWorld;
+    private static File file;
+    private static PrintWriter writer;
 
     public static String getNextSimplyID(Entity par1Entity) {
-        loadSession(par1Entity.worldObj);
-
-        nextSimplyID = 0;
-
-        int i = nextSimplyID;
-        while (true) {
-            String id = EntityList.getEntityString(par1Entity) + nextSimplyID++;
-            if (loadedIDs.add(id)) {
-                writeIDToFile(id);
-                return id;
-            }
+        String id;
+        SimplyID.loadSession(par1Entity.field_70170_p);
+        int i = nextSimplyID = 0;
+        while (!loadedIDs.add(id = EntityList.func_75621_b((Entity)par1Entity) + nextSimplyID++)) {
         }
+        SimplyID.writeIDToFile(id);
+        return id;
     }
 
     public static void loadSession(World worldObj) {
-        if ((loadedWorld == null) || (!worldObj.getSaveHandler().getWorldDirectoryName().equals(loadedWorld)))
-            resetSimplyIDTo(worldObj);
+        if (loadedWorld == null || !worldObj.func_72860_G().func_75760_g().equals(loadedWorld)) {
+            SimplyID.resetSimplyIDTo(worldObj);
+        }
     }
 
     public static void resetSimplyIDTo(World world) {
@@ -41,18 +51,18 @@ public class SimplyID {
             writer.close();
         }
         loadedIDs.clear();
-
-        loadedWorld = world.getSaveHandler().getWorldDirectoryName();
+        loadedWorld = world.func_72860_G().func_75760_g();
         String directory = "saves/" + loadedWorld + "/";
         file = new File(directory + "savedIDs.txt");
         try {
             writer = new PrintWriter(new BufferedWriter(new FileWriter(file, true)));
-        } catch (FileNotFoundException e) {
-        } catch (IOException e) {
+        }
+        catch (FileNotFoundException e) {
+        }
+        catch (IOException e) {
             e.printStackTrace();
         }
-
-        populateSet();
+        SimplyID.populateSet();
     }
 
     public static void writeIDToFile(String id) {
@@ -66,49 +76,55 @@ public class SimplyID {
         try {
             pre = new FileReader(file);
             reader = new BufferedReader(pre);
-
             String line = null;
             try {
-                while ((line = reader.readLine()) != null)
+                while ((line = reader.readLine()) != null) {
                     if (line.startsWith("delete ")) {
-                        deleteID(line, Boolean.valueOf(false));
-                    } else
-                        addID(line);
-            } catch (IOException e) {
+                        SimplyID.deleteID(line, false);
+                        continue;
+                    }
+                    SimplyID.addID(line);
+                }
+            }
+            catch (IOException e) {
                 e.printStackTrace();
-            } catch (Exception e) {
+            }
+            catch (Exception e) {
                 e.printStackTrace();
             }
             try {
-                if (reader != null)
+                if (reader != null) {
                     reader.close();
-            } catch (IOException e) {
+                }
+            }
+            catch (IOException e) {
                 e.printStackTrace();
             }
-        } catch (FileNotFoundException e) {
+        }
+        catch (FileNotFoundException e) {
+            // empty catch block
         }
         if (reader != null) {
             try {
                 reader.close();
-            } catch (IOException e) {
+            }
+            catch (IOException e) {
                 e.printStackTrace();
             }
         }
-
-        refreshLoadedIDFile();
+        SimplyID.refreshLoadedIDFile();
     }
 
     private static void refreshLoadedIDFile() {
         try {
             PrintWriter writer = new PrintWriter(file);
-
             for (String id : loadedIDs) {
                 writer.println(id);
             }
-
             writer.flush();
             writer.close();
-        } catch (FileNotFoundException e) {
+        }
+        catch (FileNotFoundException e) {
             e.printStackTrace();
         }
     }
@@ -126,20 +142,25 @@ public class SimplyID {
     }
 
     public static void deleteID(String deletedID, Boolean flag) {
-        if ((!flag.booleanValue()) && (deletedID.startsWith("delete "))) {
+        if (!flag.booleanValue() && deletedID.startsWith("delete ")) {
             deletedID = deletedID.split(" ")[1];
         }
-
         if (flag.booleanValue()) {
-            writeIDToFile("delete " + deletedID);
+            SimplyID.writeIDToFile("delete " + deletedID);
         }
-
         loadedIDs.remove(deletedID);
     }
 
     public static void deleteID(World world, String string) {
-        loadSession(world);
+        SimplyID.loadSession(world);
+        SimplyID.deleteID(string, true);
+    }
 
-        deleteID(string, Boolean.valueOf(true));
+    static {
+        loadedIDs = new HashSet<String>();
+        loadedWorld = null;
+        file = null;
+        writer = null;
     }
 }
+

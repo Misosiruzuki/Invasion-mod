@@ -1,14 +1,26 @@
+/*
+ * Decompiled with CFR 0.152.
+ * 
+ * Could not load the following classes:
+ *  net.minecraft.entity.Entity
+ *  net.minecraft.entity.EntityCreature
+ *  net.minecraft.entity.EntityLivingBase
+ *  net.minecraft.util.MathHelper
+ *  net.minecraft.util.Vec3
+ */
 package invmod.common.entity.ai;
 
 import invmod.common.entity.EntityIMLiving;
 import invmod.common.entity.EntityIMZombiePigman;
+import invmod.common.entity.ai.EntityAIMoveToEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.Vec3;
 
-public class EntityAICharge<T extends EntityLivingBase> extends EntityAIMoveToEntity<T> {
+public class EntityAICharge<T extends EntityLivingBase>
+extends EntityAIMoveToEntity<T> {
     protected EntityCreature charger;
     protected EntityLivingBase chargeTarget;
     protected double chargeX;
@@ -30,101 +42,87 @@ public class EntityAICharge<T extends EntityLivingBase> extends EntityAIMoveToEn
         this.runTime = 15;
     }
 
-
     @Override
-    public boolean shouldExecute() {
-
-        if (chargeDelay > 0) {
-            this.chargeDelay--;
+    public boolean func_75250_a() {
+        if (this.chargeDelay > 0) {
+            --this.chargeDelay;
             return false;
         }
-
-        this.chargeTarget = this.charger.getAttackTarget();
+        this.chargeTarget = this.charger.func_70638_az();
         if (this.chargeTarget == null) {
             return false;
-
         }
-        double distance = Math.sqrt(this.charger.getDistanceSqToEntity(this.chargeTarget));
-        if ((distance < 5.0D) || (distance > 20.0D)) {
+        double distance = Math.sqrt(this.charger.func_70068_e((Entity)this.chargeTarget));
+        if (distance < 5.0 || distance > 20.0) {
             return false;
         }
-        if (!this.charger.onGround) {
+        if (!this.charger.field_70122_E) {
             return false;
         }
-        Vec3 chargePos = findChargePoint(this.charger, this.chargeTarget, 6.0D);
+        Vec3 chargePos = this.findChargePoint((Entity)this.charger, (Entity)this.chargeTarget, 6.0);
         if (chargePos == null) {
             return false;
         }
-
-
-        this.chargeX = chargePos.xCoord;
-        this.chargeY = chargePos.yCoord;
-        this.chargeZ = chargePos.zCoord;
-
-        return this.charger.getRNG().nextInt(1) == 0;
+        this.chargeX = chargePos.field_72450_a;
+        this.chargeY = chargePos.field_72448_b;
+        this.chargeZ = chargePos.field_72449_c;
+        return this.charger.func_70681_au().nextInt(1) == 0;
     }
 
     @Override
-    public void startExecuting() {
-
-        this.windup = (15 + this.charger.getRNG().nextInt(25));
+    public void func_75249_e() {
+        this.windup = 15 + this.charger.func_70681_au().nextInt(25);
     }
 
     @Override
-    public boolean continueExecuting() {
+    public boolean func_75253_b() {
         if (this.windup == 0 && this.runTime > 0) {
-            this.runTime--;
+            --this.runTime;
         }
-
-        return (this.windup > 0) || (this.runTime > 0);
+        return this.windup > 0 || this.runTime > 0;
     }
 
     @Override
-    public void updateTask() {
-        this.charger.getLookHelper().setLookPosition(this.chargeX, this.chargeY - 1.0D, this.chargeZ, 10.0F, this.charger.getVerticalFaceSpeed());
+    public void func_75246_d() {
+        this.charger.func_70671_ap().func_75650_a(this.chargeX, this.chargeY - 1.0, this.chargeZ, 10.0f, (float)this.charger.func_70646_bf());
         if (this.windup > 0) {
             if (--this.windup == 0) {
-                this.charger.getNavigator().tryMoveToXYZ(this.chargeX, this.chargeY, this.chargeZ, this.speed);
+                this.charger.func_70661_as().func_75492_a(this.chargeX, this.chargeY, this.chargeZ, (double)this.speed);
             } else {
                 EntityCreature tmp90_87 = this.charger;
-                tmp90_87.limbSwingAmount = ((float) (tmp90_87.limbSwingAmount + 0.8D));
-                if ((this.charger instanceof EntityIMZombiePigman)) {
-                    ((EntityIMZombiePigman) this.charger).setCharging(true);
+                tmp90_87.field_70721_aZ = (float)((double)tmp90_87.field_70721_aZ + 0.8);
+                if (this.charger instanceof EntityIMZombiePigman) {
+                    ((EntityIMZombiePigman)this.charger).setCharging(true);
                 }
             }
         }
-        double var1 = this.charger.width * 2.1F * this.charger.width * 2.1F;
-        if (this.charger.getDistanceSq(this.chargeTarget.posX, this.chargeTarget.boundingBox.minY, this.chargeTarget.posZ) <= var1) {
-            if (!this.hasAttacked) {
-                this.hasAttacked = true;
-                this.charger.attackEntityAsMob(this.chargeTarget);
-            }
+        double var1 = this.charger.field_70130_N * 2.1f * this.charger.field_70130_N * 2.1f;
+        if (this.charger.func_70092_e(this.chargeTarget.field_70165_t, this.chargeTarget.field_70121_D.field_72338_b, this.chargeTarget.field_70161_v) <= var1 && !this.hasAttacked) {
+            this.hasAttacked = true;
+            this.charger.func_70652_k((Entity)this.chargeTarget);
         }
     }
 
     @Override
-    public void resetTask() {
+    public void func_75251_c() {
         this.windup = 0;
         this.chargeTarget = null;
         this.hasAttacked = false;
         this.chargeDelay = 100;
         this.runTime = 15;
-        if ((this.charger instanceof EntityIMZombiePigman)) {
-            ((EntityIMZombiePigman) this.charger).setCharging(false);
+        if (this.charger instanceof EntityIMZombiePigman) {
+            ((EntityIMZombiePigman)this.charger).setCharging(false);
         }
     }
 
     protected Vec3 findChargePoint(Entity attacker, Entity target, double overshoot) {
-        double vecx = target.posX - attacker.posX;
-        double vecz = target.posZ - attacker.posZ;
-        float rangle = (float) Math.atan2(vecz, vecx);
-
-        double distance = MathHelper.sqrt_double(vecx * vecx + vecz * vecz);
-
-        double dx = MathHelper.cos(rangle) * (distance + overshoot);
-        double dz = MathHelper.sin(rangle) * (distance + overshoot);
-
-        return Vec3.createVectorHelper((attacker.posX + dx), target.posY, (attacker.posZ + dz));
+        double vecx = target.field_70165_t - attacker.field_70165_t;
+        double vecz = target.field_70161_v - attacker.field_70161_v;
+        float rangle = (float)Math.atan2(vecz, vecx);
+        double distance = MathHelper.func_76133_a((double)(vecx * vecx + vecz * vecz));
+        double dx = (double)MathHelper.func_76134_b((float)rangle) * (distance + overshoot);
+        double dz = (double)MathHelper.func_76126_a((float)rangle) * (distance + overshoot);
+        return Vec3.func_72443_a((double)(attacker.field_70165_t + dx), (double)target.field_70163_u, (double)(attacker.field_70161_v + dz));
     }
 }
 

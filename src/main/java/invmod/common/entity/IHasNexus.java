@@ -1,9 +1,13 @@
+/*
+ * Decompiled with CFR 0.152.
+ */
 package invmod.common.entity;
 
 import invmod.common.nexus.INexusAccess;
 
-public abstract interface IHasNexus {
-    public abstract INexusAccess getNexus();
+public interface IHasNexus {
+    public INexusAccess getNexus();
 
-    public abstract void acquiredByNexus(INexusAccess paramINexusAccess);
+    public void acquiredByNexus(INexusAccess var1);
 }
+

@@ -1,3 +1,6 @@
+/*
+ * Decompiled with CFR 0.152.
+ */
 package invmod.common.util;
 
 public class Triplet<T, U, V> {
@@ -15,23 +18,24 @@ public class Triplet<T, U, V> {
         return this.val1;
     }
 
-    public void setVal1(T entry) {
-        this.val1 = entry;
-    }
-
     public U getVal2() {
         return this.val2;
-    }
-
-    public void setVal2(U value) {
-        this.val2 = value;
     }
 
     public V getVal3() {
         return this.val3;
     }
 
+    public void setVal1(T entry) {
+        this.val1 = entry;
+    }
+
+    public void setVal2(U value) {
+        this.val2 = value;
+    }
+
     public void setVal3(V value) {
         this.val3 = value;
     }
 }
+

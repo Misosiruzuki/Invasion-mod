@@ -1,11 +1,16 @@
+/*
+ * Decompiled with CFR 0.152.
+ */
 package invmod.common.entity;
 
 import invmod.common.INotifyTask;
+import invmod.common.entity.ModifyBlockEntry;
 
-public abstract interface ITerrainModify {
-    public abstract boolean isReadyForTask(INotifyTask paramINotifyTask);
+public interface ITerrainModify {
+    public boolean isReadyForTask(INotifyTask var1);
 
-    public abstract boolean requestTask(ModifyBlockEntry[] paramArrayOfModifyBlockEntry, INotifyTask paramINotifyTask1, INotifyTask paramINotifyTask2);
+    public boolean requestTask(ModifyBlockEntry[] var1, INotifyTask var2, INotifyTask var3);
 
-    public abstract ModifyBlockEntry getLastBlockModified();
+    public ModifyBlockEntry getLastBlockModified();
 }
+

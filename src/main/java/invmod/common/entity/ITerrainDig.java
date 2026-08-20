@@ -1,9 +1,13 @@
+/*
+ * Decompiled with CFR 0.152.
+ */
 package invmod.common.entity;
 
 import invmod.common.INotifyTask;
 
-public abstract interface ITerrainDig {
-    public abstract boolean askRemoveBlock(int paramInt1, int paramInt2, int paramInt3, INotifyTask paramINotifyTask, float paramFloat);
+public interface ITerrainDig {
+    public boolean askRemoveBlock(int var1, int var2, int var3, INotifyTask var4, float var5);
 
-    public abstract boolean askClearPosition(int paramInt1, int paramInt2, int paramInt3, INotifyTask paramINotifyTask, float paramFloat);
+    public boolean askClearPosition(int var1, int var2, int var3, INotifyTask var4, float var5);
 }
+

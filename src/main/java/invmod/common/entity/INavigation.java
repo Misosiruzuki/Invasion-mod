@@ -1,48 +1,58 @@
+/*
+ * Decompiled with CFR 0.152.
+ * 
+ * Could not load the following classes:
+ *  net.minecraft.entity.Entity
+ */
 package invmod.common.entity;
 
 import invmod.common.INotifyTask;
+import invmod.common.entity.Path;
+import invmod.common.entity.PathAction;
 import net.minecraft.entity.Entity;
 
-public abstract interface INavigation extends INotifyTask {
-    public abstract PathAction getCurrentWorkingAction();
+public interface INavigation
+extends INotifyTask {
+    public PathAction getCurrentWorkingAction();
 
-    public abstract void setSpeed(float paramFloat);
+    public void setSpeed(float var1);
 
-    public abstract Path getPathToXYZ(double paramDouble1, double paramDouble2, double paramDouble3, float paramFloat);
+    public Path getPathToXYZ(double var1, double var3, double var5, float var7);
 
-    public abstract boolean tryMoveToXYZ(double paramDouble1, double paramDouble2, double paramDouble3, float paramFloat1, float paramFloat2);
+    public boolean tryMoveToXYZ(double var1, double var3, double var5, float var7, float var8);
 
-    public abstract Path getPathTowardsXZ(double paramDouble1, double paramDouble2, int paramInt1, int paramInt2, int paramInt3);
+    public Path getPathTowardsXZ(double var1, double var3, int var5, int var6, int var7);
 
-    public abstract boolean tryMoveTowardsXZ(double paramDouble1, double paramDouble2, int paramInt1, int paramInt2, int paramInt3, float paramFloat);
+    public boolean tryMoveTowardsXZ(double var1, double var3, int var5, int var6, int var7, float var8);
 
-    public abstract Path getPathToEntity(Entity paramEntity, float paramFloat);
+    public Path getPathToEntity(Entity var1, float var2);
 
-    public abstract boolean tryMoveToEntity(Entity paramEntity, float paramFloat1, float paramFloat2);
+    public boolean tryMoveToEntity(Entity var1, float var2, float var3);
 
-    public abstract void autoPathToEntity(Entity paramEntity);
+    public void autoPathToEntity(Entity var1);
 
-    public abstract boolean setPath(Path paramPath, float paramFloat);
+    public boolean setPath(Path var1, float var2);
 
-    public abstract boolean isWaitingForTask();
+    public boolean isWaitingForTask();
 
-    public abstract Path getPath();
+    public Path getPath();
 
-    public abstract void onUpdateNavigation();
+    public void onUpdateNavigation();
 
-    public abstract int getLastActionResult();
+    public int getLastActionResult();
 
-    public abstract boolean noPath();
+    public boolean noPath();
 
-    public abstract int getStuckTime();
+    public int getStuckTime();
 
-    public abstract float getLastPathDistanceToTarget();
+    public float getLastPathDistanceToTarget();
 
-    public abstract void clearPath();
+    public void clearPath();
 
-    public abstract void haltForTick();
+    public void haltForTick();
 
-    public abstract Entity getTargetEntity();
+    public Entity getTargetEntity();
 
-    public abstract String getStatus();
+    public String getStatus();
 }
+

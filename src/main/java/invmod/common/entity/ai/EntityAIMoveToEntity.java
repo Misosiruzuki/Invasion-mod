@@ -1,10 +1,20 @@
+/*
+ * Decompiled with CFR 0.152.
+ * 
+ * Could not load the following classes:
+ *  net.minecraft.entity.Entity
+ *  net.minecraft.entity.EntityLivingBase
+ *  net.minecraft.entity.ai.EntityAIBase
+ */
 package invmod.common.entity.ai;
 
 import invmod.common.entity.EntityIMLiving;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.ai.EntityAIBase;
 
-public class EntityAIMoveToEntity<T extends EntityLivingBase> extends EntityAIBase {
+public class EntityAIMoveToEntity<T extends EntityLivingBase>
+extends EntityAIBase {
     private EntityIMLiving theEntity;
     private T targetEntity;
     private Class<? extends T> targetClass;
@@ -16,7 +26,7 @@ public class EntityAIMoveToEntity<T extends EntityLivingBase> extends EntityAIBa
     private int pathFailedCount;
 
     public EntityAIMoveToEntity(EntityIMLiving entity) {
-        this(entity, (Class<? extends T>) EntityLivingBase.class);
+        this(entity, EntityLivingBase.class);
     }
 
     public EntityAIMoveToEntity(EntityIMLiving entity, Class<? extends T> target) {
@@ -25,43 +35,38 @@ public class EntityAIMoveToEntity<T extends EntityLivingBase> extends EntityAIBa
         this.targetMoves = false;
         this.pathRequestTimer = 0;
         this.pathFailedCount = 0;
-        setMutexBits(1);
+        this.func_75248_a(1);
     }
 
-    public boolean shouldExecute() {
-        if (--this.pathRequestTimer <= 0) {
-            EntityLivingBase target = this.theEntity.getAttackTarget();
-            if ((target != null) && (this.targetClass.isAssignableFrom(this.theEntity.getAttackTarget().getClass()))) {
-                this.targetEntity = (T) ((EntityLivingBase) this.targetClass.cast(target));
-                return true;
-            }
-        }
-        return false;
-    }
-
-    public boolean continueExecuting() {
-        EntityLivingBase target = this.theEntity.getAttackTarget();
-        if ((target != null) && (target == this.targetEntity)) {
+    public boolean func_75250_a() {
+        EntityLivingBase target;
+        if (--this.pathRequestTimer <= 0 && (target = this.theEntity.func_70638_az()) != null && this.targetClass.isAssignableFrom(this.theEntity.func_70638_az().getClass())) {
+            this.targetEntity = (EntityLivingBase)this.targetClass.cast(target);
             return true;
         }
         return false;
     }
 
-    public void startExecuting() {
-        this.targetMoves = true;
-        setPath();
+    public boolean func_75253_b() {
+        EntityLivingBase target = this.theEntity.func_70638_az();
+        return target != null && target == this.targetEntity;
     }
 
-    public void resetTask() {
+    public void func_75249_e() {
+        this.targetMoves = true;
+        this.setPath();
+    }
+
+    public void func_75251_c() {
         this.targetMoves = false;
     }
 
-    public void updateTask() {
-        if ((--this.pathRequestTimer <= 0) && (!this.theEntity.getNavigatorNew().isWaitingForTask()) && (this.targetMoves) && (this.targetEntity.getDistanceSq(this.lastX, this.lastY, this.lastZ) > 1.8D)) {
-            setPath();
+    public void func_75246_d() {
+        if (--this.pathRequestTimer <= 0 && !this.theEntity.getNavigatorNew().isWaitingForTask() && this.targetMoves && this.targetEntity.func_70092_e(this.lastX, this.lastY, this.lastZ) > 1.8) {
+            this.setPath();
         }
         if (this.pathFailedCount > 3) {
-            this.theEntity.getMoveHelper().setMoveTo(this.targetEntity.posX, this.targetEntity.posY, this.targetEntity.posZ, this.theEntity.getMoveSpeedStat());
+            this.theEntity.getMoveHelper().func_75642_a(((EntityLivingBase)this.targetEntity).field_70165_t, ((EntityLivingBase)this.targetEntity).field_70163_u, ((EntityLivingBase)this.targetEntity).field_70161_v, this.theEntity.getMoveSpeedStat());
         }
     }
 
@@ -78,24 +83,21 @@ public class EntityAIMoveToEntity<T extends EntityLivingBase> extends EntityAIBa
     }
 
     protected void setPath() {
-        if (this.theEntity.getNavigatorNew().tryMoveToEntity(this.targetEntity, 0.0F, this.theEntity.getMoveSpeedStat())) {
-            if (this.theEntity.getNavigatorNew().getLastPathDistanceToTarget() > 3.0F) {
-                this.pathRequestTimer = (30 + this.theEntity.worldObj.rand.nextInt(10));
-                if (this.theEntity.getNavigatorNew().getPath().getCurrentPathLength() > 2)
-                    this.pathFailedCount = 0;
-                else
-                    this.pathFailedCount += 1;
+        if (this.theEntity.getNavigatorNew().tryMoveToEntity((Entity)this.targetEntity, 0.0f, this.theEntity.getMoveSpeedStat())) {
+            if (this.theEntity.getNavigatorNew().getLastPathDistanceToTarget() > 3.0f) {
+                this.pathRequestTimer = 30 + this.theEntity.field_70170_p.field_73012_v.nextInt(10);
+                this.pathFailedCount = this.theEntity.getNavigatorNew().getPath().getCurrentPathLength() > 2 ? 0 : ++this.pathFailedCount;
             } else {
-                this.pathRequestTimer = (10 + this.theEntity.worldObj.rand.nextInt(10));
+                this.pathRequestTimer = 10 + this.theEntity.field_70170_p.field_73012_v.nextInt(10);
                 this.pathFailedCount = 0;
             }
         } else {
-            this.pathFailedCount += 1;
-            this.pathRequestTimer = (40 * this.pathFailedCount + this.theEntity.worldObj.rand.nextInt(10));
+            ++this.pathFailedCount;
+            this.pathRequestTimer = 40 * this.pathFailedCount + this.theEntity.field_70170_p.field_73012_v.nextInt(10);
         }
-
-        this.lastX = this.targetEntity.posX;
-        this.lastY = this.targetEntity.posY;
-        this.lastZ = this.targetEntity.posZ;
+        this.lastX = ((EntityLivingBase)this.targetEntity).field_70165_t;
+        this.lastY = ((EntityLivingBase)this.targetEntity).field_70163_u;
+        this.lastZ = ((EntityLivingBase)this.targetEntity).field_70161_v;
     }
 }
+

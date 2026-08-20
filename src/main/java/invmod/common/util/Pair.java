@@ -1,3 +1,6 @@
+/*
+ * Decompiled with CFR 0.152.
+ */
 package invmod.common.util;
 
 public class Pair<T, U> {
@@ -13,15 +16,16 @@ public class Pair<T, U> {
         return this.val1;
     }
 
-    public void setVal1(T entry) {
-        this.val1 = entry;
-    }
-
     public U getVal2() {
         return this.val2;
+    }
+
+    public void setVal1(T entry) {
+        this.val1 = entry;
     }
 
     public void setVal2(U value) {
         this.val2 = value;
     }
 }
+

@@ -1,18 +1,22 @@
+/*
+ * Decompiled with CFR 0.152.
+ */
 package invmod.common.util;
 
-import invmod.Invasion;
+import invmod.common.mod_Invasion;
+import invmod.common.util.VersionChecker;
 
-//do at start of client
-public class ThreadGetData extends Thread {
+public class ThreadGetData
+extends Thread {
     public ThreadGetData() {
-        setDaemon(true);
-        start();
+        this.setDaemon(true);
+        this.start();
     }
 
     @Override
     public void run() {
-        Invasion.latestVersionNumber = VersionChecker.getLatestVersion();
-        Invasion.recentNews = VersionChecker.getRecentNews();
-
+        mod_Invasion.latestVersionNumber = VersionChecker.getLatestVersion();
+        mod_Invasion.recentNews = VersionChecker.getRecentNews();
     }
 }
+

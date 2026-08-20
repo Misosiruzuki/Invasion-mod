@@ -1,4 +1,9 @@
+/*
+ * Decompiled with CFR 0.152.
+ */
 package invmod.common.nexus;
+
+import invmod.common.nexus.IMEntityType;
 
 public class EntityConstruct {
     private IMEntityType entityType;
@@ -47,3 +52,4 @@ public class EntityConstruct {
         return this.maxAngle;
     }
 }
+

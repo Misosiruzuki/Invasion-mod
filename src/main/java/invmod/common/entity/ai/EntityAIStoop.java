@@ -1,9 +1,16 @@
+/*
+ * Decompiled with CFR 0.152.
+ * 
+ * Could not load the following classes:
+ *  net.minecraft.entity.ai.EntityAIBase
+ */
 package invmod.common.entity.ai;
 
 import invmod.common.entity.EntityIMLiving;
 import net.minecraft.entity.ai.EntityAIBase;
 
-public class EntityAIStoop extends EntityAIBase {
+public class EntityAIStoop
+extends EntityAIBase {
     private EntityIMLiving theEntity;
     private int updateTimer;
     private boolean stopStoop;
@@ -13,32 +20,33 @@ public class EntityAIStoop extends EntityAIBase {
         this.stopStoop = true;
     }
 
-    public boolean shouldExecute() {
+    public boolean func_75250_a() {
         if (--this.updateTimer <= 0) {
             this.updateTimer = 10;
-            if (this.theEntity.worldObj.getBlock(this.theEntity.getXCoord(), this.theEntity.getYCoord() + 2, this.theEntity.getZCoord()).getMaterial().blocksMovement()) {
+            if (this.theEntity.field_70170_p.func_147439_a(this.theEntity.getXCoord(), this.theEntity.getYCoord() + 2, this.theEntity.getZCoord()).func_149688_o().func_76230_c()) {
                 return true;
             }
         }
         return false;
     }
 
-    public boolean continueExecuting() {
+    public boolean func_75253_b() {
         return !this.stopStoop;
     }
 
-    public void startExecuting() {
-        this.theEntity.setSneaking(true);
+    public void func_75249_e() {
+        this.theEntity.func_70095_a(true);
         this.stopStoop = false;
     }
 
-    public void updateTask() {
+    public void func_75246_d() {
         if (--this.updateTimer <= 0) {
             this.updateTimer = 10;
-            if (!this.theEntity.worldObj.getBlock(this.theEntity.getXCoord(), this.theEntity.getYCoord() + 2, this.theEntity.getZCoord()).getMaterial().blocksMovement()) {
-                this.theEntity.setSneaking(false);
+            if (!this.theEntity.field_70170_p.func_147439_a(this.theEntity.getXCoord(), this.theEntity.getYCoord() + 2, this.theEntity.getZCoord()).func_149688_o().func_76230_c()) {
+                this.theEntity.func_70095_a(false);
                 this.stopStoop = true;
             }
         }
     }
 }
+

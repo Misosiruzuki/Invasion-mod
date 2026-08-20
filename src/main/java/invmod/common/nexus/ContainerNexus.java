@@ -1,83 +1,85 @@
+/*
+ * Decompiled with CFR 0.152.
+ * 
+ * Could not load the following classes:
+ *  net.minecraft.entity.player.EntityPlayer
+ *  net.minecraft.entity.player.InventoryPlayer
+ *  net.minecraft.inventory.Container
+ *  net.minecraft.inventory.ICrafting
+ *  net.minecraft.inventory.IInventory
+ *  net.minecraft.inventory.Slot
+ *  net.minecraft.item.ItemStack
+ */
 package invmod.common.nexus;
 
+import invmod.common.nexus.SlotOutput;
+import invmod.common.nexus.TileEntityNexus;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.ICrafting;
+import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 
-public class ContainerNexus extends Container {
+public class ContainerNexus
+extends Container {
     private TileEntityNexus nexus;
-    private int activationTimer;
-    private int currentWave;
-    private int nexusLevel;
-    private int nexusKills;
-    private int spawnRadius;
-    private int generation;
-    private int powerLevel;
-    private int cookTime;
-    private int mode;
+    private int activationTimer = 0;
+    private int currentWave = 0;
+    private int nexusLevel = 0;
+    private int nexusKills = 0;
+    private int spawnRadius = 0;
+    private int generation = 0;
+    private int powerLevel = 0;
+    private int cookTime = 0;
+    private int mode = 0;
 
     public ContainerNexus(InventoryPlayer inventoryplayer, TileEntityNexus tileEntityNexus) {
-        this.mode = 0;
-        this.activationTimer = 0;
-        this.currentWave = 0;
-        this.nexusLevel = 0;
-        this.nexusKills = 0;
-        this.spawnRadius = 0;
-        this.generation = 0;
-        this.powerLevel = 0;
-        this.cookTime = 0;
         this.nexus = tileEntityNexus;
-        addSlotToContainer(new Slot(tileEntityNexus, 0, 32, 33));
-        addSlotToContainer(new SlotOutput(tileEntityNexus, 1, 102, 33));
-        for (int i = 0; i < 3; i++) {
-            for (int k = 0; k < 9; k++) {
-                addSlotToContainer(new Slot(inventoryplayer, k + i * 9 + 9, 8 + k * 18, 84 + i * 18));
+        this.func_75146_a(new Slot((IInventory)tileEntityNexus, 0, 32, 33));
+        this.func_75146_a(new SlotOutput(tileEntityNexus, 1, 102, 33));
+        for (int i = 0; i < 3; ++i) {
+            for (int k = 0; k < 9; ++k) {
+                this.func_75146_a(new Slot((IInventory)inventoryplayer, k + i * 9 + 9, 8 + k * 18, 84 + i * 18));
             }
-
         }
-
-        for (int j = 0; j < 9; j++) {
-            addSlotToContainer(new Slot(inventoryplayer, j, 8 + j * 18, 142));
+        for (int j = 0; j < 9; ++j) {
+            this.func_75146_a(new Slot((IInventory)inventoryplayer, j, 8 + j * 18, 142));
         }
     }
 
-    @Override
-    public void detectAndSendChanges() {
-        super.detectAndSendChanges();
-        for (int i = 0; i < this.crafters.size(); i++) {
-            ICrafting icrafting = (ICrafting) this.crafters.get(i);
+    public void func_75142_b() {
+        super.func_75142_b();
+        for (int i = 0; i < this.field_75149_d.size(); ++i) {
+            ICrafting icrafting = (ICrafting)this.field_75149_d.get(i);
             if (this.activationTimer != this.nexus.getActivationTimer()) {
-                icrafting.sendProgressBarUpdate(this, 0, this.nexus.getActivationTimer());
+                icrafting.func_71112_a((Container)this, 0, this.nexus.getActivationTimer());
             }
             if (this.mode != this.nexus.getMode()) {
-                icrafting.sendProgressBarUpdate(this, 1, this.nexus.getMode());
+                icrafting.func_71112_a((Container)this, 1, this.nexus.getMode());
             }
             if (this.currentWave != this.nexus.getCurrentWave()) {
-                icrafting.sendProgressBarUpdate(this, 2, this.nexus.getCurrentWave());
+                icrafting.func_71112_a((Container)this, 2, this.nexus.getCurrentWave());
             }
             if (this.nexusLevel != this.nexus.getNexusLevel()) {
-                icrafting.sendProgressBarUpdate(this, 3, this.nexus.getNexusLevel());
+                icrafting.func_71112_a((Container)this, 3, this.nexus.getNexusLevel());
             }
             if (this.nexusKills != this.nexus.getNexusKills()) {
-                icrafting.sendProgressBarUpdate(this, 4, this.nexus.getNexusKills());
+                icrafting.func_71112_a((Container)this, 4, this.nexus.getNexusKills());
             }
             if (this.spawnRadius != this.nexus.getSpawnRadius()) {
-                icrafting.sendProgressBarUpdate(this, 5, this.nexus.getSpawnRadius());
+                icrafting.func_71112_a((Container)this, 5, this.nexus.getSpawnRadius());
             }
             if (this.generation != this.nexus.getGeneration()) {
-                icrafting.sendProgressBarUpdate(this, 6, this.nexus.getGeneration());
+                icrafting.func_71112_a((Container)this, 6, this.nexus.getGeneration());
             }
             if (this.generation != this.nexus.getNexusPowerLevel()) {
-                icrafting.sendProgressBarUpdate(this, 7, this.nexus.getNexusPowerLevel());
+                icrafting.func_71112_a((Container)this, 7, this.nexus.getNexusPowerLevel());
             }
-            if (this.generation != this.nexus.getCookTime()) {
-                icrafting.sendProgressBarUpdate(this, 9, this.nexus.getCookTime());
-            }
+            if (this.generation == this.nexus.getCookTime()) continue;
+            icrafting.func_71112_a((Container)this, 9, this.nexus.getCookTime());
         }
-
         this.activationTimer = this.nexus.getActivationTimer();
         this.mode = this.nexus.getMode();
         this.currentWave = this.nexus.getCurrentWave();
@@ -89,8 +91,7 @@ public class ContainerNexus extends Container {
         this.cookTime = this.nexus.getCookTime();
     }
 
-    @Override
-    public void updateProgressBar(int i, int j) {
+    public void func_75137_b(int i, int j) {
         if (i == 0) {
             this.nexus.setActivationTimer(j);
         } else if (i == 1) {
@@ -112,40 +113,26 @@ public class ContainerNexus extends Container {
         }
     }
 
-    @Override
-    public boolean canInteractWith(EntityPlayer entityplayer) {
-        return this.nexus.isUseableByPlayer(entityplayer);
+    public boolean func_75145_c(EntityPlayer entityplayer) {
+        return this.nexus.func_70300_a(entityplayer);
     }
 
-    @Override
-    public ItemStack transferStackInSlot(EntityPlayer player, int i) {
+    public ItemStack func_82846_b(EntityPlayer player, int i) {
         ItemStack itemstack = null;
-        Slot slot = (Slot) this.inventorySlots.get(i);
-        if ((slot != null) && (slot.getHasStack())) {
-            ItemStack itemstack1 = slot.getStack();
-            itemstack = itemstack1.copy();
-            if (i == 1) {
-                if (!mergeItemStack(itemstack1, 2, 38, true)) {
-                    return null;
-                }
-            } else if ((i >= 2) && (i < 29)) {
-                if (!mergeItemStack(itemstack1, 29, 38, false)) {
-                    return null;
-                }
-            } else if ((i >= 29) && (i < 38)) {
-                if (!mergeItemStack(itemstack1, 2, 29, false)) {
-                    return null;
-                }
-            } else if (!mergeItemStack(itemstack1, 2, 38, false)) {
+        Slot slot = (Slot)this.field_75151_b.get(i);
+        if (slot != null && slot.func_75216_d()) {
+            ItemStack itemstack1 = slot.func_75211_c();
+            itemstack = itemstack1.func_77946_l();
+            if (i == 1 ? !this.func_75135_a(itemstack1, 2, 38, true) : (i >= 2 && i < 29 ? !this.func_75135_a(itemstack1, 29, 38, false) : (i >= 29 && i < 38 ? !this.func_75135_a(itemstack1, 2, 29, false) : !this.func_75135_a(itemstack1, 2, 38, false)))) {
                 return null;
             }
-            if (itemstack1.stackSize == 0) {
-                slot.putStack(null);
+            if (itemstack1.field_77994_a == 0) {
+                slot.func_75215_d(null);
             } else {
-                slot.onSlotChanged();
+                slot.func_75218_e();
             }
-            if (itemstack1.stackSize != itemstack.stackSize) {
-                slot.onPickupFromSlot(player, itemstack1);
+            if (itemstack1.field_77994_a != itemstack.field_77994_a) {
+                slot.func_82870_a(player, itemstack1);
             } else {
                 return null;
             }
@@ -153,3 +140,4 @@ public class ContainerNexus extends Container {
         return itemstack;
     }
 }
+

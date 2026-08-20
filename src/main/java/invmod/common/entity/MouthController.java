@@ -1,7 +1,12 @@
+/*
+ * Decompiled with CFR 0.152.
+ */
 package invmod.common.entity;
 
-import com.whammich.invasion.client.render.animation.AnimationAction;
-import com.whammich.invasion.client.render.animation.AnimationState;
+import invmod.client.render.animation.AnimationAction;
+import invmod.client.render.animation.AnimationState;
+import invmod.common.entity.EntityIMBird;
+import invmod.common.entity.EntityIMLiving;
 
 public class MouthController {
     private EntityIMLiving theEntity;
@@ -16,10 +21,10 @@ public class MouthController {
 
     public void update() {
         if (this.mouthOpenTime > 0) {
-            this.mouthOpenTime -= 1;
-            ensureAnimation(this.mouthState, AnimationAction.MOUTH_OPEN, 1.0F, true);
+            --this.mouthOpenTime;
+            this.ensureAnimation(this.mouthState, AnimationAction.MOUTH_OPEN, 1.0f, true);
         } else {
-            ensureAnimation(this.mouthState, AnimationAction.MOUTH_CLOSE, 1.0F, true);
+            this.ensureAnimation(this.mouthState, AnimationAction.MOUTH_CLOSE, 1.0f, true);
         }
         this.mouthState.update();
     }
@@ -38,3 +43,4 @@ public class MouthController {
         }
     }
 }
+

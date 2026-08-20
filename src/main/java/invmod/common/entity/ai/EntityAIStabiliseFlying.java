@@ -1,3 +1,9 @@
+/*
+ * Decompiled with CFR 0.152.
+ * 
+ * Could not load the following classes:
+ *  net.minecraft.entity.ai.EntityAIBase
+ */
 package invmod.common.entity.ai;
 
 import invmod.common.entity.EntityIMFlying;
@@ -5,7 +11,8 @@ import invmod.common.entity.Goal;
 import invmod.common.entity.INavigationFlying;
 import net.minecraft.entity.ai.EntityAIBase;
 
-public class EntityAIStabiliseFlying extends EntityAIBase {
+public class EntityAIStabiliseFlying
+extends EntityAIBase {
     private static int INITIAL_STABILISE_TIME = 50;
     private EntityIMFlying theEntity;
     private int time;
@@ -17,31 +24,32 @@ public class EntityAIStabiliseFlying extends EntityAIBase {
         this.stabiliseTime = stabiliseTime;
     }
 
-    public boolean shouldExecute() {
+    public boolean func_75250_a() {
         return this.theEntity.getAIGoal() == Goal.STABILISE;
     }
 
-    public boolean continueExecuting() {
+    public boolean func_75253_b() {
         if (this.time >= this.stabiliseTime) {
             this.theEntity.transitionAIGoal(Goal.NONE);
-            this.theEntity.getNavigatorNew().setPitchBias(0.0F, 0.0F);
+            this.theEntity.getNavigatorNew().setPitchBias(0.0f, 0.0f);
             return false;
         }
         return true;
     }
 
-    public void startExecuting() {
+    public void func_75249_e() {
         this.time = 0;
         INavigationFlying nav = this.theEntity.getNavigatorNew();
         nav.clearPath();
         nav.setMovementType(INavigationFlying.MoveType.PREFER_FLYING);
-        nav.setPitchBias(20.0F, 0.5F);
+        nav.setPitchBias(20.0f, 0.5f);
     }
 
-    public void updateTask() {
-        this.time += 1;
+    public void func_75246_d() {
+        ++this.time;
         if (this.time == INITIAL_STABILISE_TIME) {
-            this.theEntity.getNavigatorNew().setPitchBias(0.0F, 0.0F);
+            this.theEntity.getNavigatorNew().setPitchBias(0.0f, 0.0f);
         }
     }
 }
+

@@ -1,79 +1,79 @@
+/*
+ * Decompiled with CFR 0.152.
+ */
 package invmod.common.util;
 
+import invmod.common.util.ISelect;
+import invmod.common.util.Pair;
+import invmod.common.util.SingleSelection;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-public class FiniteSelectionPool<T> implements ISelect<T> {
-    private List<Pair<ISelect<T>, Integer>> currentPool;
-    private List<Integer> originalPool;
-    private int totalAmount;
+public class FiniteSelectionPool<T>
+implements ISelect<T> {
+    private List<Pair<ISelect<T>, Integer>> currentPool = new ArrayList<Pair<ISelect<T>, Integer>>();
+    private List<Integer> originalPool = new ArrayList<Integer>();
+    private int totalAmount = 0;
     private int originalAmount;
-    private Random rand;
-
-    public FiniteSelectionPool() {
-        this.currentPool = new ArrayList();
-        this.originalPool = new ArrayList();
-        this.totalAmount = 0;
-        this.rand = new Random();
-    }
+    private Random rand = new Random();
 
     public void addEntry(T entry, int amount) {
-        SingleSelection selection = new SingleSelection(entry);
-        addEntry(selection, amount);
+        SingleSelection<T> selection = new SingleSelection<T>(entry);
+        this.addEntry(selection, amount);
     }
 
     public void addEntry(ISelect<T> entry, int amount) {
-        this.currentPool.add(new Pair(entry, Integer.valueOf(amount)));
-        this.originalPool.add(Integer.valueOf(amount));
-        this.originalAmount = (this.totalAmount += amount);
+        this.currentPool.add(new Pair<ISelect<T>, Integer>(entry, amount));
+        this.originalPool.add(amount);
+        this.originalAmount = this.totalAmount += amount;
     }
 
+    @Override
     public T selectNext() {
         if (this.totalAmount < 1) {
-            regeneratePool();
+            this.regeneratePool();
         }
         float r = this.rand.nextInt(this.totalAmount);
-        for (Pair entry : this.currentPool) {
-            int amountLeft = ((Integer) entry.getVal2()).intValue();
-            if (r < amountLeft) {
-                entry.setVal2(Integer.valueOf(amountLeft - 1));
-                this.totalAmount -= 1;
-                return (T) ((ISelect) entry.getVal1()).selectNext();
+        for (Pair<ISelect<T>, Integer> entry : this.currentPool) {
+            int amountLeft = entry.getVal2();
+            if (r < (float)amountLeft) {
+                entry.setVal2(amountLeft - 1);
+                --this.totalAmount;
+                return entry.getVal1().selectNext();
             }
-
-            r -= amountLeft;
+            r -= (float)amountLeft;
         }
-
         return null;
     }
 
     public FiniteSelectionPool<T> clone() {
-        FiniteSelectionPool clone = new FiniteSelectionPool();
-        for (int i = 0; i < this.currentPool.size(); i++) {
-            clone.addEntry((ISelect) ((Pair) this.currentPool.get(i)).getVal1(), ((Integer) this.originalPool.get(i)).intValue());
+        FiniteSelectionPool<T> clone = new FiniteSelectionPool<T>();
+        for (int i = 0; i < this.currentPool.size(); ++i) {
+            clone.addEntry(this.currentPool.get(i).getVal1(), (int)this.originalPool.get(i));
         }
-
         return clone;
     }
 
+    @Override
     public void reset() {
-        regeneratePool();
+        this.regeneratePool();
     }
 
     public String toString() {
-        String s = "FiniteSelectionPool@" + Integer.toHexString(hashCode()) + "#Size=" + this.currentPool.size();
-        for (int i = 0; i < this.currentPool.size(); i++) {
+        String s = "FiniteSelectionPool@" + Integer.toHexString(this.hashCode()) + "#Size=" + this.currentPool.size();
+        for (int i = 0; i < this.currentPool.size(); ++i) {
             s = s + "\n\tEntry " + i + "   Amount: " + this.originalPool.get(i);
-            s = s + "\n\t" + ((ISelect) ((Pair) this.currentPool.get(i)).getVal1()).toString();
+            s = s + "\n\t" + this.currentPool.get(i).getVal1().toString();
         }
         return s;
     }
 
     private void regeneratePool() {
         this.totalAmount = this.originalAmount;
-        for (int i = 0; i < this.currentPool.size(); i++) {
-            ((Pair) this.currentPool.get(i)).setVal2(this.originalPool.get(i));
+        for (int i = 0; i < this.currentPool.size(); ++i) {
+            this.currentPool.get(i).setVal2(this.originalPool.get(i));
         }
     }
 }
+

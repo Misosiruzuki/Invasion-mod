@@ -1,8 +1,30 @@
+/*
+ * Decompiled with CFR 0.152.
+ * 
+ * Could not load the following classes:
+ *  cpw.mods.fml.relauncher.Side
+ *  cpw.mods.fml.relauncher.SideOnly
+ *  net.minecraft.block.Block
+ *  net.minecraft.block.BlockContainer
+ *  net.minecraft.block.material.Material
+ *  net.minecraft.client.renderer.texture.IIconRegister
+ *  net.minecraft.entity.player.EntityPlayer
+ *  net.minecraft.init.Blocks
+ *  net.minecraft.item.Item
+ *  net.minecraft.item.ItemStack
+ *  net.minecraft.tileentity.TileEntity
+ *  net.minecraft.util.IIcon
+ *  net.minecraft.world.World
+ *  net.minecraftforge.common.ForgeHooks
+ */
 package invmod.common.nexus;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import invmod.Invasion;
+import invmod.common.mod_Invasion;
+import invmod.common.nexus.TileEntityNexus;
+import java.util.Random;
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IIconRegister;
@@ -15,138 +37,108 @@ import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeHooks;
 
-import java.util.Random;
-
-public class BlockNexus extends BlockContainer {
-
-    @SideOnly(Side.CLIENT)
+public class BlockNexus
+extends BlockContainer {
+    @SideOnly(value=Side.CLIENT)
     private IIcon sideOn;
-
-    @SideOnly(Side.CLIENT)
+    @SideOnly(value=Side.CLIENT)
     private IIcon sideOff;
-
-    @SideOnly(Side.CLIENT)
+    @SideOnly(value=Side.CLIENT)
     private IIcon topOn;
-
-    @SideOnly(Side.CLIENT)
+    @SideOnly(value=Side.CLIENT)
     private IIcon topOff;
-
-    @SideOnly(Side.CLIENT)
+    @SideOnly(value=Side.CLIENT)
     private IIcon botTexture;
 
     public BlockNexus() {
-        super(Material.rock);
-        this.setResistance(6000000.0F);
-        this.setHardness(3.0F);
-        this.setStepSound(Blocks.glass.stepSound);
-        this.setBlockName("blockNexus");
-        this.setCreativeTab(Invasion.tabInvmod);
+        super(Material.field_151576_e);
+        this.func_149752_b(6000000.0f);
+        this.func_149711_c(3.0f);
+        this.func_149672_a(Blocks.field_150359_w.field_149762_H);
+        this.func_149663_c("blockNexus");
+        this.func_149647_a(mod_Invasion.tabInvmod);
     }
 
-    @SideOnly(Side.CLIENT)
-    @Override
-    public void registerBlockIcons(IIconRegister iconRegister) {
-        this.sideOn = iconRegister.registerIcon("invmod:nexusSideOn");
-        this.sideOff = iconRegister.registerIcon("invmod:nexusSideOff");
-        this.topOn = iconRegister.registerIcon("invmod:nexusTopOn");
-        this.topOff = iconRegister.registerIcon("invmod:nexusTopOff");
-        this.botTexture = iconRegister.registerIcon("obsidian");
+    @SideOnly(value=Side.CLIENT)
+    public void func_149651_a(IIconRegister iconRegister) {
+        this.sideOn = iconRegister.func_94245_a("invmod:nexusSideOn");
+        this.sideOff = iconRegister.func_94245_a("invmod:nexusSideOff");
+        this.topOn = iconRegister.func_94245_a("invmod:nexusTopOn");
+        this.topOff = iconRegister.func_94245_a("invmod:nexusTopOff");
+        this.botTexture = iconRegister.func_94245_a("obsidian");
     }
 
-    @SideOnly(Side.CLIENT)
-    @Override
-    public IIcon getIcon(int side, int meta) {
-        if ((meta & 0x4) == 0) {
+    @SideOnly(value=Side.CLIENT)
+    public IIcon func_149691_a(int side, int meta) {
+        if ((meta & 4) == 0) {
             if (side == 1) {
                 return this.topOff;
             }
             return side != 0 ? this.sideOff : this.botTexture;
         }
-
         if (side == 1) {
             return this.topOn;
         }
         return side != 0 ? this.sideOn : this.botTexture;
     }
 
-    @Override
-    public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer entityPlayer, int par6, float par7, float par8, float par9) {
-
+    public boolean func_149727_a(World world, int x, int y, int z, EntityPlayer entityPlayer, int par6, float par7, float par8, float par9) {
         Item item = null;
-        ItemStack equippedItem = entityPlayer.getCurrentEquippedItem();
+        ItemStack equippedItem = entityPlayer.func_71045_bC();
         if (equippedItem != null) {
-            item = equippedItem.getItem();
+            item = equippedItem.func_77973_b();
         }
-
-        if (world.isRemote) {
+        if (world.field_72995_K) {
             return true;
-
         }
-        if ((item != Invasion.itemProbe) && ((!Invasion.isDebug()) || (item != Invasion.itemDebugWand))) {
-            TileEntityNexus tileEntityNexus = (TileEntityNexus) world.getTileEntity(x, y, z);
+        if (!(item == mod_Invasion.itemProbe || mod_Invasion.isDebug() && item == mod_Invasion.itemDebugWand)) {
+            TileEntityNexus tileEntityNexus = (TileEntityNexus)world.func_147438_o(x, y, z);
             if (tileEntityNexus != null) {
-                Invasion.setNexusClicked(tileEntityNexus);
-                entityPlayer.openGui(Invasion.getLoadedInstance(), Invasion.getGuiIdNexus(), world, x, y, z);
-
+                mod_Invasion.setNexusClicked(tileEntityNexus);
+                entityPlayer.openGui((Object)mod_Invasion.getLoadedInstance(), mod_Invasion.getGuiIdNexus(), world, x, y, z);
             }
             return true;
         }
-
         return false;
     }
 
-    @Override
-    public void randomDisplayTick(World world, int x, int y, int z, Random random) {
-        int meta = world.getBlockMetadata(x, y, z);
-        int numberOfParticles;
-        if ((meta & 0x4) == 0)
-            numberOfParticles = 0;
-        else {
-            numberOfParticles = 6;
-        }
-
-        for (int i = 0; i < numberOfParticles; i++) {
-            double y1 = y + random.nextFloat();
-            double y2 = (random.nextFloat() - 0.5D) * 0.5D;
-
-            int direction = random.nextInt(2) * 2 - 1;
+    public void func_149734_b(World world, int x, int y, int z, Random random) {
+        int meta = world.func_72805_g(x, y, z);
+        int numberOfParticles = (meta & 4) == 0 ? 0 : 6;
+        for (int i = 0; i < numberOfParticles; ++i) {
             double x2;
             double x1;
-            double z1;
             double z2;
+            double z1;
+            double y1 = (float)y + random.nextFloat();
+            double y2 = ((double)random.nextFloat() - 0.5) * 0.5;
+            int direction = random.nextInt(2) * 2 - 1;
             if (random.nextInt(2) == 0) {
-                z1 = z + 0.5D + 0.25D * direction;
-                z2 = random.nextFloat() * 2.0F * direction;
-
-                x1 = x + random.nextFloat();
-                x2 = (random.nextFloat() - 0.5D) * 0.5D;
+                z1 = (double)z + 0.5 + 0.25 * (double)direction;
+                z2 = random.nextFloat() * 2.0f * (float)direction;
+                x1 = (float)x + random.nextFloat();
+                x2 = ((double)random.nextFloat() - 0.5) * 0.5;
             } else {
-                x1 = x + 0.5D + 0.25D * direction;
-                x2 = random.nextFloat() * 2.0F * direction;
-                z1 = z + random.nextFloat();
-                z2 = (random.nextFloat() - 0.5D) * 0.5D;
+                x1 = (double)x + 0.5 + 0.25 * (double)direction;
+                x2 = random.nextFloat() * 2.0f * (float)direction;
+                z1 = (float)z + random.nextFloat();
+                z2 = ((double)random.nextFloat() - 0.5) * 0.5;
             }
-
-            world.spawnParticle("portal", x1, y1, z1, x2, y2, z2);
+            world.func_72869_a("portal", x1, y1, z1, x2, y2, z2);
         }
     }
 
-    @Override
-    public TileEntity createNewTileEntity(World world, int metadata) {
+    public TileEntity func_149915_a(World world, int metadata) {
         return new TileEntityNexus(world);
     }
 
-    @Override
-    @SideOnly(Side.CLIENT)
-    public float getPlayerRelativeBlockHardness(EntityPlayer player, World world, int x, int y, int z) {
-
-        TileEntityNexus tile = (TileEntityNexus) world.getTileEntity(x, y, z);
-
+    @SideOnly(value=Side.CLIENT)
+    public float func_149737_a(EntityPlayer player, World world, int x, int y, int z) {
+        TileEntityNexus tile = (TileEntityNexus)world.func_147438_o(x, y, z);
         if (tile.isActive()) {
-            return -1.0F;
-        } else {
-            return ForgeHooks.blockStrength(this, player, world, x, y, z);
+            return -1.0f;
         }
-
+        return ForgeHooks.blockStrength((Block)this, (EntityPlayer)player, (World)world, (int)x, (int)y, (int)z);
     }
 }
+

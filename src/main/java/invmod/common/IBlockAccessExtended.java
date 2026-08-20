@@ -1,9 +1,17 @@
+/*
+ * Decompiled with CFR 0.152.
+ * 
+ * Could not load the following classes:
+ *  net.minecraft.world.IBlockAccess
+ */
 package invmod.common;
 
 import net.minecraft.world.IBlockAccess;
 
-public abstract interface IBlockAccessExtended extends IBlockAccess {
-    public abstract int getLayeredData(int paramInt1, int paramInt2, int paramInt3);
+public interface IBlockAccessExtended
+extends IBlockAccess {
+    public int getLayeredData(int var1, int var2, int var3);
 
-    public abstract void setData(int paramInt1, int paramInt2, int paramInt3, Integer paramInteger);
+    public void setData(int var1, int var2, int var3, Integer var4);
 }
+

@@ -1,9 +1,28 @@
+/*
+ * Decompiled with CFR 0.152.
+ * 
+ * Could not load the following classes:
+ *  net.minecraft.entity.Entity
+ *  net.minecraft.entity.EntityLivingBase
+ *  net.minecraft.entity.passive.EntityWolf
+ *  net.minecraft.entity.player.EntityPlayer
+ *  net.minecraft.potion.Potion
+ *  net.minecraft.util.DamageSource
+ *  net.minecraft.world.World
+ *  net.minecraftforge.common.ForgeHooks
+ */
 package invmod.common.entity;
 
-import com.whammich.invasion.client.render.AnimationRegistry;
-import com.whammich.invasion.client.render.animation.AnimationAction;
-import com.whammich.invasion.client.render.animation.AnimationState;
-import invmod.Invasion;
+import invmod.client.render.AnimationRegistry;
+import invmod.client.render.animation.AnimationAction;
+import invmod.client.render.animation.AnimationState;
+import invmod.common.entity.EntityIMFlying;
+import invmod.common.entity.FlyState;
+import invmod.common.entity.LegController;
+import invmod.common.entity.MouthController;
+import invmod.common.entity.MoveState;
+import invmod.common.entity.WingController;
+import invmod.common.mod_Invasion;
 import invmod.common.nexus.INexusAccess;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -14,11 +33,12 @@ import net.minecraft.util.DamageSource;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeHooks;
 
-public class EntityIMBird extends EntityIMFlying {
+public class EntityIMBird
+extends EntityIMFlying {
     private static final int META_ANIMATION_FLAGS = 26;
-    private AnimationState animationRun;
-    private AnimationState animationFlap;
-    private AnimationState animationBeak;
+    private AnimationState animationRun = new AnimationState(AnimationRegistry.instance().getAnimation("bird_run"));
+    private AnimationState animationFlap = new AnimationState(AnimationRegistry.instance().getAnimation("wing_flap_2_piece"));
+    private AnimationState animationBeak = new AnimationState(AnimationRegistry.instance().getAnimation("bird_beak"));
     private WingController wingController;
     private LegController legController;
     private MouthController beakController;
@@ -32,34 +52,30 @@ public class EntityIMBird extends EntityIMFlying {
 
     public EntityIMBird(World world, INexusAccess nexus) {
         super(world, nexus);
-        this.animationRun = new AnimationState(AnimationRegistry.instance().getAnimation("bird_run"));
-        this.animationFlap = new AnimationState(AnimationRegistry.instance().getAnimation("wing_flap_2_piece"));
-        this.animationBeak = new AnimationState(AnimationRegistry.instance().getAnimation("bird_beak"));
         this.animationRun.setNewAction(AnimationAction.STAND);
         this.animationFlap.setNewAction(AnimationAction.WINGTUCK);
         this.animationBeak.setNewAction(AnimationAction.MOUTH_CLOSE);
         this.wingController = new WingController(this, this.animationFlap);
         this.legController = new LegController(this, this.animationRun);
         this.beakController = new MouthController(this, this.animationBeak);
-        setName("Bird");
-        setGender(2);
-        setBaseMoveSpeedStat(1.0F);
+        this.setName("Bird");
+        this.setGender(2);
+        this.setBaseMoveSpeedStat(1.0f);
         this.attackStrength = 1;
-        setMaxHealthAndHealth(Invasion.getMobHealth(this));
+        this.setMaxHealthAndHealth(mod_Invasion.getMobHealth(this));
         this.animationFlags = 0;
-        this.carriedEntityYawOffset = 0.0F;
-        setGravity(0.025F);
-        setThrust(0.1F);
-        setMaxPoweredFlightSpeed(0.5F);
-        setLiftFactor(0.35F);
-        setThrustComponentRatioMin(0.0F);
-        setThrustComponentRatioMax(0.5F);
-        setMaxTurnForce(getGravity() * 8.0F);
-        setMoveState(MoveState.STANDING);
-        setFlyState(FlyState.GROUNDED);
+        this.carriedEntityYawOffset = 0.0f;
+        this.setGravity(0.025f);
+        this.setThrust(0.1f);
+        this.setMaxPoweredFlightSpeed(0.5f);
+        this.setLiftFactor(0.35f);
+        this.setThrustComponentRatioMin(0.0f);
+        this.setThrustComponentRatioMax(0.5f);
+        this.setMaxTurnForce(this.getGravity() * 8.0f);
+        this.setMoveState(MoveState.STANDING);
+        this.setFlyState(FlyState.GROUNDED);
         this.tier = 1;
-
-        this.dataWatcher.addObject(26, Integer.valueOf(0));
+        this.field_70180_af.func_75682_a(26, (Object)0);
     }
 
     public void doScreech() {
@@ -79,7 +95,7 @@ public class EntityIMBird extends EntityIMFlying {
     }
 
     public float getLegSweepProgress() {
-        return 1.0F;
+        return 1.0f;
     }
 
     public AnimationState getLegAnimationState() {
@@ -91,47 +107,33 @@ public class EntityIMBird extends EntityIMFlying {
     }
 
     @Override
-    public void onUpdate() {
-        super.onUpdate();
-        if (this.worldObj.isRemote) {
-            updateFlapAnimation();
-            updateLegAnimation();
-            updateBeakAnimation();
-            this.animationFlags = this.dataWatcher.getWatchableObjectInt(26);
+    public void func_70071_h_() {
+        super.func_70071_h_();
+        if (this.field_70170_p.field_72995_K) {
+            this.updateFlapAnimation();
+            this.updateLegAnimation();
+            this.updateBeakAnimation();
+            this.animationFlags = this.field_70180_af.func_75679_c(26);
         } else {
-            this.dataWatcher.updateObject(26, Integer.valueOf(this.animationFlags));
+            this.field_70180_af.func_75692_b(26, (Object)this.animationFlags);
         }
     }
 
+    @Override
     public String getSpecies() {
         return "Bird";
     }
 
     public boolean getClawsForward() {
-        return (this.animationFlags & 0x1) > 0;
-    }
-
-    public void setClawsForward(boolean flag) {
-        if ((flag ? 1 : 0) != (this.animationFlags & 0x1))
-            this.animationFlags ^= 1;
+        return (this.animationFlags & 1) > 0;
     }
 
     public boolean isAttackingWithWings() {
-        return (this.animationFlags & 0x2) > 0;
-    }
-
-    public void setAttackingWithWings(boolean flag) {
-        if ((flag ? 1 : 0) != (this.animationFlags & 0x2))
-            this.animationFlags ^= 2;
+        return (this.animationFlags & 2) > 0;
     }
 
     public boolean isBeakOpen() {
-        return (this.animationFlags & 0x4) > 0;
-    }
-
-    protected void setBeakOpen(boolean flag) {
-        if ((flag ? 1 : 0) != (this.animationFlags & 0x4))
-            this.animationFlags ^= 4;
+        return (this.animationFlags & 4) > 0;
     }
 
     public float getCarriedEntityYawOffset() {
@@ -139,103 +141,82 @@ public class EntityIMBird extends EntityIMFlying {
     }
 
     @Override
-    public boolean attackEntityFrom(DamageSource par1DamageSource, float par2) {
-        if (ForgeHooks.onLivingAttack(this, par1DamageSource, par2)) return false;
-        if (isEntityInvulnerable()) {
+    public boolean func_70097_a(DamageSource par1DamageSource, float par2) {
+        if (ForgeHooks.onLivingAttack((EntityLivingBase)this, (DamageSource)par1DamageSource, (float)par2)) {
             return false;
         }
-        if (this.worldObj.isRemote) {
+        if (this.func_85032_ar()) {
             return false;
         }
-
-        this.entityAge = 0;
-
-        if (getHealth() <= 0.0F) {
+        if (this.field_70170_p.field_72995_K) {
             return false;
         }
-        if ((par1DamageSource.isFireDamage()) && (isPotionActive(Potion.fireResistance))) {
+        this.field_70708_bq = 0;
+        if (this.func_110143_aJ() <= 0.0f) {
             return false;
         }
-
-
-//    if (((par1DamageSource == DamageSource.anvil) || (par1DamageSource == DamageSource.fallingBlock)) && (getCurrentItemOrArmor(4) != null))
-//    {
-//      //getCurrentItemOrArmor(4).damageItem((int)(par2 * 4.0F + this.rand.nextFloat() * par2 * 2.0F), this);
-//      par2 *= 0.75F;
-//    }
-
-        this.limbSwingAmount = 1.5F;
+        if (par1DamageSource.func_76347_k() && this.func_70644_a(Potion.field_76426_n)) {
+            return false;
+        }
+        this.field_70721_aZ = 1.5f;
         boolean flag = true;
-
-        if (this.hurtResistantTime > this.maxHurtResistantTime / 2.0F) {
-            if (par2 <= this.lastDamage) {
+        if ((float)this.field_70172_ad > (float)this.field_70771_an / 2.0f) {
+            if (par2 <= this.field_110153_bc) {
                 return false;
             }
-
-            damageEntity(par1DamageSource, par2 - this.lastDamage);
-            this.lastDamage = par2;
+            this.func_70665_d(par1DamageSource, par2 - this.field_110153_bc);
+            this.field_110153_bc = par2;
             flag = false;
         } else {
-            this.lastDamage = par2;
-            this.prevHealth = getHealth();
-            this.hurtResistantTime = this.maxHurtResistantTime;
-            damageEntity(par1DamageSource, par2);
-            this.hurtTime = (this.maxHurtTime = 10);
+            this.field_110153_bc = par2;
+            this.field_70735_aL = this.func_110143_aJ();
+            this.field_70172_ad = this.field_70771_an;
+            this.func_70665_d(par1DamageSource, par2);
+            this.field_70738_aO = 10;
+            this.field_70737_aN = 10;
         }
-
-        this.attackedAtYaw = 0.0F;
-        Entity entity = par1DamageSource.getEntity();
-
+        this.field_70739_aP = 0.0f;
+        Entity entity = par1DamageSource.func_76346_g();
         if (entity != null) {
-            if ((entity instanceof EntityLivingBase)) {
-                setRevengeTarget((EntityLivingBase) entity);
+            EntityWolf entitywolf;
+            if (entity instanceof EntityLivingBase) {
+                this.func_70604_c((EntityLivingBase)entity);
             }
-
-            if ((entity instanceof EntityPlayer)) {
-                this.recentlyHit = 100;
-                this.attackingPlayer = ((EntityPlayer) entity);
-            } else if ((entity instanceof EntityWolf)) {
-                EntityWolf entitywolf = (EntityWolf) entity;
-
-                if (entitywolf.isTamed()) {
-                    this.recentlyHit = 100;
-                    this.attackingPlayer = null;
-                }
+            if (entity instanceof EntityPlayer) {
+                this.field_70718_bc = 100;
+                this.field_70717_bb = (EntityPlayer)entity;
+            } else if (entity instanceof EntityWolf && (entitywolf = (EntityWolf)entity).func_70909_n()) {
+                this.field_70718_bc = 100;
+                this.field_70717_bb = null;
             }
         }
-
         if (flag) {
-            this.worldObj.setEntityState(this, (byte) 2);
-
-            if (par1DamageSource != DamageSource.drown) {
-                setBeenAttacked();
+            this.field_70170_p.func_72960_a((Entity)this, (byte)2);
+            if (par1DamageSource != DamageSource.field_76369_e) {
+                this.func_70018_K();
             }
-
             if (entity != null) {
-                double d0 = entity.posX - this.posX;
-                double d1 = entity.posZ - this.posZ;
-
-                for (d1 = entity.posZ - this.posZ; d0 * d0 + d1 * d1 < 0.0001D; d1 = (Math.random() - Math.random()) * 0.01D) {
-                    d0 = (Math.random() - Math.random()) * 0.01D;
+                double d0 = entity.field_70165_t - this.field_70165_t;
+                double d1 = entity.field_70161_v - this.field_70161_v;
+                d1 = entity.field_70161_v - this.field_70161_v;
+                while (d0 * d0 + d1 * d1 < 1.0E-4) {
+                    d0 = (Math.random() - Math.random()) * 0.01;
+                    d1 = (Math.random() - Math.random()) * 0.01;
                 }
-
-                this.attackedAtYaw = ((float) (Math.atan2(d1, d0) * 180.0D / 3.141592653589793D) - this.rotationYaw);
-                knockBack(entity, par2, d0, d1);
+                this.field_70739_aP = (float)(Math.atan2(d1, d0) * 180.0 / Math.PI) - this.field_70177_z;
+                this.func_70653_a(entity, par2, d0, d1);
             } else {
-                this.attackedAtYaw = ((int) (Math.random() * 2.0D) * 180);
+                this.field_70739_aP = (int)(Math.random() * 2.0) * 180;
             }
         }
-
-        if (getHealth() <= 0.0F) {
+        if (this.func_110143_aJ() <= 0.0f) {
             if (flag) {
-                doDeathSound();
+                this.doDeathSound();
             }
-
-            onDeath(par1DamageSource);
+            this.func_70645_a(par1DamageSource);
         } else if (flag) {
-            doHurtSound();
+            this.doHurtSound();
         }
-
         return true;
     }
 
@@ -244,11 +225,29 @@ public class EntityIMBird extends EntityIMFlying {
     }
 
     protected void onPickedUpEntity(Entity entity) {
-        this.carriedEntityYawOffset = (entity.rotationYaw - entity.rotationYaw);
+        this.carriedEntityYawOffset = entity.field_70177_z - entity.field_70177_z;
+    }
+
+    public void setClawsForward(boolean flag) {
+        if ((flag ? 1 : 0) != (this.animationFlags & 1)) {
+            this.animationFlags ^= 1;
+        }
+    }
+
+    public void setAttackingWithWings(boolean flag) {
+        if ((flag ? 1 : 0) != (this.animationFlags & 2)) {
+            this.animationFlags ^= 2;
+        }
+    }
+
+    protected void setBeakOpen(boolean flag) {
+        if ((flag ? 1 : 0) != (this.animationFlags & 4)) {
+            this.animationFlags ^= 4;
+        }
     }
 
     @Override
-    protected void updateAITick() {
+    protected void func_70629_bd() {
     }
 
     protected void updateFlapAnimation() {
@@ -268,8 +267,8 @@ public class EntityIMBird extends EntityIMFlying {
         return this.tier;
     }
 
-    @Override
     public String toString() {
         return "IMBird T" + this.getTier();
     }
 }
+

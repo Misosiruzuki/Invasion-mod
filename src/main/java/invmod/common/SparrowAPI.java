@@ -1,47 +1,54 @@
+/*
+ * Decompiled with CFR 0.152.
+ * 
+ * Could not load the following classes:
+ *  net.minecraft.entity.Entity
+ */
 package invmod.common;
 
 import net.minecraft.entity.Entity;
 
-public abstract interface SparrowAPI {
-    public abstract boolean isStupidToAttack();
+public interface SparrowAPI {
+    public boolean isStupidToAttack();
 
-    public abstract boolean doNotVaporize();
+    public boolean doNotVaporize();
 
-    public abstract boolean isPredator();
+    public boolean isPredator();
 
-    public abstract boolean isHostile();
+    public boolean isHostile();
 
-    public abstract boolean isPeaceful();
+    public boolean isPeaceful();
 
-    public abstract boolean isPrey();
+    public boolean isPrey();
 
-    public abstract boolean isNeutral();
+    public boolean isNeutral();
 
-    public abstract boolean isUnkillable();
+    public boolean isUnkillable();
 
-    public abstract boolean isThreatTo(Entity paramEntity);
+    public boolean isThreatTo(Entity var1);
 
-    public abstract boolean isFriendOf(Entity paramEntity);
+    public boolean isFriendOf(Entity var1);
 
-    public abstract boolean isNPC();
+    public boolean isNPC();
 
-    public abstract int isPet();
+    public int isPet();
 
-    public abstract Entity getPetOwner();
+    public Entity getPetOwner();
 
-    public abstract String getName();
+    public String getName();
 
-    public abstract Entity getAttackingTarget();
+    public Entity getAttackingTarget();
 
-    public abstract float getSize();
+    public float getSize();
 
-    public abstract String getSpecies();
+    public String getSpecies();
 
-    public abstract int getTier();
+    public int getTier();
 
-    public abstract int getGender();
+    public int getGender();
 
-    public abstract String customStringAndResponse(String paramString);
+    public String customStringAndResponse(String var1);
 
-    public abstract String getSimplyID();
+    public String getSimplyID();
 }
+

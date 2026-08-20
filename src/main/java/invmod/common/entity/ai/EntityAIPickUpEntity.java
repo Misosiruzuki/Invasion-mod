@@ -1,3 +1,11 @@
+/*
+ * Decompiled with CFR 0.152.
+ * 
+ * Could not load the following classes:
+ *  net.minecraft.entity.Entity
+ *  net.minecraft.entity.EntityLivingBase
+ *  net.minecraft.entity.ai.EntityAIBase
+ */
 package invmod.common.entity.ai;
 
 import invmod.common.entity.EntityIMBird;
@@ -7,7 +15,8 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.ai.EntityAIBase;
 
-public class EntityAIPickUpEntity extends EntityAIBase {
+public class EntityAIPickUpEntity
+extends EntityAIBase {
     private EntityIMBird theEntity;
     private int time;
     private int holdTime;
@@ -36,76 +45,68 @@ public class EntityAIPickUpEntity extends EntityAIBase {
         this.isHoldingEntity = false;
     }
 
-    public boolean shouldExecute() {
-        return (this.theEntity.getAIGoal() == Goal.PICK_UP_TARGET) || (this.theEntity.riddenByEntity != null);
+    public boolean func_75250_a() {
+        return this.theEntity.getAIGoal() == Goal.PICK_UP_TARGET || this.theEntity.field_70153_n != null;
     }
 
-    public void startExecuting() {
-        this.isHoldingEntity = (this.theEntity.riddenByEntity != null);
+    public void func_75249_e() {
+        this.isHoldingEntity = this.theEntity.field_70153_n != null;
         this.time = 0;
     }
 
-    public boolean continueExecuting() {
-        EntityLivingBase target = this.theEntity.getAttackTarget();
-        if ((target != null) && (!target.isDead)) {
-            if (!this.isHoldingEntity) {
-                if ((this.time > this.abortTime) && (isLinedUp(target)))
-                    return true;
-            } else if (this.theEntity.riddenByEntity == target) {
-                return true;
-            }
+    public boolean func_75253_b() {
+        EntityLivingBase target = this.theEntity.func_70638_az();
+        if (target != null && !target.field_70128_L && (!this.isHoldingEntity ? this.time > this.abortTime && this.isLinedUp((Entity)target) : this.theEntity.field_70153_n == target)) {
+            return true;
         }
         this.theEntity.transitionAIGoal(Goal.NONE);
         this.theEntity.setClawsForward(false);
         return false;
     }
 
-    public void updateTask() {
-        this.time += 1;
+    public void func_75246_d() {
+        ++this.time;
         if (!this.isHoldingEntity) {
-            EntityLivingBase target = this.theEntity.getAttackTarget();
-            double dY = target.prevPosY - this.theEntity.prevPosY;
+            EntityLivingBase target = this.theEntity.func_70638_az();
+            double dY = target.field_70167_r - this.theEntity.field_70167_r;
             System.out.println(dY);
-            if (Math.abs(dY - this.pickupPointY) < this.pickupRangeY) {
-                double dAngle = this.theEntity.prevRotationYaw / 180.0F * 3.141592653589793D;
+            if (Math.abs(dY - (double)this.pickupPointY) < (double)this.pickupRangeY) {
+                double dAngle = (double)(this.theEntity.field_70126_B / 180.0f) * Math.PI;
                 double sinF = Math.sin(dAngle);
                 double cosF = Math.cos(dAngle);
-                double x = this.pickupPointX * cosF - this.pickupPointZ * sinF;
-                double z = this.pickupPointZ * cosF + this.pickupPointX * sinF;
-
-                double dX = target.prevPosX - (x + this.theEntity.prevPosX);
-                double dZ = target.prevPosZ - (z + this.theEntity.prevPosZ);
+                double x = (double)this.pickupPointX * cosF - (double)this.pickupPointZ * sinF;
+                double z = (double)this.pickupPointZ * cosF + (double)this.pickupPointX * sinF;
+                double dX = target.field_70169_q - (x + this.theEntity.field_70169_q);
+                double dZ = target.field_70166_s - (z + this.theEntity.field_70166_s);
                 double dXZ = Math.sqrt(dX * dX + dZ * dZ);
                 System.out.println(dXZ);
-                if (dXZ < this.pickupRangeXZ) {
-                    target.mountEntity(this.theEntity);
+                if (dXZ < (double)this.pickupRangeXZ) {
+                    target.func_70078_a((Entity)this.theEntity);
                     this.isHoldingEntity = true;
                     this.time = 0;
                     this.theEntity.getNavigatorNew().clearPath();
-                    this.theEntity.getNavigatorNew().setPitchBias(20.0F, 1.5F);
+                    this.theEntity.getNavigatorNew().setPitchBias(20.0f, 1.5f);
                 }
             }
         } else if (this.time == 45) {
-            this.theEntity.getNavigatorNew().setPitchBias(0.0F, 0.0F);
+            this.theEntity.getNavigatorNew().setPitchBias(0.0f, 0.0f);
         } else if (this.time > this.holdTime) {
-            this.theEntity.getAttackTarget().mountEntity(null);
+            this.theEntity.func_70638_az().func_70078_a(null);
         }
     }
 
     private boolean isLinedUp(Entity target) {
-        double dX = target.posX - this.theEntity.posX;
-        double dY = target.posY - this.theEntity.posY;
-        double dZ = target.posZ - this.theEntity.posZ;
+        double dX = target.field_70165_t - this.theEntity.field_70165_t;
+        double dY = target.field_70163_u - this.theEntity.field_70163_u;
+        double dZ = target.field_70161_v - this.theEntity.field_70161_v;
         double dXZ = Math.sqrt(dX * dX + dZ * dZ);
-        double yawToTarget = Math.atan2(dZ, dX) * 180.0D / 3.141592653589793D - 90.0D;
-        double dYaw = MathUtil.boundAngle180Deg(yawToTarget - this.theEntity.rotationYaw);
-        if ((dYaw < -this.abortAngleYaw) || (dYaw > this.abortAngleYaw)) {
+        double yawToTarget = Math.atan2(dZ, dX) * 180.0 / Math.PI - 90.0;
+        double dYaw = MathUtil.boundAngle180Deg(yawToTarget - (double)this.theEntity.field_70177_z);
+        if (dYaw < (double)(-this.abortAngleYaw) || dYaw > (double)this.abortAngleYaw) {
             return false;
         }
-        double dPitch = Math.atan(dY / dXZ) * 180.0D / 3.141592653589793D - this.theEntity.rotationPitch;
-        if ((dPitch < -this.abortAnglePitch) || (dPitch > this.abortAnglePitch)) {
-            return false;
-        }
-        return true;
+        double dPitch = Math.atan(dY / dXZ) * 180.0 / Math.PI - (double)this.theEntity.field_70125_A;
+        return !(dPitch < (double)(-this.abortAnglePitch)) && !(dPitch > (double)this.abortAnglePitch);
     }
 }
+

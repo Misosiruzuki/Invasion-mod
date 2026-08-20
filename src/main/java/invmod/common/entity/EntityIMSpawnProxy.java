@@ -1,6 +1,17 @@
+/*
+ * Decompiled with CFR 0.152.
+ * 
+ * Could not load the following classes:
+ *  net.minecraft.entity.Entity
+ *  net.minecraft.entity.EntityLiving
+ *  net.minecraft.nbt.NBTTagCompound
+ *  net.minecraft.util.MathHelper
+ *  net.minecraft.world.EnumSkyBlock
+ *  net.minecraft.world.World
+ */
 package invmod.common.entity;
 
-import invmod.Invasion;
+import invmod.common.mod_Invasion;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.nbt.NBTTagCompound;
@@ -8,57 +19,55 @@ import net.minecraft.util.MathHelper;
 import net.minecraft.world.EnumSkyBlock;
 import net.minecraft.world.World;
 
-public class EntityIMSpawnProxy extends EntityLiving {
+public class EntityIMSpawnProxy
+extends EntityLiving {
     public EntityIMSpawnProxy(World world) {
         super(world);
     }
 
-    @Override
-    public void onEntityUpdate() {
-        if (this.worldObj != null) {
-            Entity[] entities = Invasion.getNightMobSpawns1(this.worldObj);
-            for (Entity entity : entities) {
-                entity.setLocationAndAngles(this.posX, this.posY, this.posZ, this.rotationYaw, this.rotationPitch);
-                this.worldObj.spawnEntityInWorld(entity);
+    public void func_70030_z() {
+        if (this.field_70170_p != null) {
+            Entity[] entities;
+            for (Entity entity : entities = mod_Invasion.getNightMobSpawns1(this.field_70170_p)) {
+                entity.func_70012_b(this.field_70165_t, this.field_70163_u, this.field_70161_v, this.field_70177_z, this.field_70125_A);
+                this.field_70170_p.func_72838_d(entity);
             }
         }
-        setDead();
+        this.func_70106_y();
     }
 
-    @Override
-    public void writeEntityToNBT(NBTTagCompound nbttagcompound) {
+    public void func_70014_b(NBTTagCompound nbttagcompound) {
     }
 
-    @Override
-    public void readEntityFromNBT(NBTTagCompound nbttagcompound) {
+    public void func_70037_a(NBTTagCompound nbttagcompound) {
     }
 
     public float getBlockPathWeight(int i, int j, int k) {
-        return 0.5F - this.worldObj.getLightBrightness(i, j, k);
+        return 0.5f - this.field_70170_p.func_72801_o(i, j, k);
     }
 
     protected boolean darkEnoughToSpawn() {
-        int i = MathHelper.floor_double(this.posX);
-        int j = MathHelper.floor_double(this.boundingBox.minY);
-        int k = MathHelper.floor_double(this.posZ);
-        if (this.worldObj.getSavedLightValue(EnumSkyBlock.Sky, i, j, k) > this.rand.nextInt(32)) {
+        int k;
+        int j;
+        int i = MathHelper.func_76128_c((double)this.field_70165_t);
+        if (this.field_70170_p.func_72972_b(EnumSkyBlock.Sky, i, j = MathHelper.func_76128_c((double)this.field_70121_D.field_72338_b), k = MathHelper.func_76128_c((double)this.field_70161_v)) > this.field_70146_Z.nextInt(32)) {
             return false;
         }
-        int l = this.worldObj.getBlockLightValue(i, j, k);
-        if (this.worldObj.isThundering()) {
-            int i1 = this.worldObj.skylightSubtracted;
-            this.worldObj.skylightSubtracted = 10;
-            l = this.worldObj.getBlockLightValue(i, j, k);
-            this.worldObj.skylightSubtracted = i1;
+        int l = this.field_70170_p.func_72957_l(i, j, k);
+        if (this.field_70170_p.func_72911_I()) {
+            int i1 = this.field_70170_p.field_73008_k;
+            this.field_70170_p.field_73008_k = 10;
+            l = this.field_70170_p.func_72957_l(i, j, k);
+            this.field_70170_p.field_73008_k = i1;
         }
-        return l <= this.rand.nextInt(8);
+        return l <= this.field_70146_Z.nextInt(8);
     }
 
-    @Override
-    public boolean getCanSpawnHere() {
-        int i = MathHelper.floor_double(this.posX);
-        int j = MathHelper.floor_double(this.boundingBox.minY);
-        int k = MathHelper.floor_double(this.posZ);
-        return (darkEnoughToSpawn()) && (super.getCanSpawnHere()) && (getBlockPathWeight(i, j, k) >= 0.0F);
+    public boolean func_70601_bi() {
+        int i = MathHelper.func_76128_c((double)this.field_70165_t);
+        int j = MathHelper.func_76128_c((double)this.field_70121_D.field_72338_b);
+        int k = MathHelper.func_76128_c((double)this.field_70161_v);
+        return this.darkEnoughToSpawn() && super.func_70601_bi() && this.getBlockPathWeight(i, j, k) >= 0.0f;
     }
 }
+

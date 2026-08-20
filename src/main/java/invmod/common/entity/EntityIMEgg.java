@@ -1,11 +1,21 @@
+/*
+ * Decompiled with CFR 0.152.
+ * 
+ * Could not load the following classes:
+ *  net.minecraft.entity.Entity
+ *  net.minecraft.entity.player.EntityPlayer
+ *  net.minecraft.world.World
+ */
 package invmod.common.entity;
 
-import invmod.Invasion;
+import invmod.common.entity.EntityIMLiving;
+import invmod.common.mod_Invasion;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
 
-public class EntityIMEgg extends EntityIMLiving {
+public class EntityIMEgg
+extends EntityIMLiving {
     private static int META_HATCHED = 30;
     private int hatchTime;
     private int ticks;
@@ -15,26 +25,24 @@ public class EntityIMEgg extends EntityIMLiving {
 
     public EntityIMEgg(World world) {
         super(world);
-        getDataWatcher().addObject(META_HATCHED, Byte.valueOf((byte) 0));
+        this.func_70096_w().func_75682_a(META_HATCHED, (Object)0);
     }
 
     public EntityIMEgg(Entity parent, Entity[] contents, int hatchTime) {
-        super(parent.worldObj);
+        super(parent.field_70170_p);
         this.parent = parent;
         this.contents = contents;
         this.hatchTime = hatchTime;
         this.setBurnsInDay(false);
         this.hatched = false;
         this.ticks = 0;
-        setBaseMoveSpeedStat(0.01F);
-
-        getDataWatcher().addObject(META_HATCHED, Byte.valueOf((byte) 0));
-
-        setMaxHealthAndHealth(Invasion.getMobHealth(this));
-        setName("Spider Egg");
-        setGender(0);
-        setPosition(parent.posX, parent.posY, parent.posZ);
-        setSize(0.5F, 0.8F);
+        this.setBaseMoveSpeedStat(0.01f);
+        this.func_70096_w().func_75682_a(META_HATCHED, (Object)0);
+        this.setMaxHealthAndHealth(mod_Invasion.getMobHealth(this));
+        this.setName("Spider Egg");
+        this.setGender(0);
+        this.func_70107_b(parent.field_70165_t, parent.field_70163_u, parent.field_70161_v);
+        this.func_70105_a(0.5f, 0.8f);
     }
 
     @Override
@@ -59,10 +67,7 @@ public class EntityIMEgg extends EntityIMLiving {
 
     @Override
     public boolean isThreatTo(Entity entity) {
-        if ((entity instanceof EntityPlayer)) {
-            return true;
-        }
-        return false;
+        return entity instanceof EntityPlayer;
     }
 
     @Override
@@ -71,38 +76,39 @@ public class EntityIMEgg extends EntityIMLiving {
     }
 
     @Override
-    public void onEntityUpdate() {
-        super.onEntityUpdate();
-        if (!this.worldObj.isRemote) {
-            this.ticks += 1;
+    public void func_70030_z() {
+        super.func_70030_z();
+        if (!this.field_70170_p.field_72995_K) {
+            ++this.ticks;
             if (this.hatched) {
-                if (this.ticks > this.hatchTime + 40)
-                    setDead();
+                if (this.ticks > this.hatchTime + 40) {
+                    this.func_70106_y();
+                }
             } else if (this.ticks > this.hatchTime) {
-                hatch();
+                this.hatch();
             }
-        } else if ((!this.hatched) && (getDataWatcher().getWatchableObjectByte(META_HATCHED) == 1)) {
-            this.worldObj.playSoundAtEntity(this, "invmod:egghatch" + (rand.nextInt(1) + (Integer) 1), 1.0F, 1.0F);
+        } else if (!this.hatched && this.func_70096_w().func_75683_a(META_HATCHED) == 1) {
+            this.field_70170_p.func_72956_a((Entity)this, "invmod:egghatch" + (this.field_70146_Z.nextInt(1) + Integer.valueOf(1)), 1.0f, 1.0f);
             this.hatched = true;
         }
     }
 
     private void hatch() {
-        this.worldObj.playSoundAtEntity(this, "invmod:egghatch" + (rand.nextInt(1) + (Integer) 1), 1.0F, 1.0F);
+        this.field_70170_p.func_72956_a((Entity)this, "invmod:egghatch" + (this.field_70146_Z.nextInt(1) + Integer.valueOf(1)), 1.0f, 1.0f);
         this.hatched = true;
-        if (!this.worldObj.isRemote) {
-            getDataWatcher().updateObject(META_HATCHED, Byte.valueOf((byte) 1));
+        if (!this.field_70170_p.field_72995_K) {
+            this.func_70096_w().func_75692_b(META_HATCHED, (Object)1);
             if (this.contents != null) {
                 for (Entity entity : this.contents) {
-                    entity.setPosition(this.posX, this.posY, this.posZ);
-                    this.worldObj.spawnEntityInWorld(entity);
+                    entity.func_70107_b(this.field_70165_t, this.field_70163_u, this.field_70161_v);
+                    this.field_70170_p.func_72838_d(entity);
                 }
             }
         }
     }
 
-    @Override
     public String toString() {
         return "IMSpider-egg";
     }
 }
+

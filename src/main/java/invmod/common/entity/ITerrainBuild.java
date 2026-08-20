@@ -1,14 +1,18 @@
+/*
+ * Decompiled with CFR 0.152.
+ */
 package invmod.common.entity;
 
 import invmod.common.INotifyTask;
 import invmod.common.util.IPosition;
 
-public abstract interface ITerrainBuild {
-    public abstract boolean askBuildScaffoldLayer(IPosition paramIPosition, INotifyTask paramINotifyTask);
+public interface ITerrainBuild {
+    public boolean askBuildScaffoldLayer(IPosition var1, INotifyTask var2);
 
-    public abstract boolean askBuildLadderTower(IPosition paramIPosition, int paramInt1, int paramInt2, INotifyTask paramINotifyTask);
+    public boolean askBuildLadderTower(IPosition var1, int var2, int var3, INotifyTask var4);
 
-    public abstract boolean askBuildLadder(IPosition paramIPosition, INotifyTask paramINotifyTask);
+    public boolean askBuildLadder(IPosition var1, INotifyTask var2);
 
-    public abstract boolean askBuildBridge(IPosition paramIPosition, INotifyTask paramINotifyTask);
+    public boolean askBuildBridge(IPosition var1, INotifyTask var2);
 }
+

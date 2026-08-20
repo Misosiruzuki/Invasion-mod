@@ -1,7 +1,13 @@
+/*
+ * Decompiled with CFR 0.152.
+ */
 package invmod.common.nexus;
 
-public abstract interface IEntityIMPattern {
-    public abstract EntityConstruct generateEntityConstruct();
+import invmod.common.nexus.EntityConstruct;
 
-    public abstract EntityConstruct generateEntityConstruct(int paramInt1, int paramInt2);
+public interface IEntityIMPattern {
+    public EntityConstruct generateEntityConstruct();
+
+    public EntityConstruct generateEntityConstruct(int var1, int var2);
 }
+

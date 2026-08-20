@@ -1,27 +1,32 @@
+/*
+ * Decompiled with CFR 0.152.
+ */
 package invmod.common.entity;
 
+import invmod.common.entity.EntityIMLiving;
+import invmod.common.entity.IPathSource;
+import invmod.common.entity.NavigatorIM;
+import invmod.common.entity.PathAction;
 import invmod.common.util.PosRotate3D;
 
-public abstract class NavigatorParametric extends NavigatorIM {
-    protected double minMoveToleranceSq;
-    protected int timeParam;
+public abstract class NavigatorParametric
+extends NavigatorIM {
+    protected double minMoveToleranceSq = 21.0;
+    protected int timeParam = 0;
 
     public NavigatorParametric(EntityIMLiving entity, IPathSource pathSource) {
         super(entity, pathSource);
-        this.minMoveToleranceSq = 21.0D;
-        this.timeParam = 0;
     }
 
     public void onUpdateNavigation(int paramElapsed) {
-        this.totalTicks += 1;
-        if ((noPath()) || (this.waitingForNotify)) {
+        ++this.totalTicks;
+        if (this.noPath() || this.waitingForNotify) {
             return;
         }
-        if ((canNavigate()) && (this.nodeActionFinished)) {
+        if (this.canNavigate() && this.nodeActionFinished) {
             int pathIndex = this.path.getCurrentPathIndex();
-            pathFollow(this.timeParam + paramElapsed);
-            doMovementTo(this.timeParam);
-
+            this.pathFollow(this.timeParam + paramElapsed);
+            this.doMovementTo(this.timeParam);
             if (this.path.getCurrentPathIndex() != pathIndex) {
                 this.ticksStuck = 0;
                 if (this.activeNode.action != PathAction.NONE) {
@@ -30,41 +35,41 @@ public abstract class NavigatorParametric extends NavigatorIM {
             }
         }
         if (this.nodeActionFinished) {
-            if (!isPositionClear(this.activeNode.xCoord, this.activeNode.yCoord, this.activeNode.zCoord, this.theEntity)) {
+            if (!this.isPositionClear(this.activeNode.xCoord, this.activeNode.yCoord, this.activeNode.zCoord, this.theEntity)) {
                 if (this.theEntity.onPathBlocked(this.path, this)) {
-                    setDoingTaskAndHold();
+                    this.setDoingTaskAndHold();
                 } else {
-                    clearPath();
+                    this.clearPath();
                 }
             }
         } else {
-            handlePathAction();
+            this.handlePathAction();
         }
     }
 
+    @Override
     public void onUpdateNavigation() {
-        onUpdateNavigation(1);
+        this.onUpdateNavigation(1);
     }
 
     protected void doMovementTo(int param) {
-        PosRotate3D movePos = entityPositionAtParam(param);
-        this.theEntity.moveEntity(movePos.getPosX(), movePos.getPosY(), movePos.getPosZ());
-
-        if (Math.abs(this.theEntity.getDistanceSq(movePos.getPosX(), movePos.getPosY(), movePos.getPosZ())) < this.minMoveToleranceSq) {
+        PosRotate3D movePos = this.entityPositionAtParam(param);
+        this.theEntity.func_70091_d(movePos.getPosX(), movePos.getPosY(), movePos.getPosZ());
+        if (Math.abs(this.theEntity.func_70092_e(movePos.getPosX(), movePos.getPosY(), movePos.getPosZ())) < this.minMoveToleranceSq) {
             this.timeParam = param;
-            this.ticksStuck -= 1;
+            --this.ticksStuck;
         } else {
-            this.ticksStuck += 1;
+            ++this.ticksStuck;
         }
     }
 
-    protected abstract PosRotate3D entityPositionAtParam(int paramInt);
+    protected abstract PosRotate3D entityPositionAtParam(int var1);
 
-    protected abstract boolean isReadyForNextNode(int paramInt);
+    protected abstract boolean isReadyForNextNode(int var1);
 
     protected void pathFollow(int param) {
         int nextIndex = this.path.getCurrentPathIndex() + 1;
-        if (isReadyForNextNode(param)) {
+        if (this.isReadyForNextNode(param)) {
             if (nextIndex < this.path.getCurrentPathLength()) {
                 this.timeParam = 0;
                 this.path.setCurrentPathIndex(nextIndex);
@@ -75,7 +80,9 @@ public abstract class NavigatorParametric extends NavigatorIM {
         }
     }
 
+    @Override
     protected void pathFollow() {
-        pathFollow(0);
+        this.pathFollow(0);
     }
 }
+

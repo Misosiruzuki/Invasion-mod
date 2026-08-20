@@ -1,9 +1,13 @@
+/*
+ * Decompiled with CFR 0.152.
+ */
 package invmod.common.util;
 
-public abstract interface IPosition {
-    public abstract int getXCoord();
+public interface IPosition {
+    public int getXCoord();
 
-    public abstract int getYCoord();
+    public int getYCoord();
 
-    public abstract int getZCoord();
+    public int getZCoord();
 }
+

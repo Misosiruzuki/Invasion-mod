@@ -1,15 +1,58 @@
+/*
+ * Decompiled with CFR 0.152.
+ * 
+ * Could not load the following classes:
+ *  net.minecraft.block.Block
+ *  net.minecraft.entity.DataWatcher
+ *  net.minecraft.entity.Entity
+ *  net.minecraft.entity.EntityCreature
+ *  net.minecraft.entity.EntityLiving
+ *  net.minecraft.entity.EntityLivingBase
+ *  net.minecraft.entity.ai.EntityAIBase
+ *  net.minecraft.entity.ai.EntityAIHurtByTarget
+ *  net.minecraft.entity.ai.EntityAILookIdle
+ *  net.minecraft.entity.ai.EntityAISwimming
+ *  net.minecraft.entity.ai.EntityAITasks
+ *  net.minecraft.entity.ai.EntityAIWatchClosest
+ *  net.minecraft.entity.player.EntityPlayer
+ *  net.minecraft.entity.player.EntityPlayerMP
+ *  net.minecraft.init.Blocks
+ *  net.minecraft.item.ItemStack
+ *  net.minecraft.nbt.NBTTagCompound
+ *  net.minecraft.util.MathHelper
+ *  net.minecraft.world.World
+ */
 package invmod.common.entity;
 
-import invmod.Invasion;
 import invmod.common.INotifyTask;
-import invmod.common.entity.ai.*;
+import invmod.common.entity.EntityIMBoulder;
+import invmod.common.entity.EntityIMCreeper;
+import invmod.common.entity.EntityIMMob;
+import invmod.common.entity.EntityIMPrimedTNT;
+import invmod.common.entity.Path;
+import invmod.common.entity.PathNode;
+import invmod.common.entity.ai.EntityAIAttackNexus;
+import invmod.common.entity.ai.EntityAIGoToNexus;
+import invmod.common.entity.ai.EntityAIRandomBoulder;
+import invmod.common.entity.ai.EntityAISimpleTarget;
+import invmod.common.entity.ai.EntityAIThrowerKillEntity;
+import invmod.common.entity.ai.EntityAIWanderIM;
+import invmod.common.mod_Invasion;
 import invmod.common.nexus.INexusAccess;
 import invmod.common.util.CoordsInt;
 import invmod.common.util.IPosition;
 import net.minecraft.block.Block;
 import net.minecraft.entity.DataWatcher;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.ai.*;
+import net.minecraft.entity.EntityCreature;
+import net.minecraft.entity.EntityLiving;
+import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.ai.EntityAIBase;
+import net.minecraft.entity.ai.EntityAIHurtByTarget;
+import net.minecraft.entity.ai.EntityAILookIdle;
+import net.minecraft.entity.ai.EntityAISwimming;
+import net.minecraft.entity.ai.EntityAITasks;
+import net.minecraft.entity.ai.EntityAIWatchClosest;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Blocks;
@@ -18,7 +61,8 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 
-public class EntityIMThrower extends EntityIMMob {
+public class EntityIMThrower
+extends EntityIMMob {
     private int throwTime;
     private int punchTimer;
     private boolean clearingPoint;
@@ -33,101 +77,93 @@ public class EntityIMThrower extends EntityIMMob {
 
     public EntityIMThrower(World world, INexusAccess nexus) {
         super(world, nexus);
-
-        setBaseMoveSpeedStat(0.13F);
+        this.setBaseMoveSpeedStat(0.13f);
         this.attackStrength = 10;
         this.selfDamage = 0;
         this.maxSelfDamage = 0;
-        this.experienceValue = 20;
+        this.field_70728_aV = 20;
         this.clearingPoint = false;
         this.tier = 1;
-        setMaxHealthAndHealth(Invasion.getMobHealth(this));
-        setName("Thrower");
-        setDestructiveness(2);
-        setSize(1.8F, 1.95F);
-        setAI();
-
-        DataWatcher dataWatcher = getDataWatcher();
-        dataWatcher.addObject(29, Byte.valueOf(this.metaChanged));
-        dataWatcher.addObject(30, Integer.valueOf(this.tier));
-        dataWatcher.addObject(31, Integer.valueOf(1));
-
+        this.setMaxHealthAndHealth(mod_Invasion.getMobHealth(this));
+        this.setName("Thrower");
+        this.setDestructiveness(2);
+        this.func_70105_a(1.8f, 1.95f);
+        this.setAI();
+        DataWatcher dataWatcher = this.func_70096_w();
+        dataWatcher.func_75682_a(29, (Object)this.metaChanged);
+        dataWatcher.func_75682_a(30, (Object)this.tier);
+        dataWatcher.func_75682_a(31, (Object)1);
     }
 
     protected void setAI() {
-        this.tasks = new EntityAITasks(this.worldObj.theProfiler);
-        this.tasks.addTask(0, new EntityAISwimming(this));
+        this.field_70714_bg = new EntityAITasks(this.field_70170_p.field_72984_F);
+        this.field_70714_bg.func_75776_a(0, (EntityAIBase)new EntityAISwimming((EntityLiving)this));
         if (this.getTier() == 1) {
-            this.tasks.addTask(1, new EntityAIThrowerKillEntity(this, EntityPlayer.class, 55, 60.0F, 1.0F));
-            this.tasks.addTask(1, new EntityAIThrowerKillEntity(this, EntityPlayerMP.class, 55, 60.0F, 1.0F));
+            this.field_70714_bg.func_75776_a(1, new EntityAIThrowerKillEntity<EntityPlayer>(this, EntityPlayer.class, 55, 60.0f, 1.0f));
+            this.field_70714_bg.func_75776_a(1, new EntityAIThrowerKillEntity<EntityPlayerMP>(this, EntityPlayerMP.class, 55, 60.0f, 1.0f));
         } else {
-            this.tasks.addTask(1, new EntityAIThrowerKillEntity(this, EntityPlayer.class, 60, 90.0F, 1.5F));
-            this.tasks.addTask(1, new EntityAIThrowerKillEntity(this, EntityPlayerMP.class, 60, 90.0F, 1.5F));
+            this.field_70714_bg.func_75776_a(1, new EntityAIThrowerKillEntity<EntityPlayer>(this, EntityPlayer.class, 60, 90.0f, 1.5f));
+            this.field_70714_bg.func_75776_a(1, new EntityAIThrowerKillEntity<EntityPlayerMP>(this, EntityPlayerMP.class, 60, 90.0f, 1.5f));
         }
-        this.tasks.addTask(2, new EntityAIAttackNexus(this));
-        this.tasks.addTask(3, new EntityAIRandomBoulder(this, 3));
-        this.tasks.addTask(4, new EntityAIGoToNexus(this));
-        this.tasks.addTask(7, new EntityAIWanderIM(this));
-        this.tasks.addTask(8, new EntityAIWatchClosest(this, EntityPlayer.class, 8.0F));
-        this.tasks.addTask(9, new EntityAIWatchClosest(this, EntityIMCreeper.class, 12.0F));
-        this.tasks.addTask(10, new EntityAIWatchClosest(this, EntityPlayer.class, 16.0F));
-        this.tasks.addTask(10, new EntityAILookIdle(this));
-
-        this.targetTasks = new EntityAITasks(this.worldObj.theProfiler);
-        this.targetTasks.addTask(1, new EntityAISimpleTarget(this, EntityPlayer.class, this.getSenseRange(), false));
-        this.targetTasks.addTask(2, new EntityAISimpleTarget(this, EntityPlayer.class, this.getAggroRange(), true));
-        this.targetTasks.addTask(3, new EntityAIHurtByTarget(this, false));
+        this.field_70714_bg.func_75776_a(2, (EntityAIBase)new EntityAIAttackNexus(this));
+        this.field_70714_bg.func_75776_a(3, (EntityAIBase)new EntityAIRandomBoulder(this, 3));
+        this.field_70714_bg.func_75776_a(4, (EntityAIBase)new EntityAIGoToNexus(this));
+        this.field_70714_bg.func_75776_a(7, (EntityAIBase)new EntityAIWanderIM(this));
+        this.field_70714_bg.func_75776_a(8, (EntityAIBase)new EntityAIWatchClosest((EntityLiving)this, EntityPlayer.class, 8.0f));
+        this.field_70714_bg.func_75776_a(9, (EntityAIBase)new EntityAIWatchClosest((EntityLiving)this, EntityIMCreeper.class, 12.0f));
+        this.field_70714_bg.func_75776_a(10, (EntityAIBase)new EntityAIWatchClosest((EntityLiving)this, EntityPlayer.class, 16.0f));
+        this.field_70714_bg.func_75776_a(10, (EntityAIBase)new EntityAILookIdle((EntityLiving)this));
+        this.field_70715_bh = new EntityAITasks(this.field_70170_p.field_72984_F);
+        this.field_70715_bh.func_75776_a(1, (EntityAIBase)new EntityAISimpleTarget(this, EntityPlayer.class, this.getSenseRange(), false));
+        this.field_70715_bh.func_75776_a(2, (EntityAIBase)new EntityAISimpleTarget(this, EntityPlayer.class, this.getAggroRange(), true));
+        this.field_70715_bh.func_75776_a(3, (EntityAIBase)new EntityAIHurtByTarget((EntityCreature)this, false));
     }
 
     @Override
-    public void onUpdate() {
-        super.onUpdate();
-        if ((this.worldObj.isRemote) && (this.metaChanged != Byte.valueOf((byte) getDataWatcher().getWatchableObjectByte(29)))) {
-            DataWatcher data = getDataWatcher();
-            this.metaChanged = data.getWatchableObjectByte(29);
-            setTexture(data.getWatchableObjectInt(31));
-
-            if (this.tier != data.getWatchableObjectInt(30)) {
-                setTier(data.getWatchableObjectInt(30));
+    public void func_70071_h_() {
+        super.func_70071_h_();
+        if (this.field_70170_p.field_72995_K && this.metaChanged != Byte.valueOf(this.func_70096_w().func_75683_a(29))) {
+            DataWatcher data = this.func_70096_w();
+            this.metaChanged = data.func_75683_a(29);
+            this.setTexture(data.func_75679_c(31));
+            if (this.tier != data.func_75679_c(30)) {
+                this.setTier(data.func_75679_c(30));
             }
         }
     }
 
     @Override
-    public void updateAITick() {
-        super.updateAITick();
-        this.throwTime -= 1;
-        if (this.clearingPoint) {
-            if (clearPoint()) {
-                this.clearingPoint = false;
-                if (this.clearPointNotifee != null)
-                    this.clearPointNotifee.notifyTask(0);
+    public void func_70629_bd() {
+        super.func_70629_bd();
+        --this.throwTime;
+        if (this.clearingPoint && this.clearPoint()) {
+            this.clearingPoint = false;
+            if (this.clearPointNotifee != null) {
+                this.clearPointNotifee.notifyTask(0);
             }
         }
     }
 
-    @Override
-    public void knockBack(Entity par1Entity, float par2, double par3, double par5) {
+    public void func_70653_a(Entity par1Entity, float par2, double par3, double par5) {
         if (this.tier == 2) {
             return;
         }
-        this.isAirBorne = true;
-        float f = MathHelper.sqrt_double(par3 * par3 + par5 * par5);
-        float f1 = 0.2F;
-        this.motionX /= 2.0D;
-        this.motionY /= 2.0D;
-        this.motionZ /= 2.0D;
-        this.motionX -= par3 / f * f1;
-        this.motionY += f1;
-        this.motionZ -= par5 / f * f1;
-
-        if (this.motionY > 0.4000000059604645D) {
-            this.motionY = 0.4000000059604645D;
+        this.field_70160_al = true;
+        float f = MathHelper.func_76133_a((double)(par3 * par3 + par5 * par5));
+        float f1 = 0.2f;
+        this.field_70159_w /= 2.0;
+        this.field_70181_x /= 2.0;
+        this.field_70179_y /= 2.0;
+        this.field_70159_w -= par3 / (double)f * (double)f1;
+        this.field_70181_x += (double)f1;
+        this.field_70179_y -= par5 / (double)f * (double)f1;
+        if (this.field_70181_x > (double)0.4f) {
+            this.field_70181_x = 0.4f;
         }
     }
 
     @Override
-    public boolean isAIEnabled() {
+    public boolean func_70650_aV() {
         return true;
     }
 
@@ -147,18 +183,52 @@ public class EntityIMThrower extends EntityIMMob {
         return false;
     }
 
-    @Override
-    public void writeEntityToNBT(NBTTagCompound nbttagcompound) {
-        nbttagcompound.setInteger("tier", this.tier);
-        super.writeEntityToNBT(nbttagcompound);
+    public void setTier(int tier) {
+        this.tier = tier;
+        this.func_70096_w().func_75692_b(30, (Object)tier);
+        this.selfDamage = 0;
+        this.maxSelfDamage = 0;
+        this.clearingPoint = false;
+        if (tier == 1) {
+            this.setBaseMoveSpeedStat(0.13f);
+            this.attackStrength = 10;
+            this.field_70728_aV = 20;
+            this.setMaxHealthAndHealth(mod_Invasion.getMobHealth(this));
+            this.setName("Thrower");
+            this.setDestructiveness(2);
+            this.func_70105_a(1.8f, 1.95f);
+            this.setAI();
+        } else if (tier == 2) {
+            this.setBaseMoveSpeedStat(0.23f);
+            this.attackStrength = 15;
+            this.field_70728_aV = 25;
+            this.setMaxHealthAndHealth(mod_Invasion.getMobHealth(this));
+            this.setName("Big Thrower");
+            this.setDestructiveness(4);
+            this.func_70105_a(2.0f, 2.0f);
+            this.setAI();
+        }
+        if (this.func_70096_w().func_75679_c(31) == 1) {
+            if (tier == 1) {
+                this.setTexture(1);
+            } else if (tier == 2) {
+                this.setTexture(2);
+            }
+        }
     }
 
     @Override
-    public void readEntityFromNBT(NBTTagCompound nbttagcompound) {
-        super.readEntityFromNBT(nbttagcompound);
-        setTexture(nbttagcompound.getInteger("tier"));
-        this.tier = nbttagcompound.getInteger("tier");
-        setTier(this.tier);
+    public void func_70014_b(NBTTagCompound nbttagcompound) {
+        nbttagcompound.func_74768_a("tier", this.tier);
+        super.func_70014_b(nbttagcompound);
+    }
+
+    @Override
+    public void func_70037_a(NBTTagCompound nbttagcompound) {
+        super.func_70037_a(nbttagcompound);
+        this.setTexture(nbttagcompound.func_74762_e("tier"));
+        this.tier = nbttagcompound.func_74762_e("tier");
+        this.setTier(this.tier);
     }
 
     @Override
@@ -171,106 +241,64 @@ public class EntityIMThrower extends EntityIMMob {
         return this.tier;
     }
 
-    public void setTier(int tier) {
-        this.tier = tier;
-        getDataWatcher().updateObject(30, Integer.valueOf(tier));
-        this.selfDamage = 0;
-        this.maxSelfDamage = 0;
-        this.clearingPoint = false;
-        if (tier == 1) {
-            setBaseMoveSpeedStat(0.13F);
-            this.attackStrength = 10;
-            this.experienceValue = 20;
-            setMaxHealthAndHealth(Invasion.getMobHealth(this));
-            setName("Thrower");
-            setDestructiveness(2);
-            setSize(1.8F, 1.95F);
-            setAI();
-
-        } else if (tier == 2) {
-            setBaseMoveSpeedStat(0.23F);
-            this.attackStrength = 15;
-            this.experienceValue = 25;
-            setMaxHealthAndHealth(Invasion.getMobHealth(this));
-            setName("Big Thrower");
-            setDestructiveness(4);
-            setSize(2F, 2F);
-            setAI();
-        }
-
-        if (getDataWatcher().getWatchableObjectInt(31) == 1) {
-            if (tier == 1) {
-                setTexture(1);
-            } else if (tier == 2) {
-                setTexture(2);
-            }
-        }
-    }
-
     @Override
     public int getGender() {
         return 1;
     }
 
-    @Override
-    protected String getLivingSound() {
+    protected String func_70639_aQ() {
         return "mob.zombie.say";
     }
 
-    @Override
-    protected String getHurtSound() {
+    protected String func_70621_aR() {
         return "mob.zombie.hurt";
     }
 
-    @Override
-    protected String getDeathSound() {
+    protected String func_70673_aS() {
         return "mob.zombie.death";
     }
 
     protected boolean clearPoint() {
         if (--this.punchTimer <= 0) {
-            //this is a cheat, I should fix it where it get's the point to clear
             int x = this.pointToClear.getXCoord() + 1;
             int y = this.pointToClear.getYCoord();
             int z = this.pointToClear.getZCoord();
-            int mobX = MathHelper.floor_double(this.posX);
-            int mobZ = MathHelper.floor_double(this.posZ);
+            int mobX = MathHelper.func_76128_c((double)this.field_70165_t);
+            int mobZ = MathHelper.func_76128_c((double)this.field_70161_v);
             int xOffsetR = 0;
             int zOffsetR = 0;
             int axisX = 0;
             int axisZ = 0;
-
-            float facing = this.rotationYaw % 360.0F;
-            if (facing < 0.0F) {
-                facing += 360.0F;
+            float facing = this.field_70177_z % 360.0f;
+            if (facing < 0.0f) {
+                facing += 360.0f;
             }
-            if ((facing >= 45.0F) && (facing < 135.0F)) {
+            if (facing >= 45.0f && facing < 135.0f) {
                 zOffsetR = -1;
                 axisX = -1;
-            } else if ((facing >= 135.0F) && (facing < 225.0F)) {
+            } else if (facing >= 135.0f && facing < 225.0f) {
                 xOffsetR = -1;
                 axisZ = -1;
-            } else if ((facing >= 225.0F) && (facing < 315.0F)) {
+            } else if (facing >= 225.0f && facing < 315.0f) {
                 zOffsetR = -1;
                 axisX = 1;
             } else {
                 xOffsetR = -1;
                 axisZ = 1;
             }
-            if (((this.worldObj.getBlock(x, y, z) != null) && (this.worldObj.getBlock(x, y, z).getMaterial().isSolid())) || ((this.worldObj.getBlock(x, y + 1, z) != null) && (this.worldObj.getBlock(x, y + 1, z).getMaterial().isSolid()))
-                    || ((this.worldObj.getBlock(x + xOffsetR, y, z + zOffsetR) != null) && (this.worldObj.getBlock(x + xOffsetR, y, z + zOffsetR).getMaterial().isSolid())) || ((this.worldObj.getBlock(x + xOffsetR, y + 1, z + zOffsetR) != null) && (this.worldObj.getBlock(x + xOffsetR, y + 1, z + zOffsetR).getMaterial().isSolid()))) {
-                tryDestroyBlock(x, y, z);
-                tryDestroyBlock(x, y + 1, z);
-                tryDestroyBlock(x + xOffsetR, y, z + zOffsetR);
-                tryDestroyBlock(x + xOffsetR, y + 1, z + zOffsetR);
+            if (this.field_70170_p.func_147439_a(x, y, z) != null && this.field_70170_p.func_147439_a(x, y, z).func_149688_o().func_76220_a() || this.field_70170_p.func_147439_a(x, y + 1, z) != null && this.field_70170_p.func_147439_a(x, y + 1, z).func_149688_o().func_76220_a() || this.field_70170_p.func_147439_a(x + xOffsetR, y, z + zOffsetR) != null && this.field_70170_p.func_147439_a(x + xOffsetR, y, z + zOffsetR).func_149688_o().func_76220_a() || this.field_70170_p.func_147439_a(x + xOffsetR, y + 1, z + zOffsetR) != null && this.field_70170_p.func_147439_a(x + xOffsetR, y + 1, z + zOffsetR).func_149688_o().func_76220_a()) {
+                this.tryDestroyBlock(x, y, z);
+                this.tryDestroyBlock(x, y + 1, z);
+                this.tryDestroyBlock(x + xOffsetR, y, z + zOffsetR);
+                this.tryDestroyBlock(x + xOffsetR, y + 1, z + zOffsetR);
                 this.punchTimer = 160;
-            } else if (((this.worldObj.getBlock(x - axisX, y + 1, z - axisZ) != null) && (this.worldObj.getBlock(x - axisX, y + 1, z - axisZ).getMaterial().isSolid())) || ((this.worldObj.getBlock(x - axisX + xOffsetR, y + 1, z - axisZ + zOffsetR) != null) && (this.worldObj.getBlock(x - axisX + xOffsetR, y + 1, z - axisZ + zOffsetR).getMaterial().isSolid()))) {
-                tryDestroyBlock(x - axisX, y + 1, z - axisZ);
-                tryDestroyBlock(x - axisX + xOffsetR, y + 1, z - axisZ + zOffsetR);
+            } else if (this.field_70170_p.func_147439_a(x - axisX, y + 1, z - axisZ) != null && this.field_70170_p.func_147439_a(x - axisX, y + 1, z - axisZ).func_149688_o().func_76220_a() || this.field_70170_p.func_147439_a(x - axisX + xOffsetR, y + 1, z - axisZ + zOffsetR) != null && this.field_70170_p.func_147439_a(x - axisX + xOffsetR, y + 1, z - axisZ + zOffsetR).func_149688_o().func_76220_a()) {
+                this.tryDestroyBlock(x - axisX, y + 1, z - axisZ);
+                this.tryDestroyBlock(x - axisX + xOffsetR, y + 1, z - axisZ + zOffsetR);
                 this.punchTimer = 160;
-            } else if (((this.worldObj.getBlock(x - 2 * axisX, y + 1, z - 2 * axisZ) != null) && (this.worldObj.getBlock(x - 2 * axisX, y + 1, z - 2 * axisZ).getMaterial().isSolid())) || ((this.worldObj.getBlock(x - 2 * axisX + xOffsetR, y + 1, z - 2 * axisZ + zOffsetR) != null) && (this.worldObj.getBlock(x - 2 * axisX + xOffsetR, y + 1, z - 2 * axisZ + zOffsetR).getMaterial().isSolid()))) {
-                tryDestroyBlock(x - 2 * axisX, y + 1, z - 2 * axisZ);
-                tryDestroyBlock(x - 2 * axisX + xOffsetR, y + 1, z - 2 * axisZ + zOffsetR);
+            } else if (this.field_70170_p.func_147439_a(x - 2 * axisX, y + 1, z - 2 * axisZ) != null && this.field_70170_p.func_147439_a(x - 2 * axisX, y + 1, z - 2 * axisZ).func_149688_o().func_76220_a() || this.field_70170_p.func_147439_a(x - 2 * axisX + xOffsetR, y + 1, z - 2 * axisZ + zOffsetR) != null && this.field_70170_p.func_147439_a(x - 2 * axisX + xOffsetR, y + 1, z - 2 * axisZ + zOffsetR).func_149688_o().func_76220_a()) {
+                this.tryDestroyBlock(x - 2 * axisX, y + 1, z - 2 * axisZ);
+                this.tryDestroyBlock(x - 2 * axisX + xOffsetR, y + 1, z - 2 * axisZ + zOffsetR);
                 this.punchTimer = 160;
             } else {
                 return true;
@@ -280,123 +308,101 @@ public class EntityIMThrower extends EntityIMMob {
     }
 
     protected void tryDestroyBlock(int x, int y, int z) {
-        Block block = this.worldObj.getBlock(x, y, z);
-        //if ((block != null) && ((isNexusBound()) || (this.j != null))) {
-        if ((block != null) || (this.j != null)) {
-            if ((block == Invasion.blockNexus) && (this.attackTime == 0) && (x == this.targetNexus.getXCoord()) && (y == this.targetNexus.getYCoord()) && (z == this.targetNexus.getZCoord())) {
+        Block block = this.field_70170_p.func_147439_a(x, y, z);
+        if (block != null || this.j != null) {
+            if (block == mod_Invasion.blockNexus && this.field_70724_aR == 0 && x == this.targetNexus.getXCoord() && y == this.targetNexus.getYCoord() && z == this.targetNexus.getZCoord()) {
                 this.targetNexus.attackNexus(5);
-                this.attackTime = 60;
-            } else if (block != Invasion.blockNexus) {
-                int meta = this.worldObj.getBlockMetadata(x, y, z);
-                this.worldObj.setBlock(x, y, z, Blocks.air);
-                block.onBlockDestroyedByPlayer(this.worldObj, x, y, z, meta);
-
-                if (Invasion.getDestructedBlocksDrop()) {
-                    block.dropBlockAsItem(this.worldObj, x, y, z, meta, 0);
+                this.field_70724_aR = 60;
+            } else if (block != mod_Invasion.blockNexus) {
+                int meta = this.field_70170_p.func_72805_g(x, y, z);
+                this.field_70170_p.func_147449_b(x, y, z, Blocks.field_150350_a);
+                block.func_149664_b(this.field_70170_p, x, y, z, meta);
+                if (mod_Invasion.getDestructedBlocksDrop()) {
+                    block.func_149697_b(this.field_70170_p, x, y, z, meta, 0);
                 }
                 if (this.throttled == 0) {
-                    this.worldObj.playSoundAtEntity(this, "random.explode", 1.0F, 0.4F);
-
+                    this.field_70170_p.func_72956_a((Entity)this, "random.explode", 1.0f, 0.4f);
                     this.throttled = 5;
                 }
             }
         }
     }
 
-
     @Override
-    protected void attackEntity(Entity entity, float f) {
-        if ((this.throwTime <= 0) && (f > 4.0F)) {
+    protected void func_70785_a(Entity entity, float f) {
+        if (this.throwTime <= 0 && f > 4.0f) {
             this.throwTime = 120;
-            //f is the throwdistance
-            if (f < 50.0F) {
-                throwBoulder(entity.posX, entity.posY + entity.getEyeHeight() - 0.7D, entity.posZ, false);
+            if (f < 50.0f) {
+                this.throwBoulder(entity.field_70165_t, entity.field_70163_u + (double)entity.func_70047_e() - 0.7, entity.field_70161_v, false);
             }
         } else {
-            super.attackEntity(entity, f);
+            super.func_70785_a(entity, f);
         }
     }
 
     protected void throwBoulder(double entityX, double entityY, double entityZ, boolean forced) {
-        float launchSpeed = 1.0F;
-        double dX = entityX - this.posX;
-        double dZ = entityZ - this.posZ;
-        double dXY = MathHelper.sqrt_double(dX * dX + dZ * dZ);
-
-        if ((0.025D * dXY / (launchSpeed * launchSpeed) <= 1.0D) && (this.attackTime == 0)) {
-            EntityIMBoulder entityBoulder = new EntityIMBoulder(this.worldObj, this, launchSpeed);
-            double dY = entityY - entityBoulder.posY;
-            double angle = 0.5D * Math.asin(0.025D * dXY / (launchSpeed * launchSpeed));
-            dY += dXY * Math.tan(angle);
-            entityBoulder.setBoulderHeading(dX, dY, dZ, launchSpeed, 0.05F);
-            this.worldObj.spawnEntityInWorld(entityBoulder);
+        float launchSpeed = 1.0f;
+        double dX = entityX - this.field_70165_t;
+        double dZ = entityZ - this.field_70161_v;
+        double dXY = MathHelper.func_76133_a((double)(dX * dX + dZ * dZ));
+        if (0.025 * dXY / (double)(launchSpeed * launchSpeed) <= 1.0 && this.field_70724_aR == 0) {
+            EntityIMBoulder entityBoulder = new EntityIMBoulder(this.field_70170_p, (EntityLivingBase)this, launchSpeed);
+            double dY = entityY - entityBoulder.field_70163_u;
+            double angle = 0.5 * Math.asin(0.025 * dXY / (double)(launchSpeed * launchSpeed));
+            entityBoulder.setBoulderHeading(dX, dY += dXY * Math.tan(angle), dZ, launchSpeed, 0.05f);
+            this.field_70170_p.func_72838_d((Entity)entityBoulder);
         } else if (forced) {
-            EntityIMBoulder entityBoulder = new EntityIMBoulder(this.worldObj, this, launchSpeed);
-            double dY = entityY - entityBoulder.posY;
-            dY += dXY * Math.tan(0.7853981633974483D);
-            entityBoulder.setBoulderHeading(dX, dY, dZ, launchSpeed, 0.05F);
-            this.worldObj.spawnEntityInWorld(entityBoulder);
+            EntityIMBoulder entityBoulder = new EntityIMBoulder(this.field_70170_p, (EntityLivingBase)this, launchSpeed);
+            double dY = entityY - entityBoulder.field_70163_u;
+            entityBoulder.setBoulderHeading(dX, dY += dXY * Math.tan(0.7853981633974483), dZ, launchSpeed, 0.05f);
+            this.field_70170_p.func_72838_d((Entity)entityBoulder);
         }
-
     }
 
     public void throwBoulder(double entityX, double entityY, double entityZ) {
         this.throwTime = 40;
-        float launchSpeed = 1.0F;
-        double dX = entityX - this.posX;
-        double dZ = entityZ - this.posZ;
-        double dXY = MathHelper.sqrt_double(dX * dX + dZ * dZ);
-        double p = 0.025D * dXY / (launchSpeed * launchSpeed);
-        double angle;
-        if (p <= 1.0D)
-            angle = 0.5D * p;
-        else {
-            angle = 0.7853981633974483D;
-        }
-        EntityIMBoulder entityBoulder = new EntityIMBoulder(this.worldObj, this, launchSpeed);
-        double dY = entityY - entityBoulder.posY;
-        dY += dXY * Math.tan(angle);
-        entityBoulder.setBoulderHeading(dX, dY, dZ, launchSpeed, 0.05F);
-        this.worldObj.spawnEntityInWorld(entityBoulder);
+        float launchSpeed = 1.0f;
+        double dX = entityX - this.field_70165_t;
+        double dZ = entityZ - this.field_70161_v;
+        double dXY = MathHelper.func_76133_a((double)(dX * dX + dZ * dZ));
+        double p = 0.025 * dXY / (double)(launchSpeed * launchSpeed);
+        double angle = p <= 1.0 ? 0.5 * p : 0.7853981633974483;
+        EntityIMBoulder entityBoulder = new EntityIMBoulder(this.field_70170_p, (EntityLivingBase)this, launchSpeed);
+        double dY = entityY - entityBoulder.field_70163_u;
+        entityBoulder.setBoulderHeading(dX, dY += dXY * Math.tan(angle), dZ, launchSpeed, 0.05f);
+        this.field_70170_p.func_72838_d((Entity)entityBoulder);
     }
 
     public void throwTNT(double entityX, double entityY, double entityZ) {
         this.throwTime = 40;
-        float launchSpeed = 1.0F;
-        double dX = entityX - this.posX;
-        double dZ = entityZ - this.posZ;
-        double dXY = MathHelper.sqrt_double(dX * dX + dZ * dZ);
-        double p = 0.025D * dXY / (launchSpeed * launchSpeed);
-        double angle;
-        if (p <= 1.0D)
-            angle = 0.5D * p;
-        else {
-            angle = 0.7853981633974483D;
-        }
-        EntityIMPrimedTNT entityTNT = new EntityIMPrimedTNT(this.worldObj, this, launchSpeed);
-        double dY = entityY - entityTNT.posY;
-        dY += dXY * Math.tan(angle);
-        entityTNT.setBoulderHeading(dX, dY, dZ, launchSpeed, 0.05F);
-        this.worldObj.spawnEntityInWorld(entityTNT);
+        float launchSpeed = 1.0f;
+        double dX = entityX - this.field_70165_t;
+        double dZ = entityZ - this.field_70161_v;
+        double dXY = MathHelper.func_76133_a((double)(dX * dX + dZ * dZ));
+        double p = 0.025 * dXY / (double)(launchSpeed * launchSpeed);
+        double angle = p <= 1.0 ? 0.5 * p : 0.7853981633974483;
+        EntityIMPrimedTNT entityTNT = new EntityIMPrimedTNT(this.field_70170_p, (EntityLivingBase)this, launchSpeed);
+        double dY = entityY - entityTNT.field_70163_u;
+        entityTNT.setBoulderHeading(dX, dY += dXY * Math.tan(angle), dZ, launchSpeed, 0.05f);
+        this.field_70170_p.func_72838_d((Entity)entityTNT);
     }
 
     @Override
-    protected void dropFewItems(boolean flag, int bonus) {
-        super.dropFewItems(flag, bonus);
-        entityDropItem(new ItemStack(Invasion.itemSmallRemnants, 1), 0.0F);
+    protected void func_70628_a(boolean flag, int bonus) {
+        super.func_70628_a(flag, bonus);
+        this.func_70099_a(new ItemStack(mod_Invasion.itemSmallRemnants, 1), 0.0f);
     }
 
-
-    @Override
     public String toString() {
         return "IMThrower-T" + this.tier;
     }
 
     public void setTexture(int textureId) {
-        getDataWatcher().updateObject(31, Integer.valueOf(textureId));
+        this.func_70096_w().func_75692_b(31, (Object)textureId);
     }
 
     public int getTextureId() {
-        return getDataWatcher().getWatchableObjectInt(31);
+        return this.func_70096_w().func_75679_c(31);
     }
 }
+

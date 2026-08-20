@@ -1,11 +1,20 @@
+/*
+ * Decompiled with CFR 0.152.
+ * 
+ * Could not load the following classes:
+ *  net.minecraft.entity.Entity
+ *  net.minecraft.entity.EntityLivingBase
+ */
 package invmod.common.entity.ai;
 
 import invmod.common.entity.EntityIMLiving;
+import invmod.common.entity.ai.EntityAIMoveToEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 
-public class EntityAIKillEntity<T extends EntityLivingBase> extends EntityAIMoveToEntity<T> {
-    private static final float ATTACK_RANGE = 1.0F;
+public class EntityAIKillEntity<T extends EntityLivingBase>
+extends EntityAIMoveToEntity<T> {
+    private static final float ATTACK_RANGE = 1.0f;
     private int attackDelay;
     private int nextAttack;
 
@@ -16,26 +25,25 @@ public class EntityAIKillEntity<T extends EntityLivingBase> extends EntityAIMove
     }
 
     @Override
-    public void updateTask() {
-        super.updateTask();
-        setAttackTime(getAttackTime() - 1);
-        Entity target = getTarget();
-        if (canAttackEntity(target)) {
-            attackEntity(target);
+    public void func_75246_d() {
+        super.func_75246_d();
+        this.setAttackTime(this.getAttackTime() - 1);
+        Object target = this.getTarget();
+        if (this.canAttackEntity((Entity)target)) {
+            this.attackEntity((Entity)target);
         }
     }
 
     protected void attackEntity(Entity target) {
-        getEntity().attackEntityAsMob(getTarget());
-        setAttackTime(getAttackDelay());
+        this.getEntity().func_70652_k((Entity)this.getTarget());
+        this.setAttackTime(this.getAttackDelay());
     }
 
     protected boolean canAttackEntity(Entity target) {
-        if (getAttackTime() <= 0) {
-            Entity entity = getEntity();
-            double d = (entity.width + 1.0F) * (entity.width + 1.0F);
-
-            return entity.getDistanceSq(target.posX, target.boundingBox.minY, target.posZ) < d;
+        if (this.getAttackTime() <= 0) {
+            EntityIMLiving entity = this.getEntity();
+            double d = (((Entity)entity).field_70130_N + 1.0f) * (((Entity)entity).field_70130_N + 1.0f);
+            return entity.func_70092_e(target.field_70165_t, target.field_70121_D.field_72338_b, target.field_70161_v) < d;
         }
         return false;
     }
@@ -56,3 +64,4 @@ public class EntityAIKillEntity<T extends EntityLivingBase> extends EntityAIMove
         this.attackDelay = time;
     }
 }
+
