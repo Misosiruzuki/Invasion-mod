@@ -1,9 +1,9 @@
 {
   "name": "invasion-d22-flame-trap-craft",
-  "description": "P5/D-22: craft empty trap + lava bucket → flame trap (1.7 parity).",
+  "description": "P5/D-22: empty trap + lava bucket → flame trap (1.7 parity).",
   "launchServer": true,
-  "totalTicks": 220,
-  "totalFrames": 1000,
+  "totalTicks": 240,
+  "totalFrames": 1100,
   "captureEvery": 8,
   "warmupFrames": 40,
   "closeClient": true,
@@ -13,12 +13,13 @@
   "commands": [
     "time set day",
     "gamemode creative Dev",
-    "tp Dev 0 -60 2",
+    "tp Dev 0.5 -60 2.5",
     "fill -6 -61 -6 6 -61 6 minecraft:stone",
     "fill -6 -60 -6 6 -55 6 minecraft:air",
     "setblock 0 -60 0 minecraft:crafting_table",
-    "give Dev invasion:trap 4",
-    "give Dev minecraft:lava_bucket 4",
+    "clear Dev",
+    "give Dev invasion:trap 2",
+    "give Dev minecraft:lava_bucket 2",
     "tp Dev 0.5 -59 2.5"
   ],
   "actions": [
@@ -41,14 +42,12 @@
     },
     {
       "fromTick": 51,
-      "toTick": 65,
-      "camera": "first",
-      "yaw": 180,
-      "pitch": 28
+      "toTick": 70,
+      "camera": "first"
     },
     {
-      "fromTick": 66,
-      "toTick": 75,
+      "fromTick": 71,
+      "toTick": 85,
       "camera": "first",
       "containerClick": {
         "slot": 38,
@@ -57,21 +56,11 @@
       }
     },
     {
-      "fromTick": 76,
-      "toTick": 90,
-      "camera": "first",
-      "containerClick": {
-        "slot": 5,
-        "button": 0,
-        "type": "pickup"
-      }
-    },
-    {
-      "fromTick": 91,
+      "fromTick": 86,
       "toTick": 100,
       "camera": "first",
       "containerClick": {
-        "slot": 37,
+        "slot": 2,
         "button": 0,
         "type": "pickup"
       }
@@ -81,14 +70,29 @@
       "toTick": 115,
       "camera": "first",
       "containerClick": {
-        "slot": 8,
+        "slot": 37,
         "button": 0,
         "type": "pickup"
       }
     },
     {
       "fromTick": 116,
-      "toTick": 140,
+      "toTick": 130,
+      "camera": "first",
+      "containerClick": {
+        "slot": 5,
+        "button": 0,
+        "type": "pickup"
+      }
+    },
+    {
+      "fromTick": 131,
+      "toTick": 160,
+      "camera": "first"
+    },
+    {
+      "fromTick": 161,
+      "toTick": 175,
       "camera": "first",
       "containerClick": {
         "slot": 0,
@@ -97,8 +101,8 @@
       }
     },
     {
-      "fromTick": 141,
-      "toTick": 160,
+      "fromTick": 176,
+      "toTick": 190,
       "camera": "first",
       "containerClick": {
         "slot": 39,
@@ -107,14 +111,13 @@
       }
     },
     {
-      "fromTick": 161,
-      "toTick": 200,
-      "camera": "first",
-      "deltaYaw": 0.05
+      "fromTick": 191,
+      "toTick": 220,
+      "camera": "first"
     },
     {
-      "fromTick": 201,
-      "toTick": 219,
+      "fromTick": 221,
+      "toTick": 239,
       "camera": "first"
     }
   ]
