@@ -35,6 +35,8 @@ public class EntityIMTrap extends Entity {
 
     public EntityIMTrap(EntityType<? extends EntityIMTrap> type, Level level) {
         super(type, level);
+        this.setNoGravity(true);
+        this.noPhysics = true;
     }
 
     public void setTrapType(int type) {
@@ -69,7 +71,7 @@ public class EntityIMTrap extends Entity {
         if (ticks < ARM_TIME) {
             return;
         }
-        AABB box = getBoundingBox().inflate(0.35);
+        AABB box = getBoundingBox().inflate(0.6, 0.8, 0.6);
         for (LivingEntity living : level().getEntitiesOfClass(LivingEntity.class, box)) {
             if (living instanceof Player player && player.isCreative()) {
                 continue;

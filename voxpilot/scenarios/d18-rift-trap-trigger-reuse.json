@@ -2,8 +2,8 @@
   "name": "invasion-d18-rift-trap-trigger-reuse",
   "description": "P5/D-18+D-20: place rift trap, zombie triggers, empty trap drops.",
   "launchServer": true,
-  "totalTicks": 280,
-  "totalFrames": 1200,
+  "totalTicks": 320,
+  "totalFrames": 1400,
   "captureEvery": 8,
   "warmupFrames": 40,
   "closeClient": true,
@@ -24,45 +24,47 @@
       "toTick": 20,
       "camera": "third_back",
       "yaw": 0,
-      "pitch": 40
+      "pitch": 35
     },
     {
       "fromTick": 21,
-      "toTick": 50,
+      "toTick": 45,
       "camera": "third_back",
       "commands": [
         "invasion placetrap rift"
       ]
     },
     {
-      "fromTick": 51,
-      "toTick": 80,
-      "camera": "third_back",
-      "deltaYaw": 0.05
-    },
-    {
-      "fromTick": 81,
-      "toTick": 110,
+      "fromTick": 46,
+      "toTick": 70,
       "camera": "third_back",
       "commands": [
-        "summon minecraft:zombie 0.5 -59 0.5 {NoAI:1b,Health:40f}"
+        "tp Dev 3 -59 3"
       ]
     },
     {
-      "fromTick": 111,
-      "toTick": 200,
+      "fromTick": 71,
+      "toTick": 100,
+      "camera": "third_back",
+      "commands": [
+        "summon minecraft:zombie 0.5 -59 0.5 {Health:30f}"
+      ]
+    },
+    {
+      "fromTick": 101,
+      "toTick": 220,
+      "camera": "third_back",
+      "deltaYaw": 0.12
+    },
+    {
+      "fromTick": 221,
+      "toTick": 280,
       "camera": "third_back",
       "deltaYaw": 0.08
     },
     {
-      "fromTick": 201,
-      "toTick": 240,
-      "camera": "third_back",
-      "deltaYaw": 0.1
-    },
-    {
-      "fromTick": 241,
-      "toTick": 279,
+      "fromTick": 281,
+      "toTick": 319,
       "camera": "third_back"
     }
   ]

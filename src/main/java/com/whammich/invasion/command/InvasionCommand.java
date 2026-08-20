@@ -500,10 +500,15 @@ public final class InvasionCommand {
                 return 0;
             }
             int trapType = "flame".equalsIgnoreCase(type) ? EntityIMTrap.TYPE_FLAME : EntityIMTrap.TYPE_RIFT;
-            trap.setPos(Math.floor(pos.x) + 0.5, Math.floor(pos.y), Math.floor(pos.z) + 0.5);
+            double x = Math.floor(pos.x) + 0.5;
+            double y = Math.floor(pos.y) + 0.05;
+            double z = Math.floor(pos.z) + 0.5;
+            trap.setPos(x, y, z);
             trap.setTrapType(trapType);
             level.addFreshEntity(trap);
-            src.sendSuccess(() -> Component.literal("Placed " + type + " trap at " + trap.blockPosition()), true);
+            final int id = trap.getId();
+            src.sendSuccess(() -> Component.literal(
+                    "Placed " + type + " trap id=" + id + " at " + trap.blockPosition()), true);
             return 1;
         } catch (Exception e) {
             src.sendFailure(Component.literal("placeTrap error: " + e.getMessage()));
