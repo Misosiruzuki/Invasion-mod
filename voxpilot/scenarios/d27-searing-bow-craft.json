@@ -2,8 +2,8 @@
   "name": "invasion-d27-searing-bow-craft",
   "description": "P6/D-27: Flux x5 + bow → searing bow",
   "launchServer": true,
-  "totalTicks": 280,
-  "totalFrames": 1300,
+  "totalTicks": 320,
+  "totalFrames": 1400,
   "captureEvery": 8,
   "warmupFrames": 40,
   "closeClient": true,
@@ -32,20 +32,20 @@
     },
     {
       "fromTick": 21,
-      "toTick": 50,
+      "toTick": 55,
       "camera": "first",
       "keys": {
         "use": true
       }
     },
     {
-      "fromTick": 51,
-      "toTick": 70,
+      "fromTick": 56,
+      "toTick": 80,
       "camera": "first"
     },
     {
-      "fromTick": 71,
-      "toTick": 85,
+      "fromTick": 81,
+      "toTick": 95,
       "camera": "first",
       "containerClick": {
         "slot": 37,
@@ -54,8 +54,8 @@
       }
     },
     {
-      "fromTick": 86,
-      "toTick": 95,
+      "fromTick": 96,
+      "toTick": 110,
       "camera": "first",
       "containerClick": {
         "slot": 1,
@@ -64,8 +64,8 @@
       }
     },
     {
-      "fromTick": 96,
-      "toTick": 105,
+      "fromTick": 111,
+      "toTick": 125,
       "camera": "first",
       "containerClick": {
         "slot": 2,
@@ -74,8 +74,8 @@
       }
     },
     {
-      "fromTick": 106,
-      "toTick": 115,
+      "fromTick": 126,
+      "toTick": 140,
       "camera": "first",
       "containerClick": {
         "slot": 3,
@@ -84,8 +84,8 @@
       }
     },
     {
-      "fromTick": 116,
-      "toTick": 125,
+      "fromTick": 141,
+      "toTick": 155,
       "camera": "first",
       "containerClick": {
         "slot": 4,
@@ -94,8 +94,8 @@
       }
     },
     {
-      "fromTick": 126,
-      "toTick": 135,
+      "fromTick": 156,
+      "toTick": 170,
       "camera": "first",
       "containerClick": {
         "slot": 7,
@@ -104,8 +104,8 @@
       }
     },
     {
-      "fromTick": 136,
-      "toTick": 145,
+      "fromTick": 171,
+      "toTick": 185,
       "camera": "first",
       "containerClick": {
         "slot": 37,
@@ -114,27 +114,7 @@
       }
     },
     {
-      "fromTick": 146,
-      "toTick": 160,
-      "camera": "first",
-      "containerClick": {
-        "slot": 38,
-        "button": 0,
-        "type": "pickup"
-      }
-    },
-    {
-      "fromTick": 161,
-      "toTick": 175,
-      "camera": "first",
-      "containerClick": {
-        "slot": 5,
-        "button": 0,
-        "type": "pickup"
-      }
-    },
-    {
-      "fromTick": 176,
+      "fromTick": 186,
       "toTick": 200,
       "camera": "first"
     },
@@ -143,14 +123,39 @@
       "toTick": 215,
       "camera": "first",
       "containerClick": {
-        "slot": 0,
+        "slot": 38,
         "button": 0,
         "type": "pickup"
       }
     },
     {
       "fromTick": 216,
-      "toTick": 230,
+      "toTick": 235,
+      "camera": "first",
+      "containerClick": {
+        "slot": 5,
+        "button": 0,
+        "type": "pickup"
+      }
+    },
+    {
+      "fromTick": 236,
+      "toTick": 260,
+      "camera": "first"
+    },
+    {
+      "fromTick": 261,
+      "toTick": 280,
+      "camera": "first",
+      "containerClick": {
+        "slot": 0,
+        "button": 0,
+        "type": "pickup"
+      }
+    },
+    {
+      "fromTick": 281,
+      "toTick": 295,
       "camera": "first",
       "containerClick": {
         "slot": 39,
@@ -159,8 +164,8 @@
       }
     },
     {
-      "fromTick": 231,
-      "toTick": 279,
+      "fromTick": 296,
+      "toTick": 319,
       "camera": "first"
     }
   ]
