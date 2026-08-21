@@ -18,7 +18,7 @@
   "item.invasion.probe.tooltip": "ネクサスと地形データを調査する",
   "item.invasion.probe.scan_pending": "プローブ: ネクサス走査はまだ利用できません",
   "item.invasion.strange_bone": "奇妙な骨",
-  "item.invasion.strange_bone.tooltip": "リフトの残滓を帯びた骨",
+  "item.invasion.strange_bone.tooltip": "ネクサス近くの懐いた狼に使うと紐付ける。",
   "item.invasion.infused_sword": "注入された剣",
   "item.invasion.infused_sword.tooltip": "敵への攻撃でゲージ蓄積。満タン時に右クリックでハート3回復（スニークで満腹度回復）。",
   "item.invasion.trap": "空のトラップ",
@@ -60,5 +60,9 @@
   "item.invasion.trap.tooltip.rift": "敵に大ダメージと硬直",
   "item.invasion.trap.tooltip.flame": "発動時に3×3の炎",
   "item.invasion.trap.empty_cannot_place": "空のトラップはネクサスでチャージしてから設置",
-  "item.invasion.infused_sword.charge": "チャージ: %s / %s"
+  "item.invasion.infused_sword.charge": "チャージ: %s / %s",
+  "item.invasion.strange_bone.not_tamed": "狼は懐いている必要がある。",
+  "item.invasion.strange_bone.no_nexus": "近くにネクサスがない。",
+  "item.invasion.strange_bone.bound": "狼をネクサスに紐付けた。",
+  "entity.invasion.im_wolf": "ネクサスの狼"
 }

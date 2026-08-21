@@ -1,0 +1,64 @@
+{
+  "name": "invasion-d32-strange-bone-bind-wolf",
+  "description": "P7/D-32: use strange bone on tamed wolf near nexus → IM wolf",
+  "launchServer": true,
+  "totalTicks": 220,
+  "totalFrames": 1000,
+  "captureEvery": 8,
+  "warmupFrames": 40,
+  "closeClient": true,
+  "display": {
+    "background": true
+  },
+  "commands": [
+    "time set day",
+    "gamemode creative Dev",
+    "tp Dev 0.5 -59 0.5",
+    "fill -6 -61 -6 6 -61 6 minecraft:stone",
+    "fill -6 -60 -6 6 -55 6 minecraft:air",
+    "setblock 0 -60 2 invasion:nexus",
+    "clear Dev",
+    "give Dev invasion:strange_bone 1",
+    "item replace entity Dev weapon.mainhand with invasion:strange_bone 1",
+    "summon minecraft:wolf 0.5 -59 1.5 {CustomName:'\"VoxPilotTrack\"'}",
+    "tp Dev 0.5 -59 0.5"
+  ],
+  "actions": [
+    {
+      "fromTick": 0,
+      "toTick": 25,
+      "camera": "third_back",
+      "yaw": 0,
+      "pitch": 20
+    },
+    {
+      "fromTick": 26,
+      "toTick": 50,
+      "camera": "third_back",
+      "commands": [
+        "execute as @e[type=minecraft:wolf,limit=1,sort=nearest] run data modify entity @s Owner set from entity @p UUID",
+        "execute as @e[type=minecraft:wolf,limit=1,sort=nearest] run data modify entity @s Sitting set value 0b"
+      ]
+    },
+    {
+      "fromTick": 51,
+      "toTick": 100,
+      "camera": "third_back",
+      "yaw": 0,
+      "pitch": 30,
+      "keys": {
+        "use": true
+      }
+    },
+    {
+      "fromTick": 101,
+      "toTick": 180,
+      "camera": "third_back"
+    },
+    {
+      "fromTick": 181,
+      "toTick": 219,
+      "camera": "third_back"
+    }
+  ]
+}

@@ -18,7 +18,7 @@
   "item.invasion.probe.tooltip": "Scans Nexus and terrain data",
   "item.invasion.probe.scan_pending": "Probe: Nexus scan not available yet",
   "item.invasion.strange_bone": "Strange Bone",
-  "item.invasion.strange_bone.tooltip": "An odd bone with residual rift energy",
+  "item.invasion.strange_bone.tooltip": "Use on a tamed wolf near a Nexus to bind it.",
   "item.invasion.infused_sword": "Infused Sword",
   "item.invasion.infused_sword.tooltip": "Hits charge the gauge. When full, right-click to heal 3 hearts (sneak: restore food).",
   "item.invasion.trap": "Empty Trap",
@@ -60,5 +60,9 @@
   "item.invasion.trap.tooltip.rift": "Triggers on invaders: heavy damage and stun",
   "item.invasion.trap.tooltip.flame": "Triggers: 3x3 fire",
   "item.invasion.trap.empty_cannot_place": "Empty traps must be charged in a Nexus first",
-  "item.invasion.infused_sword.charge": "Charge: %s / %s"
+  "item.invasion.infused_sword.charge": "Charge: %s / %s",
+  "item.invasion.strange_bone.not_tamed": "Wolf must be tamed.",
+  "item.invasion.strange_bone.no_nexus": "No Nexus nearby.",
+  "item.invasion.strange_bone.bound": "Wolf bound to Nexus.",
+  "entity.invasion.im_wolf": "Nexus Wolf"
 }

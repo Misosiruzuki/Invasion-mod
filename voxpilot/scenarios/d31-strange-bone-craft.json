@@ -1,0 +1,144 @@
+{
+  "name": "invasion-d31-strange-bone-craft",
+  "description": "P7/D-31: flux + bone → strange bone",
+  "launchServer": true,
+  "totalTicks": 240,
+  "totalFrames": 1100,
+  "captureEvery": 8,
+  "warmupFrames": 40,
+  "closeClient": true,
+  "display": {
+    "background": true
+  },
+  "slotCrops": [
+    0,
+    4,
+    5,
+    37,
+    38
+  ],
+  "commands": [
+    "time set day",
+    "gamemode creative Dev",
+    "tp Dev 0.5 -60 2.5",
+    "fill -6 -61 -6 6 -61 6 minecraft:stone",
+    "fill -6 -60 -6 6 -55 6 minecraft:air",
+    "setblock 0 -60 0 minecraft:crafting_table",
+    "clear Dev",
+    "give Dev invasion:rift_flux 4",
+    "give Dev minecraft:bone 2",
+    "tp Dev 0.5 -59 2.5"
+  ],
+  "actions": [
+    {
+      "fromTick": 0,
+      "toTick": 20,
+      "camera": "first",
+      "yaw": 180,
+      "pitch": 28
+    },
+    {
+      "fromTick": 21,
+      "toTick": 50,
+      "camera": "first",
+      "keys": {
+        "use": true
+      }
+    },
+    {
+      "fromTick": 51,
+      "toTick": 70,
+      "camera": "first"
+    },
+    {
+      "fromTick": 71,
+      "toTick": 85,
+      "camera": "first",
+      "containerClick": {
+        "slot": 37,
+        "button": 0,
+        "type": "pickup"
+      }
+    },
+    {
+      "fromTick": 86,
+      "toTick": 100,
+      "camera": "first",
+      "containerClick": {
+        "slot": 4,
+        "button": 1,
+        "type": "pickup"
+      }
+    },
+    {
+      "fromTick": 101,
+      "toTick": 115,
+      "camera": "first",
+      "containerClick": {
+        "slot": 6,
+        "button": 1,
+        "type": "pickup"
+      }
+    },
+    {
+      "fromTick": 116,
+      "toTick": 130,
+      "camera": "first",
+      "containerClick": {
+        "slot": 10,
+        "button": 0,
+        "type": "pickup"
+      }
+    },
+    {
+      "fromTick": 131,
+      "toTick": 145,
+      "camera": "first",
+      "containerClick": {
+        "slot": 38,
+        "button": 0,
+        "type": "pickup"
+      }
+    },
+    {
+      "fromTick": 146,
+      "toTick": 160,
+      "camera": "first",
+      "containerClick": {
+        "slot": 5,
+        "button": 0,
+        "type": "pickup"
+      }
+    },
+    {
+      "fromTick": 161,
+      "toTick": 185,
+      "camera": "first"
+    },
+    {
+      "fromTick": 186,
+      "toTick": 200,
+      "camera": "first",
+      "containerClick": {
+        "slot": 0,
+        "button": 0,
+        "type": "pickup"
+      }
+    },
+    {
+      "fromTick": 201,
+      "toTick": 215,
+      "camera": "first",
+      "containerClick": {
+        "slot": 39,
+        "button": 0,
+        "type": "pickup"
+      }
+    },
+    {
+      "fromTick": 216,
+      "toTick": 239,
+      "camera": "first"
+    }
+  ]
+}
