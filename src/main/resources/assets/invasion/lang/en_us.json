@@ -11,7 +11,7 @@
   "item.invasion.rift_flux": "Rift Flux",
   "item.invasion.phase_crystal": "Phase Crystal",
   "item.invasion.searing_bow": "Searing Bow",
-  "item.invasion.searing_bow.tooltip": "Fires searing shots when fully charged (special effect pending)",
+  "item.invasion.searing_bow.tooltip": "Hold charge longer than a full draw for a searing flaming arrow.",
   "item.invasion.engy_hammer": "Engineer Hammer",
   "item.invasion.engy_hammer.tooltip": "Tool of the Pigman Engineer",
   "item.invasion.probe": "Probe",

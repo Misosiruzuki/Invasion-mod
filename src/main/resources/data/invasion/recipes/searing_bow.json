@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "pattern": [
+    "XXX",
+    "X# ",
+    "X  "
+  ],
+  "key": {
+    "X": { "item": "invasion:rift_flux" },
+    "#": { "item": "minecraft:bow" }
+  },
+  "result": {
+    "item": "invasion:searing_bow",
+    "count": 1
+  }
+}

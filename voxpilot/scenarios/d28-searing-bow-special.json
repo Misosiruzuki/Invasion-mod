@@ -1,0 +1,57 @@
+{
+  "name": "invasion-d28-searing-bow-special",
+  "description": "P6/D-28+D-29: long charge fires searing flaming arrow",
+  "launchServer": true,
+  "totalTicks": 200,
+  "totalFrames": 900,
+  "captureEvery": 8,
+  "warmupFrames": 40,
+  "closeClient": true,
+  "display": {
+    "background": true
+  },
+  "commands": [
+    "time set day",
+    "gamemode creative Dev",
+    "tp Dev 0.5 -59 0.5",
+    "fill -8 -61 -2 8 -61 20 minecraft:stone",
+    "fill -8 -60 -2 8 -55 20 minecraft:air",
+    "clear Dev",
+    "give Dev invasion:searing_bow 1",
+    "give Dev minecraft:arrow 64",
+    "item replace entity Dev weapon.mainhand with invasion:searing_bow 1",
+    "summon minecraft:zombie 0.5 -59 12.5 {NoAI:1b,Health:40f,PersistenceRequired:1b}",
+    "tp Dev 0.5 -59 0.5"
+  ],
+  "actions": [
+    {
+      "fromTick": 0,
+      "toTick": 20,
+      "camera": "first",
+      "yaw": 0,
+      "pitch": 5
+    },
+    {
+      "fromTick": 21,
+      "toTick": 110,
+      "camera": "first",
+      "yaw": 0,
+      "pitch": 5,
+      "keys": {
+        "use": true
+      }
+    },
+    {
+      "fromTick": 111,
+      "toTick": 160,
+      "camera": "first",
+      "yaw": 0,
+      "pitch": 5
+    },
+    {
+      "fromTick": 161,
+      "toTick": 199,
+      "camera": "first"
+    }
+  ]
+}

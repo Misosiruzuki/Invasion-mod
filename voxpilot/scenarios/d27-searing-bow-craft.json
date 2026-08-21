@@ -1,0 +1,167 @@
+{
+  "name": "invasion-d27-searing-bow-craft",
+  "description": "P6/D-27: Flux x5 + bow → searing bow",
+  "launchServer": true,
+  "totalTicks": 280,
+  "totalFrames": 1300,
+  "captureEvery": 8,
+  "warmupFrames": 40,
+  "closeClient": true,
+  "display": {
+    "background": true
+  },
+  "commands": [
+    "time set day",
+    "gamemode creative Dev",
+    "tp Dev 0.5 -60 2.5",
+    "fill -6 -61 -6 6 -61 6 minecraft:stone",
+    "fill -6 -60 -6 6 -55 6 minecraft:air",
+    "setblock 0 -60 0 minecraft:crafting_table",
+    "clear Dev",
+    "give Dev invasion:rift_flux 16",
+    "give Dev minecraft:bow 1",
+    "tp Dev 0.5 -59 2.5"
+  ],
+  "actions": [
+    {
+      "fromTick": 0,
+      "toTick": 20,
+      "camera": "first",
+      "yaw": 180,
+      "pitch": 28
+    },
+    {
+      "fromTick": 21,
+      "toTick": 50,
+      "camera": "first",
+      "keys": {
+        "use": true
+      }
+    },
+    {
+      "fromTick": 51,
+      "toTick": 70,
+      "camera": "first"
+    },
+    {
+      "fromTick": 71,
+      "toTick": 85,
+      "camera": "first",
+      "containerClick": {
+        "slot": 37,
+        "button": 0,
+        "type": "pickup"
+      }
+    },
+    {
+      "fromTick": 86,
+      "toTick": 95,
+      "camera": "first",
+      "containerClick": {
+        "slot": 1,
+        "button": 1,
+        "type": "pickup"
+      }
+    },
+    {
+      "fromTick": 96,
+      "toTick": 105,
+      "camera": "first",
+      "containerClick": {
+        "slot": 2,
+        "button": 1,
+        "type": "pickup"
+      }
+    },
+    {
+      "fromTick": 106,
+      "toTick": 115,
+      "camera": "first",
+      "containerClick": {
+        "slot": 3,
+        "button": 1,
+        "type": "pickup"
+      }
+    },
+    {
+      "fromTick": 116,
+      "toTick": 125,
+      "camera": "first",
+      "containerClick": {
+        "slot": 4,
+        "button": 1,
+        "type": "pickup"
+      }
+    },
+    {
+      "fromTick": 126,
+      "toTick": 135,
+      "camera": "first",
+      "containerClick": {
+        "slot": 7,
+        "button": 1,
+        "type": "pickup"
+      }
+    },
+    {
+      "fromTick": 136,
+      "toTick": 145,
+      "camera": "first",
+      "containerClick": {
+        "slot": 37,
+        "button": 0,
+        "type": "pickup"
+      }
+    },
+    {
+      "fromTick": 146,
+      "toTick": 160,
+      "camera": "first",
+      "containerClick": {
+        "slot": 38,
+        "button": 0,
+        "type": "pickup"
+      }
+    },
+    {
+      "fromTick": 161,
+      "toTick": 175,
+      "camera": "first",
+      "containerClick": {
+        "slot": 5,
+        "button": 0,
+        "type": "pickup"
+      }
+    },
+    {
+      "fromTick": 176,
+      "toTick": 200,
+      "camera": "first"
+    },
+    {
+      "fromTick": 201,
+      "toTick": 215,
+      "camera": "first",
+      "containerClick": {
+        "slot": 0,
+        "button": 0,
+        "type": "pickup"
+      }
+    },
+    {
+      "fromTick": 216,
+      "toTick": 230,
+      "camera": "first",
+      "containerClick": {
+        "slot": 39,
+        "button": 0,
+        "type": "pickup"
+      }
+    },
+    {
+      "fromTick": 231,
+      "toTick": 279,
+      "camera": "first"
+    }
+  ]
+}
