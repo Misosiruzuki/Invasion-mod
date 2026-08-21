@@ -13,6 +13,7 @@ import net.minecraft.world.item.Tier;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.Level;
+import com.whammich.invasion.util.LogHelper;
 
 import java.util.List;
 
@@ -82,11 +83,14 @@ public class ItemSwordInfused extends SwordItem {
         if (!level.isClientSide) {
             if (player.isShiftKeyDown()) {
                 player.getFoodData().eat(6, 0.5F);
+                LogHelper.info("InfusedSword food restore");
                 level.playSound(null, player.getX(), player.getY(), player.getZ(),
                         SoundEvents.PLAYER_BURP, SoundSource.PLAYERS, 0.5F,
                         level.random.nextFloat() * 0.1F + 0.9F);
             } else {
+                float before = player.getHealth();
                 player.heal(6.0F); // 3 hearts
+                LogHelper.info("InfusedSword heal: {} -> {}", before, player.getHealth());
                 level.playSound(null, player.getX(), player.getY(), player.getZ(),
                         SoundEvents.EXPERIENCE_ORB_PICKUP, SoundSource.PLAYERS, 0.6F, 1.2F);
             }

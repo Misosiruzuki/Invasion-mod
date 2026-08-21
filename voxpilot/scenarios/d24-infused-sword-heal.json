@@ -1,9 +1,9 @@
 {
   "name": "invasion-d24-infused-sword-heal",
-  "description": "P6/D-24+D-25: full gauge right-click heals 3 hearts; hit charges gauge",
+  "description": "P6/D-24+D-25: full gauge right-click heals 3 hearts",
   "launchServer": true,
-  "totalTicks": 280,
-  "totalFrames": 1300,
+  "totalTicks": 200,
+  "totalFrames": 900,
   "captureEvery": 8,
   "warmupFrames": 40,
   "closeClient": true,
@@ -12,63 +12,55 @@
   },
   "commands": [
     "time set day",
+    "gamerule naturalRegeneration false",
     "gamemode survival Dev",
     "tp Dev 0.5 -59 0.5",
     "fill -6 -61 -6 6 -61 6 minecraft:stone",
     "fill -6 -60 -6 6 -55 6 minecraft:air",
     "clear Dev",
-    "give Dev invasion:infused_sword 1",
-    "effect give Dev minecraft:instant_health 1 10 true",
+    "give Dev invasion:infused_sword{Damage:0} 1",
+    "item replace entity Dev weapon.mainhand with invasion:infused_sword{Damage:0} 1",
     "effect clear Dev",
-    "damage Dev 12 minecraft:generic",
     "tp Dev 0.5 -59 0.5"
   ],
   "actions": [
     {
       "fromTick": 0,
-      "toTick": 30,
+      "toTick": 20,
       "camera": "third_back",
       "yaw": 0,
-      "pitch": 20
+      "pitch": 15
     },
     {
-      "fromTick": 31,
-      "toTick": 60,
+      "fromTick": 21,
+      "toTick": 40,
+      "camera": "third_back",
+      "commands": [
+        "data modify entity @p Health set value 6.0f",
+        "effect give @p minecraft:instant_damage 1 0 true"
+      ]
+    },
+    {
+      "fromTick": 41,
+      "toTick": 70,
+      "camera": "third_back"
+    },
+    {
+      "fromTick": 71,
+      "toTick": 110,
       "camera": "third_back",
       "keys": {
         "use": true
       }
     },
     {
-      "fromTick": 61,
-      "toTick": 90,
-      "camera": "third_back"
-    },
-    {
-      "fromTick": 91,
-      "toTick": 110,
-      "camera": "third_back",
-      "commands": [
-        "summon minecraft:zombie 0.5 -59 2.5 {NoAI:1b,Health:40f}"
-      ]
-    },
-    {
       "fromTick": 111,
-      "toTick": 200,
-      "camera": "third_back",
-      "deltaYaw": 0.05,
-      "keys": {
-        "attack": true
-      }
-    },
-    {
-      "fromTick": 201,
-      "toTick": 250,
+      "toTick": 160,
       "camera": "third_back"
     },
     {
-      "fromTick": 251,
-      "toTick": 279,
+      "fromTick": 161,
+      "toTick": 199,
       "camera": "third_back"
     }
   ]
