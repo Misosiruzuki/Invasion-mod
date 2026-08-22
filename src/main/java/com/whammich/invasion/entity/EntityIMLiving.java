@@ -41,6 +41,7 @@ public abstract class EntityIMLiving extends Monster implements IHasNexus, IPath
     private boolean canClimb;
     private boolean canDig;
     private boolean nexusBound;
+    private boolean loggedSpawnStats;
 
     protected EntityIMLiving(EntityType<? extends EntityIMLiving> type, Level level) {
         this(type, level, null);
@@ -247,6 +248,14 @@ public abstract class EntityIMLiving extends Monster implements IHasNexus, IPath
     public void tick() {
         super.tick();
         if (!level().isClientSide) {
+            if (!loggedSpawnStats) {
+                loggedSpawnStats = true;
+                double hp = getMaxHealth();
+                double atk = getAttribute(Attributes.ATTACK_DAMAGE) != null
+                        ? getAttributeValue(Attributes.ATTACK_DAMAGE) : 0.0;
+                LogHelper.info("IMMob stats type={} tier={} hp={} atk={} worldDifficulty={}",
+                        getType().getDescriptionId(), getTier(), hp, atk, level().getDifficulty());
+            }
             imNavigator.tick();
             if (targetNexus != null && targetNexus.getHp() <= 0) {
                 targetNexus = null;
