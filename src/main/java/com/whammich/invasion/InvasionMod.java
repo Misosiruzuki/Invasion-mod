@@ -11,7 +11,11 @@ import com.whammich.invasion.command.InvasionCommand;
 import com.whammich.invasion.network.InvasionNetwork;
 import com.whammich.invasion.util.LogHelper;
 import net.minecraftforge.event.RegisterCommandsEvent;
+import net.minecraftforge.event.entity.player.PlayerInteractEvent;
+import net.minecraftforge.eventbus.api.Event;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import com.whammich.invasion.item.ItemProbe;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.CreativeModeTab;
@@ -81,4 +85,19 @@ public class InvasionMod {
     public void onRegisterCommands(RegisterCommandsEvent event) {
         InvasionCommand.register(event.getDispatcher());
     }
+
+    /** 1.7 onItemUseFirst parity: Adjuster/Probe before Nexus GUI opens. */
+    @SubscribeEvent
+    public void onRightClickBlock(PlayerInteractEvent.RightClickBlock event) {
+        if (event.getLevel().isClientSide()) {
+            return;
+        }
+        if (ItemProbe.handleRightClickBlock(event.getEntity(), event.getLevel(), event.getPos(), event.getItemStack())) {
+            event.setCanceled(true);
+            event.setCancellationResult(InteractionResult.SUCCESS);
+            event.setUseBlock(Event.Result.DENY);
+            event.setUseItem(Event.Result.DENY);
+        }
+    }
+
 }

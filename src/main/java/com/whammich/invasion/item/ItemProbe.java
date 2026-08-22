@@ -19,8 +19,8 @@ import net.minecraft.world.level.block.state.BlockState;
 import java.util.List;
 
 /**
- * Nexus Adjuster (kind=ADJUSTER) and Material Probe (kind=MATERIAL) — 1.7 ItemProbe meta 0/1.
- * D-35..D-38, B-33, B-35, F-01.
+ * Nexus Adjuster / Material Probe (1.7 ItemProbe meta 0/1).
+ * Nexus GUI would swallow normal useOn — handle via {@link #handleRightClickBlock}.
  */
 public class ItemProbe extends Item {
 
@@ -40,35 +40,35 @@ public class ItemProbe extends Item {
         return kind;
     }
 
-    @Override
-    public InteractionResult useOn(UseOnContext ctx) {
-        Level level = ctx.getLevel();
-        if (level.isClientSide) {
-            return InteractionResult.SUCCESS;
+    /**
+     * Called from Forge RightClickBlock before the Nexus opens its menu (1.7 onItemUseFirst parity).
+     * @return true if the click was handled (caller should cancel the event)
+     */
+    public static boolean handleRightClickBlock(Player player, Level level, BlockPos pos, ItemStack stack) {
+        if (!(stack.getItem() instanceof ItemProbe probe)) {
+            return false;
         }
-        Player player = ctx.getPlayer();
-        BlockPos pos = ctx.getClickedPos();
         BlockState state = level.getBlockState(pos);
-
         if (state.is(BlockRegistry.NEXUS.get())) {
-            return adjustNexusRadius(level, pos, player);
+            if (!level.isClientSide) {
+                applyNexusRadius(level, pos, player);
+            }
+            return true;
         }
-
-        if (kind == Kind.MATERIAL) {
-            float strength = BlockStrength.get(level, pos, state);
-            double shown = Math.round((strength + 0.005) * 100.0) / 100.0;
-            if (player != null) {
+        if (probe.kind == Kind.MATERIAL) {
+            if (!level.isClientSide) {
+                float strength = BlockStrength.get(level, pos, state);
+                double shown = Math.round((strength + 0.005) * 100.0) / 100.0;
                 player.displayClientMessage(
                         Component.translatable("item.invasion.material_probe.strength", shown), false);
+                LogHelper.info("MaterialProbe strength={} at {}", shown, pos);
             }
-            LogHelper.info("MaterialProbe strength={} at {}", shown, pos);
-            return InteractionResult.SUCCESS;
+            return true;
         }
-
-        return InteractionResult.PASS;
+        return false;
     }
 
-    private InteractionResult adjustNexusRadius(Level level, BlockPos pos, Player player) {
+    private static InteractionResult applyNexusRadius(Level level, BlockPos pos, Player player) {
         BlockEntity be = level.getBlockEntity(pos);
         if (!(be instanceof NexusBlockEntity nexus)) {
             return InteractionResult.FAIL;
@@ -99,6 +99,15 @@ public class ItemProbe extends Item {
         }
         LogHelper.info("NexusAdjuster radius {} -> {} at {}", current, nexus.getSpawnRadius(), pos);
         return InteractionResult.SUCCESS;
+    }
+
+    @Override
+    public InteractionResult useOn(UseOnContext ctx) {
+        // Fallback if event did not fire; still try
+        if (ItemProbe.handleRightClickBlock(ctx.getPlayer(), ctx.getLevel(), ctx.getClickedPos(), ctx.getItemInHand())) {
+            return InteractionResult.sidedSuccess(ctx.getLevel().isClientSide);
+        }
+        return InteractionResult.PASS;
     }
 
     @Override
