@@ -70,6 +70,21 @@ public class EntityIMWolf extends EntityIMMob {
                 e -> e instanceof Enemy && !(e instanceof EntityIMWolf) && e != this));
     }
 
+
+    @Override
+    public void checkDespawn() {
+        // Bound wolves must not vanish on Peaceful (Monster default)
+        if (nexusPos != null) {
+            return;
+        }
+        super.checkDespawn();
+    }
+
+    @Override
+    public boolean removeWhenFarAway(double distance) {
+        return nexusPos == null && super.removeWhenFarAway(distance);
+    }
+
     @Override
     public void die(DamageSource source) {
         BlockPos bound = this.nexusPos;
