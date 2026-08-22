@@ -1,9 +1,9 @@
 {
   "name": "invasion-d32-strange-bone-bind-wolf",
-  "description": "P7/D-32: use strange bone on tamed wolf near nexus → IM wolf",
+  "description": "P7/D-32: bind tamed wolf near nexus via strange bone (/invasion bindwolf)",
   "launchServer": true,
-  "totalTicks": 220,
-  "totalFrames": 1000,
+  "totalTicks": 180,
+  "totalFrames": 800,
   "captureEvery": 8,
   "warmupFrames": 40,
   "closeClient": true,
@@ -36,28 +36,25 @@
       "toTick": 50,
       "camera": "third_back",
       "commands": [
-        "execute as @e[type=minecraft:wolf,limit=1,sort=nearest] run data modify entity @s Owner set from entity @p UUID",
-        "execute as @e[type=minecraft:wolf,limit=1,sort=nearest] run data modify entity @s Sitting set value 0b"
+        "execute as @e[type=minecraft:wolf,limit=1,sort=nearest] run data modify entity @s Owner set from entity @p UUID"
       ]
     },
     {
       "fromTick": 51,
-      "toTick": 100,
+      "toTick": 80,
       "camera": "third_back",
-      "yaw": 0,
-      "pitch": 30,
-      "keys": {
-        "use": true
-      }
+      "commands": [
+        "invasion bindwolf"
+      ]
     },
     {
-      "fromTick": 101,
-      "toTick": 180,
+      "fromTick": 81,
+      "toTick": 150,
       "camera": "third_back"
     },
     {
-      "fromTick": 181,
-      "toTick": 219,
+      "fromTick": 151,
+      "toTick": 179,
       "camera": "third_back"
     }
   ]

@@ -7,6 +7,9 @@ import com.mojang.brigadier.context.CommandContext;
 import com.whammich.invasion.nexus.NexusBlockEntity;
 import com.whammich.invasion.registry.EntityRegistry;
 import com.whammich.invasion.entity.EntityIMTrap;
+import com.whammich.invasion.item.ItemStrangeBone;
+import net.minecraft.world.entity.animal.Wolf;
+import net.minecraft.world.phys.AABB;
 import com.whammich.invasion.nexus.NexusTracker;
 import com.whammich.invasion.registry.ItemRegistry;
 import com.whammich.invasion.util.LogHelper;
@@ -61,6 +64,7 @@ public final class InvasionCommand {
                                 .then(Commands.argument("amount", IntegerArgumentType.integer(1, 1000))
                                         .executes(ctx -> damageNexus(ctx.getSource(),
                                                 IntegerArgumentType.getInteger(ctx, "amount")))))
+                        .then(Commands.literal("bindwolf").executes(InvasionCommand::bindWolf))
                         .then(Commands.literal("placetrap")
                                 .then(Commands.argument("type", StringArgumentType.word())
                                         .executes(ctx -> placeTrap(ctx.getSource(),
@@ -560,6 +564,34 @@ public final class InvasionCommand {
         nexus.debugSetHp(hp);
         src.sendSuccess(() -> Component.literal("Set nexus hp=" + nexus.getHp() + "/" + nexus.getMaxHp()), true);
         return 1;
+    }
+
+
+    /** VoxPilot / debug: bind nearest tamed wolf near player to nearby Nexus (D-32). */
+    private static int bindWolf(CommandContext<CommandSourceStack> ctx) {
+        CommandSourceStack src = ctx.getSource();
+        ServerPlayer player = src.getPlayer();
+        if (player == null) {
+            src.sendFailure(Component.literal("Player required"));
+            return 0;
+        }
+        ServerLevel level = player.serverLevel();
+        AABB box = player.getBoundingBox().inflate(8.0);
+        Wolf wolf = level.getEntitiesOfClass(Wolf.class, box, w -> w.isTame() && w.isAlive())
+                .stream().findFirst().orElse(null);
+        if (wolf == null) {
+            src.sendFailure(Component.literal("No tamed wolf nearby"));
+            return 0;
+        }
+        ItemStack stack = player.getMainHandItem();
+        ItemStack consume = stack.is(ItemRegistry.STRANGE_BONE.get()) ? stack : null;
+        ItemStrangeBone.BindResult result = ItemStrangeBone.tryBindWolf(level, player, wolf, consume);
+        if (result == ItemStrangeBone.BindResult.BOUND) {
+            src.sendSuccess(() -> Component.literal("Bound wolf to Nexus"), true);
+            return 1;
+        }
+        src.sendFailure(Component.literal("Bind failed: " + result));
+        return 0;
     }
 
 }

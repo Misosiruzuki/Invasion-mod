@@ -1,8 +1,8 @@
 package com.whammich.invasion.item;
 
-import com.whammich.invasion.registry.BlockRegistry;
 import com.whammich.invasion.entity.EntityIMWolf;
 import com.whammich.invasion.nexus.NexusBlockEntity;
+import com.whammich.invasion.registry.BlockRegistry;
 import com.whammich.invasion.registry.EntityRegistry;
 import com.whammich.invasion.util.LogHelper;
 import net.minecraft.core.BlockPos;
@@ -23,7 +23,6 @@ import java.util.List;
 
 /**
  * Strange Bone — 1.7 ItemStrangeBone parity (D-31..D-34).
- * Use on a tamed wolf near a Nexus to bind it as an IM wolf.
  */
 public class ItemStrangeBone extends Item {
 
@@ -36,44 +35,69 @@ public class ItemStrangeBone extends Item {
 
     @Override
     public InteractionResult interactLivingEntity(ItemStack stack, Player player, LivingEntity target, InteractionHand hand) {
-        Level level = player.level();
-        if (level.isClientSide) {
+        if (player.level().isClientSide) {
             return InteractionResult.SUCCESS;
         }
+        BindResult result = tryBindWolf(player.level(), player, target, !player.getAbilities().instabuild ? stack : null);
+        switch (result) {
+            case BOUND -> {
+                player.displayClientMessage(Component.translatable("item.invasion.strange_bone.bound"), true);
+                return InteractionResult.CONSUME;
+            }
+            case NOT_TAMED -> {
+                player.displayClientMessage(Component.translatable("item.invasion.strange_bone.not_tamed"), true);
+                return InteractionResult.FAIL;
+            }
+            case NO_NEXUS -> {
+                player.displayClientMessage(Component.translatable("item.invasion.strange_bone.no_nexus"), true);
+                return InteractionResult.FAIL;
+            }
+            default -> {
+                return InteractionResult.PASS;
+            }
+        }
+    }
+
+    public enum BindResult { BOUND, NOT_WOLF, NOT_TAMED, NO_NEXUS, FAILED }
+
+    /**
+     * Shared bind path for item use and {@code /invasion bindwolf}.
+     * @param consumeFrom if non-null and bind succeeds, shrink by 1
+     */
+    public static BindResult tryBindWolf(Level level, Player player, LivingEntity target, ItemStack consumeFrom) {
         if (!(target instanceof Wolf wolf) || target instanceof EntityIMWolf) {
-            return InteractionResult.PASS;
+            return BindResult.NOT_WOLF;
         }
         if (!wolf.isTame()) {
-            player.displayClientMessage(Component.translatable("item.invasion.strange_bone.not_tamed"), true);
-            return InteractionResult.FAIL;
+            return BindResult.NOT_TAMED;
         }
-        BlockPos wolfPos = wolf.blockPosition();
-        NexusBlockEntity nexus = findNearbyNexus(level, wolfPos);
+        NexusBlockEntity nexus = findNearbyNexus(level, wolf.blockPosition());
         if (nexus == null) {
-            player.displayClientMessage(Component.translatable("item.invasion.strange_bone.no_nexus"), true);
-            return InteractionResult.FAIL;
+            return BindResult.NO_NEXUS;
         }
-        EntityIMWolf imWolf = EntityRegistry.WOLF.get().create((ServerLevel) level);
+        if (!(level instanceof ServerLevel server)) {
+            return BindResult.FAILED;
+        }
+        EntityIMWolf imWolf = EntityRegistry.WOLF.get().create(server);
         if (imWolf == null) {
-            return InteractionResult.FAIL;
+            return BindResult.FAILED;
         }
         imWolf.moveTo(wolf.getX(), wolf.getY(), wolf.getZ(), wolf.getYRot(), wolf.getXRot());
         imWolf.bindToNexus(nexus.getBlockPos());
-        imWolf.setCustomName(wolf.getCustomName());
-        if (wolf.hasCustomName()) {
+        if (wolf.getCustomName() != null) {
+            imWolf.setCustomName(wolf.getCustomName());
             imWolf.setCustomNameVisible(true);
         }
         level.addFreshEntity(imWolf);
         wolf.discard();
-        if (!player.getAbilities().instabuild) {
-            stack.shrink(1);
+        if (consumeFrom != null && !consumeFrom.isEmpty()) {
+            consumeFrom.shrink(1);
         }
-        LogHelper.info("StrangeBone: bound IM wolf at {} to nexus {}", wolfPos, nexus.getBlockPos());
-        player.displayClientMessage(Component.translatable("item.invasion.strange_bone.bound"), true);
-        return InteractionResult.CONSUME;
+        LogHelper.info("StrangeBone: bound IM wolf at {} to nexus {}", wolf.blockPosition(), nexus.getBlockPos());
+        return BindResult.BOUND;
     }
 
-    private static NexusBlockEntity findNearbyNexus(Level level, BlockPos origin) {
+    public static NexusBlockEntity findNearbyNexus(Level level, BlockPos origin) {
         for (int dy = -SEARCH_Y; dy <= SEARCH_Y; dy++) {
             for (int dx = -SEARCH_XZ; dx <= SEARCH_XZ; dx++) {
                 for (int dz = -SEARCH_XZ; dz <= SEARCH_XZ; dz++) {
