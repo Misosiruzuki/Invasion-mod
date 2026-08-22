@@ -65,5 +65,12 @@
   "item.invasion.strange_bone.no_nexus": "近くにネクサスがない。",
   "item.invasion.strange_bone.bound": "狼をネクサスに紐付けた。",
   "entity.invasion.im_wolf": "ネクサスの狼",
-  "entity.invasion.im_wolf.unbound": "狼のネクサス紐付けを解除した。"
+  "entity.invasion.im_wolf.unbound": "狼のネクサス紐付けを解除した。",
+  "item.invasion.nexus_adjuster": "ネクサス調整器",
+  "item.invasion.nexus_adjuster.tooltip": "ネクサスを右クリックで半径+8（スニークで-8）。範囲32–128。",
+  "item.invasion.nexus_adjuster.range": "ネクサス範囲を %s に変更した。",
+  "item.invasion.nexus_adjuster.busy": "侵略中は範囲を変更できない。",
+  "item.invasion.material_probe": "物質探査機",
+  "item.invasion.material_probe.tooltip": "ブロックを右クリックでInvasion破壊耐性を表示。",
+  "item.invasion.material_probe.strength": "ブロック強度: %s"
 }

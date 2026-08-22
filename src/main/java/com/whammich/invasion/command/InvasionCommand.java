@@ -68,6 +68,9 @@ public final class InvasionCommand {
                         .then(Commands.literal("bindwolf").executes(InvasionCommand::bindWolf))
                         .then(Commands.literal("spawnwolf").executes(InvasionCommand::spawnWolf))
                         .then(Commands.literal("unbindwolf").executes(InvasionCommand::unbindWolf))
+                        .then(Commands.literal("probe").executes(InvasionCommand::probeStrength))
+                        .then(Commands.literal("adjust").executes(ctx -> adjustRadius(ctx, false)))
+                        .then(Commands.literal("adjustdown").executes(ctx -> adjustRadius(ctx, true)))
                         .then(Commands.literal("placetrap")
                                 .then(Commands.argument("type", StringArgumentType.word())
                                         .executes(ctx -> placeTrap(ctx.getSource(),
@@ -571,6 +574,49 @@ public final class InvasionCommand {
 
 
 
+
+
+    private static int adjustRadius(CommandContext<CommandSourceStack> ctx, boolean down) {
+        CommandSourceStack src = ctx.getSource();
+        NexusBlockEntity nexus = resolveNexus(src);
+        if (nexus == null) {
+            src.sendFailure(Component.literal("No nexus"));
+            return 0;
+        }
+        int current = nexus.getSpawnRadius();
+        int next = down ? current - 8 : current + 8;
+        if (next < 32) next = 128;
+        if (next > 128) next = 32;
+        if (!nexus.setSpawnRadius(next)) {
+            src.sendFailure(Component.literal("Cannot change radius while active"));
+            return 0;
+        }
+        int finalNext = next;
+        src.sendSuccess(() -> Component.literal("Nexus range changed to: " + finalNext), true);
+        LogHelper.info("adjust radius {} -> {}", current, finalNext);
+        return 1;
+    }
+
+    private static int probeStrength(CommandContext<CommandSourceStack> ctx) {
+        CommandSourceStack src = ctx.getSource();
+        ServerPlayer player = src.getPlayer();
+        if (player == null) {
+            src.sendFailure(Component.literal("Player required"));
+            return 0;
+        }
+        var hit = player.pick(5.0, 0, false);
+        if (!(hit instanceof BlockHitResult bhr)) {
+            src.sendFailure(Component.literal("Look at a block"));
+            return 0;
+        }
+        BlockPos pos = bhr.getBlockPos();
+        var state = player.level().getBlockState(pos);
+        float strength = com.whammich.invasion.util.BlockStrength.get(player.level(), pos, state);
+        double shown = Math.round((strength + 0.005) * 100.0) / 100.0;
+        src.sendSuccess(() -> Component.literal("Block strength: " + shown), true);
+        LogHelper.info("probe strength={} at {}", shown, pos);
+        return 1;
+    }
 
     /** Unbind nearest IM wolf with a bone (D-34 / VoxPilot). */
     private static int unbindWolf(CommandContext<CommandSourceStack> ctx) {

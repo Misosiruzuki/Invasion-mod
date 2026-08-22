@@ -65,5 +65,12 @@
   "item.invasion.strange_bone.no_nexus": "No Nexus nearby.",
   "item.invasion.strange_bone.bound": "Wolf bound to Nexus.",
   "entity.invasion.im_wolf": "Nexus Wolf",
-  "entity.invasion.im_wolf.unbound": "Wolf unbound from Nexus."
+  "entity.invasion.im_wolf.unbound": "Wolf unbound from Nexus.",
+  "item.invasion.nexus_adjuster": "Nexus Adjuster",
+  "item.invasion.nexus_adjuster.tooltip": "Right-click Nexus: radius +8 (sneak: -8). Range 32–128.",
+  "item.invasion.nexus_adjuster.range": "Nexus range changed to: %s",
+  "item.invasion.nexus_adjuster.busy": "Cannot change range while invasion is active.",
+  "item.invasion.material_probe": "Material Probe",
+  "item.invasion.material_probe.tooltip": "Right-click a block to show Invasion dig strength.",
+  "item.invasion.material_probe.strength": "Block strength: %s"
 }

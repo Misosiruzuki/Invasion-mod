@@ -1,0 +1,147 @@
+{
+  "name": "invasion-d36-material-probe-craft",
+  "description": "P7/D-36: adjuster + phase crystal + stick → material probe",
+  "launchServer": true,
+  "totalTicks": 280,
+  "totalFrames": 1200,
+  "captureEvery": 8,
+  "warmupFrames": 40,
+  "closeClient": true,
+  "display": {
+    "background": true
+  },
+  "slotCrops": [
+    0,
+    2,
+    5,
+    8,
+    37,
+    38,
+    39
+  ],
+  "commands": [
+    "time set day",
+    "gamemode creative Dev",
+    "tp Dev 0.5 -60 2.5",
+    "fill -6 -61 -6 6 -61 6 minecraft:stone",
+    "fill -6 -60 -6 6 -55 6 minecraft:air",
+    "setblock 0 -60 0 minecraft:crafting_table",
+    "clear Dev",
+    "give Dev invasion:nexus_adjuster 1",
+    "give Dev invasion:phase_crystal 1",
+    "give Dev minecraft:stick 1",
+    "tp Dev 0.5 -59 2.5"
+  ],
+  "actions": [
+    {
+      "fromTick": 0,
+      "toTick": 20,
+      "camera": "first",
+      "yaw": 180,
+      "pitch": 28
+    },
+    {
+      "fromTick": 21,
+      "toTick": 50,
+      "camera": "first",
+      "keys": {
+        "use": true
+      }
+    },
+    {
+      "fromTick": 51,
+      "toTick": 70,
+      "camera": "first"
+    },
+    {
+      "fromTick": 71,
+      "toTick": 90,
+      "camera": "first",
+      "containerClick": {
+        "slot": 37,
+        "button": 0,
+        "type": "pickup"
+      }
+    },
+    {
+      "fromTick": 91,
+      "toTick": 110,
+      "camera": "first",
+      "containerClick": {
+        "slot": 2,
+        "button": 0,
+        "type": "pickup"
+      }
+    },
+    {
+      "fromTick": 111,
+      "toTick": 130,
+      "camera": "first",
+      "containerClick": {
+        "slot": 38,
+        "button": 0,
+        "type": "pickup"
+      }
+    },
+    {
+      "fromTick": 131,
+      "toTick": 150,
+      "camera": "first",
+      "containerClick": {
+        "slot": 5,
+        "button": 0,
+        "type": "pickup"
+      }
+    },
+    {
+      "fromTick": 151,
+      "toTick": 170,
+      "camera": "first",
+      "containerClick": {
+        "slot": 39,
+        "button": 0,
+        "type": "pickup"
+      }
+    },
+    {
+      "fromTick": 171,
+      "toTick": 190,
+      "camera": "first",
+      "containerClick": {
+        "slot": 8,
+        "button": 0,
+        "type": "pickup"
+      }
+    },
+    {
+      "fromTick": 191,
+      "toTick": 220,
+      "camera": "first"
+    },
+    {
+      "fromTick": 221,
+      "toTick": 240,
+      "camera": "first",
+      "containerClick": {
+        "slot": 0,
+        "button": 0,
+        "type": "pickup"
+      }
+    },
+    {
+      "fromTick": 241,
+      "toTick": 260,
+      "camera": "first",
+      "containerClick": {
+        "slot": 40,
+        "button": 0,
+        "type": "pickup"
+      }
+    },
+    {
+      "fromTick": 261,
+      "toTick": 279,
+      "camera": "first"
+    }
+  ]
+}

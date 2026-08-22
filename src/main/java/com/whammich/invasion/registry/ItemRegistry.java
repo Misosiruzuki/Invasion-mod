@@ -41,8 +41,14 @@ public final class ItemRegistry {
     public static final RegistryObject<Item> ENGY_HAMMER = ITEMS.register("engy_hammer",
             () -> new ItemHammerEngineer(new Item.Properties().stacksTo(1).durability(250)));
 
-    public static final RegistryObject<Item> PROBE = ITEMS.register("probe",
-            () -> new ItemProbe(new Item.Properties().stacksTo(1)));
+    /** 1.7 ItemProbe meta 0 — Nexus Adjuster */
+    public static final RegistryObject<Item> NEXUS_ADJUSTER = ITEMS.register("nexus_adjuster",
+            () -> new ItemProbe(new Item.Properties().stacksTo(1), ItemProbe.Kind.ADJUSTER));
+    /** 1.7 ItemProbe meta 1 — Material Probe */
+    public static final RegistryObject<Item> MATERIAL_PROBE = ITEMS.register("material_probe",
+            () -> new ItemProbe(new Item.Properties().stacksTo(1), ItemProbe.Kind.MATERIAL));
+    /** Alias kept for older recipes / give commands */
+    public static final RegistryObject<Item> PROBE = MATERIAL_PROBE;
 
     public static final RegistryObject<Item> STRANGE_BONE = ITEMS.register("strange_bone",
             () -> new ItemStrangeBone(new Item.Properties().stacksTo(64)));
