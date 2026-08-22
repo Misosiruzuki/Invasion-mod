@@ -7,6 +7,7 @@ import com.mojang.brigadier.context.CommandContext;
 import com.whammich.invasion.nexus.NexusBlockEntity;
 import com.whammich.invasion.registry.EntityRegistry;
 import com.whammich.invasion.entity.EntityIMTrap;
+import com.whammich.invasion.entity.EntityIMWolf;
 import com.whammich.invasion.item.ItemStrangeBone;
 import net.minecraft.world.entity.animal.Wolf;
 import net.minecraft.world.phys.AABB;
@@ -65,6 +66,7 @@ public final class InvasionCommand {
                                         .executes(ctx -> damageNexus(ctx.getSource(),
                                                 IntegerArgumentType.getInteger(ctx, "amount")))))
                         .then(Commands.literal("bindwolf").executes(InvasionCommand::bindWolf))
+                        .then(Commands.literal("spawnwolf").executes(InvasionCommand::spawnWolf))
                         .then(Commands.literal("placetrap")
                                 .then(Commands.argument("type", StringArgumentType.word())
                                         .executes(ctx -> placeTrap(ctx.getSource(),
@@ -566,6 +568,37 @@ public final class InvasionCommand {
         return 1;
     }
 
+
+
+    /** Spawn an IM wolf bound to nearest nexus (D-33 tests). */
+    private static int spawnWolf(CommandContext<CommandSourceStack> ctx) {
+        CommandSourceStack src = ctx.getSource();
+        ServerPlayer player = src.getPlayer();
+        if (player == null) {
+            src.sendFailure(Component.literal("Player required"));
+            return 0;
+        }
+        ServerLevel level = player.serverLevel();
+        NexusBlockEntity nexus = resolveNexus(src);
+        if (nexus == null) {
+            src.sendFailure(Component.literal("No nexus in range"));
+            return 0;
+        }
+        EntityIMWolf wolf = EntityRegistry.WOLF.get().create(level);
+        if (wolf == null) {
+            src.sendFailure(Component.literal("Failed to create wolf"));
+            return 0;
+        }
+        BlockPos at = player.blockPosition();
+        wolf.moveTo(at.getX() + 0.5, at.getY(), at.getZ() + 0.5, player.getYRot(), 0);
+        wolf.bindToNexus(nexus.getBlockPos());
+        wolf.setCustomName(Component.literal("VoxPilotTrack"));
+        wolf.setCustomNameVisible(true);
+        level.addFreshEntity(wolf);
+        src.sendSuccess(() -> Component.literal("Spawned IM wolf bound to nexus " + nexus.getBlockPos()), true);
+        LogHelper.info("spawnwolf at {} bound to {}", at, nexus.getBlockPos());
+        return 1;
+    }
 
     /** VoxPilot / debug: bind nearest tamed wolf near player to nearby Nexus (D-32). */
     private static int bindWolf(CommandContext<CommandSourceStack> ctx) {
