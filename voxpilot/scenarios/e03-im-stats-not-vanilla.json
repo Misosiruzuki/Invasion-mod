@@ -1,0 +1,46 @@
+{
+  "name": "invasion-e03-im-stats-not-vanilla",
+  "description": "P8/E-03: IM zombie uses Invasion stats (hp=10 atk=4) not vanilla (20/3)",
+  "launchServer": true,
+  "totalTicks": 100,
+  "totalFrames": 400,
+  "captureEvery": 8,
+  "warmupFrames": 40,
+  "closeClient": true,
+  "display": {
+    "background": true
+  },
+  "commands": [
+    "time set day",
+    "difficulty hard",
+    "gamemode creative Dev",
+    "tp Dev 0.5 -59 0.5",
+    "fill -6 -61 -6 6 -61 6 minecraft:stone",
+    "fill -6 -60 -6 6 -55 6 minecraft:air"
+  ],
+  "actions": [
+    {
+      "fromTick": 0,
+      "toTick": 15,
+      "camera": "third_back"
+    },
+    {
+      "fromTick": 16,
+      "toTick": 40,
+      "camera": "third_back",
+      "commands": [
+        "summon invasion:im_zombie 0.5 -59 2.5 {CustomName:'\"VoxPilotTrack\"'}"
+      ]
+    },
+    {
+      "fromTick": 41,
+      "toTick": 80,
+      "camera": "third_back"
+    },
+    {
+      "fromTick": 81,
+      "toTick": 99,
+      "camera": "third_back"
+    }
+  ]
+}
