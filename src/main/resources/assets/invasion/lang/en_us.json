@@ -64,5 +64,6 @@
   "item.invasion.strange_bone.not_tamed": "Wolf must be tamed.",
   "item.invasion.strange_bone.no_nexus": "No Nexus nearby.",
   "item.invasion.strange_bone.bound": "Wolf bound to Nexus.",
-  "entity.invasion.im_wolf": "Nexus Wolf"
+  "entity.invasion.im_wolf": "Nexus Wolf",
+  "entity.invasion.im_wolf.unbound": "Wolf unbound from Nexus."
 }

@@ -20,6 +20,11 @@ import net.minecraft.world.entity.ai.goal.RandomStrollGoal;
 import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
 import net.minecraft.world.entity.monster.Enemy;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.entity.animal.Wolf;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -83,6 +88,62 @@ public class EntityIMWolf extends EntityIMMob {
     @Override
     public boolean removeWhenFarAway(double distance) {
         return nexusPos == null && super.removeWhenFarAway(distance);
+    }
+
+
+    /** Clear nexus link so death no longer respawns (D-34). */
+    public void clearNexusBinding() {
+        this.nexusPos = null;
+    }
+
+    public boolean isNexusBound() {
+        return this.nexusPos != null;
+    }
+
+    /**
+     * Convert this IM wolf back to a tamed vanilla wolf and drop nexus binding (D-34).
+     * Called when the player uses a normal bone on the wolf.
+     */
+    public boolean unbindToVanillaWolf(Player player) {
+        if (level().isClientSide) {
+            return false;
+        }
+        Level level = level();
+        Wolf wolf = EntityType.WOLF.create(level);
+        if (wolf == null) {
+            return false;
+        }
+        wolf.moveTo(getX(), getY(), getZ(), getYRot(), getXRot());
+        wolf.tame(player);
+        wolf.setOwnerUUID(player.getUUID());
+        if (getCustomName() != null) {
+            wolf.setCustomName(getCustomName());
+            wolf.setCustomNameVisible(isCustomNameVisible());
+        }
+        wolf.setHealth(Math.min(getHealth(), wolf.getMaxHealth()));
+        level.addFreshEntity(wolf);
+        BlockPos was = this.nexusPos;
+        clearNexusBinding();
+        discard();
+        LogHelper.info("IMWolf unbound at {} (was nexus {})", blockPosition(), was);
+        return true;
+    }
+
+    @Override
+    public InteractionResult mobInteract(Player player, InteractionHand hand) {
+        ItemStack stack = player.getItemInHand(hand);
+        if (stack.is(Items.BONE) && isNexusBound()) {
+            if (!level().isClientSide) {
+                if (unbindToVanillaWolf(player)) {
+                    if (!player.getAbilities().instabuild) {
+                        stack.shrink(1);
+                    }
+                    player.displayClientMessage(Component.translatable("entity.invasion.im_wolf.unbound"), true);
+                }
+            }
+            return InteractionResult.sidedSuccess(level().isClientSide);
+        }
+        return super.mobInteract(player, hand);
     }
 
     @Override

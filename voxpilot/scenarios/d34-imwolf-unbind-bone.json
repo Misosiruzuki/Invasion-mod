@@ -1,0 +1,90 @@
+{
+  "name": "invasion-d34-imwolf-unbind-bone",
+  "description": "P7/D-34: normal bone unbinds IM wolf; no respawn after kill",
+  "launchServer": true,
+  "totalTicks": 320,
+  "totalFrames": 1500,
+  "captureEvery": 8,
+  "warmupFrames": 40,
+  "closeClient": true,
+  "display": {
+    "background": true
+  },
+  "commands": [
+    "time set day",
+    "difficulty hard",
+    "gamerule doMobSpawning false",
+    "gamemode creative Dev",
+    "tp Dev 0.5 -59 0.5",
+    "fill -8 -61 -8 8 -61 8 minecraft:stone",
+    "fill -8 -60 -8 8 -55 8 minecraft:air",
+    "setblock 0 -60 0 invasion:nexus",
+    "clear Dev",
+    "give Dev minecraft:bone 1",
+    "item replace entity Dev weapon.mainhand with minecraft:bone 1",
+    "tp Dev 0.5 -59 2.5"
+  ],
+  "actions": [
+    {
+      "fromTick": 0,
+      "toTick": 20,
+      "camera": "third_back",
+      "yaw": 180,
+      "pitch": 15
+    },
+    {
+      "fromTick": 21,
+      "toTick": 45,
+      "camera": "third_back",
+      "commands": [
+        "invasion begin 1"
+      ]
+    },
+    {
+      "fromTick": 46,
+      "toTick": 70,
+      "camera": "third_back",
+      "commands": [
+        "invasion spawnwolf"
+      ]
+    },
+    {
+      "fromTick": 71,
+      "toTick": 100,
+      "camera": "third_back"
+    },
+    {
+      "fromTick": 101,
+      "toTick": 130,
+      "camera": "third_back",
+      "commands": [
+        "invasion unbindwolf"
+      ]
+    },
+    {
+      "fromTick": 131,
+      "toTick": 160,
+      "camera": "third_back"
+    },
+    {
+      "fromTick": 161,
+      "toTick": 185,
+      "camera": "third_back",
+      "commands": [
+        "kill @e[type=invasion:im_wolf]",
+        "kill @e[type=minecraft:wolf]",
+        "kill @e[name=VoxPilotTrack]"
+      ]
+    },
+    {
+      "fromTick": 186,
+      "toTick": 280,
+      "camera": "third_back"
+    },
+    {
+      "fromTick": 281,
+      "toTick": 319,
+      "camera": "third_back"
+    }
+  ]
+}

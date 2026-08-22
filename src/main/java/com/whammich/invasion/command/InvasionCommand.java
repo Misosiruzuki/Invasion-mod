@@ -67,6 +67,7 @@ public final class InvasionCommand {
                                                 IntegerArgumentType.getInteger(ctx, "amount")))))
                         .then(Commands.literal("bindwolf").executes(InvasionCommand::bindWolf))
                         .then(Commands.literal("spawnwolf").executes(InvasionCommand::spawnWolf))
+                        .then(Commands.literal("unbindwolf").executes(InvasionCommand::unbindWolf))
                         .then(Commands.literal("placetrap")
                                 .then(Commands.argument("type", StringArgumentType.word())
                                         .executes(ctx -> placeTrap(ctx.getSource(),
@@ -569,6 +570,38 @@ public final class InvasionCommand {
     }
 
 
+
+
+    /** Unbind nearest IM wolf with a bone (D-34 / VoxPilot). */
+    private static int unbindWolf(CommandContext<CommandSourceStack> ctx) {
+        CommandSourceStack src = ctx.getSource();
+        ServerPlayer player = src.getPlayer();
+        if (player == null) {
+            src.sendFailure(Component.literal("Player required"));
+            return 0;
+        }
+        ServerLevel level = player.serverLevel();
+        EntityIMWolf im = level.getEntitiesOfClass(EntityIMWolf.class, player.getBoundingBox().inflate(12.0),
+                w -> w.isAlive() && w.isNexusBound()).stream().findFirst().orElse(null);
+        if (im == null) {
+            src.sendFailure(Component.literal("No bound IM wolf nearby"));
+            return 0;
+        }
+        ItemStack bone = player.getMainHandItem();
+        boolean creative = player.getAbilities().instabuild;
+        if (!creative && !bone.is(net.minecraft.world.item.Items.BONE)) {
+            // still allow command path for tests — consume if bone present
+        }
+        if (im.unbindToVanillaWolf(player)) {
+            if (!creative && bone.is(net.minecraft.world.item.Items.BONE)) {
+                bone.shrink(1);
+            }
+            src.sendSuccess(() -> Component.literal("Unbound IM wolf to vanilla wolf"), true);
+            return 1;
+        }
+        src.sendFailure(Component.literal("Unbind failed"));
+        return 0;
+    }
 
     /** Spawn an IM wolf bound to nearest nexus (D-33 tests). */
     private static int spawnWolf(CommandContext<CommandSourceStack> ctx) {
