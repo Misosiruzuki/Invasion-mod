@@ -1,9 +1,9 @@
 {
   "name": "invasion-d38-probe-nexus-adjust",
-  "description": "P7/D-38 B-35: material probe on nexus adjusts radius like adjuster",
+  "description": "P7/D-38 B-35: Material Probe on Nexus changes radius like Adjuster",
   "launchServer": true,
-  "totalTicks": 140,
-  "totalFrames": 600,
+  "totalTicks": 160,
+  "totalFrames": 700,
   "captureEvery": 8,
   "warmupFrames": 40,
   "closeClient": true,
@@ -13,38 +13,54 @@
   "commands": [
     "time set day",
     "gamemode creative Dev",
-    "tp Dev 0.5 -59 0.5",
+    "tp Dev 0.5 -59 2.5 180 28",
     "fill -6 -61 -6 6 -61 6 minecraft:stone",
     "fill -6 -60 -6 6 -55 6 minecraft:air",
     "setblock 0 -60 0 invasion:nexus",
+    "clear Dev",
     "give Dev invasion:material_probe 1",
-    "tp Dev 0.5 -59 2.5"
+    "item replace entity Dev weapon.mainhand with invasion:material_probe 1",
+    "tp Dev 0.5 -59 2.5 180 28"
   ],
   "actions": [
     {
       "fromTick": 0,
-      "toTick": 25,
-      "camera": "third_back",
+      "toTick": 30,
+      "camera": "first",
       "yaw": 180,
-      "pitch": 20
+      "pitch": 28
     },
     {
-      "fromTick": 26,
+      "fromTick": 31,
       "toTick": 55,
-      "camera": "third_back",
-      "commands": [
-        "invasion adjust"
-      ]
+      "camera": "first",
+      "yaw": 180,
+      "pitch": 28,
+      "keys": {
+        "use": true
+      }
     },
     {
       "fromTick": 56,
-      "toTick": 100,
-      "camera": "third_back"
+      "toTick": 90,
+      "camera": "first",
+      "yaw": 180,
+      "pitch": 28
     },
     {
-      "fromTick": 101,
-      "toTick": 139,
-      "camera": "third_back"
+      "fromTick": 91,
+      "toTick": 120,
+      "camera": "first",
+      "yaw": 180,
+      "pitch": 28,
+      "keys": {
+        "use": true
+      }
+    },
+    {
+      "fromTick": 121,
+      "toTick": 159,
+      "camera": "first"
     }
   ]
 }

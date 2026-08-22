@@ -1,9 +1,9 @@
 {
   "name": "invasion-d35-nexus-adjuster-radius",
-  "description": "P7/D-35 B-33: adjuster +8 radius cycle",
+  "description": "P7/D-35 B-33: Nexus Adjuster right-click increases radius (+8). No custom commands.",
   "launchServer": true,
-  "totalTicks": 160,
-  "totalFrames": 700,
+  "totalTicks": 180,
+  "totalFrames": 800,
   "captureEvery": 8,
   "warmupFrames": 40,
   "closeClient": true,
@@ -14,47 +14,61 @@
     "time set day",
     "difficulty hard",
     "gamemode creative Dev",
-    "tp Dev 0.5 -59 0.5",
+    "tp Dev 0.5 -59 2.5 180 25",
     "fill -6 -61 -6 6 -61 6 minecraft:stone",
     "fill -6 -60 -6 6 -55 6 minecraft:air",
     "setblock 0 -60 0 invasion:nexus",
+    "clear Dev",
     "give Dev invasion:nexus_adjuster 1",
     "item replace entity Dev weapon.mainhand with invasion:nexus_adjuster 1",
-    "tp Dev 0.5 -59 2.5"
+    "tp Dev 0.5 -59 2.5 180 25"
   ],
   "actions": [
     {
       "fromTick": 0,
-      "toTick": 25,
-      "camera": "third_back",
+      "toTick": 30,
+      "camera": "first",
       "yaw": 180,
-      "pitch": 20
+      "pitch": 28
     },
     {
-      "fromTick": 26,
-      "toTick": 50,
-      "camera": "third_back",
-      "commands": [
-        "invasion adjust"
-      ]
+      "fromTick": 31,
+      "toTick": 55,
+      "camera": "first",
+      "yaw": 180,
+      "pitch": 28,
+      "keys": {
+        "use": true
+      }
     },
     {
-      "fromTick": 51,
-      "toTick": 80,
-      "camera": "third_back",
-      "commands": [
-        "invasion adjust"
-      ]
+      "fromTick": 56,
+      "toTick": 75,
+      "camera": "first",
+      "yaw": 180,
+      "pitch": 28
     },
     {
-      "fromTick": 81,
-      "toTick": 120,
-      "camera": "third_back"
+      "fromTick": 76,
+      "toTick": 100,
+      "camera": "first",
+      "yaw": 180,
+      "pitch": 28,
+      "keys": {
+        "use": true
+      }
     },
     {
-      "fromTick": 121,
-      "toTick": 159,
-      "camera": "third_back"
+      "fromTick": 101,
+      "toTick": 140,
+      "camera": "first",
+      "yaw": 180,
+      "pitch": 28
+    },
+    {
+      "fromTick": 141,
+      "toTick": 179,
+      "camera": "first"
     }
   ]
 }

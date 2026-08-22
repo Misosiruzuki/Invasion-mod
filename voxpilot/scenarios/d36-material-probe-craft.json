@@ -1,9 +1,9 @@
 {
   "name": "invasion-d36-material-probe-craft",
-  "description": "P7/D-36: adjuster + phase crystal + stick → material probe",
+  "description": "P7/D-36: Adjuster + Phase Crystal + Stick → Material Probe",
   "launchServer": true,
-  "totalTicks": 280,
-  "totalFrames": 1200,
+  "totalTicks": 300,
+  "totalFrames": 1300,
   "captureEvery": 8,
   "warmupFrames": 40,
   "closeClient": true,
@@ -30,32 +30,32 @@
     "give Dev invasion:nexus_adjuster 1",
     "give Dev invasion:phase_crystal 1",
     "give Dev minecraft:stick 1",
-    "tp Dev 0.5 -59 2.5"
+    "tp Dev 0.5 -59 2.5 180 28"
   ],
   "actions": [
     {
       "fromTick": 0,
-      "toTick": 20,
+      "toTick": 25,
       "camera": "first",
       "yaw": 180,
       "pitch": 28
     },
     {
-      "fromTick": 21,
-      "toTick": 50,
+      "fromTick": 26,
+      "toTick": 55,
       "camera": "first",
       "keys": {
         "use": true
       }
     },
     {
-      "fromTick": 51,
-      "toTick": 70,
+      "fromTick": 56,
+      "toTick": 80,
       "camera": "first"
     },
     {
-      "fromTick": 71,
-      "toTick": 90,
+      "fromTick": 81,
+      "toTick": 100,
       "camera": "first",
       "containerClick": {
         "slot": 37,
@@ -64,8 +64,8 @@
       }
     },
     {
-      "fromTick": 91,
-      "toTick": 110,
+      "fromTick": 101,
+      "toTick": 120,
       "camera": "first",
       "containerClick": {
         "slot": 2,
@@ -74,8 +74,8 @@
       }
     },
     {
-      "fromTick": 111,
-      "toTick": 130,
+      "fromTick": 121,
+      "toTick": 140,
       "camera": "first",
       "containerClick": {
         "slot": 38,
@@ -84,8 +84,8 @@
       }
     },
     {
-      "fromTick": 131,
-      "toTick": 150,
+      "fromTick": 141,
+      "toTick": 160,
       "camera": "first",
       "containerClick": {
         "slot": 5,
@@ -94,8 +94,8 @@
       }
     },
     {
-      "fromTick": 151,
-      "toTick": 170,
+      "fromTick": 161,
+      "toTick": 180,
       "camera": "first",
       "containerClick": {
         "slot": 39,
@@ -104,8 +104,8 @@
       }
     },
     {
-      "fromTick": 171,
-      "toTick": 190,
+      "fromTick": 181,
+      "toTick": 200,
       "camera": "first",
       "containerClick": {
         "slot": 8,
@@ -114,13 +114,13 @@
       }
     },
     {
-      "fromTick": 191,
-      "toTick": 220,
+      "fromTick": 201,
+      "toTick": 230,
       "camera": "first"
     },
     {
-      "fromTick": 221,
-      "toTick": 240,
+      "fromTick": 231,
+      "toTick": 250,
       "camera": "first",
       "containerClick": {
         "slot": 0,
@@ -129,8 +129,8 @@
       }
     },
     {
-      "fromTick": 241,
-      "toTick": 260,
+      "fromTick": 251,
+      "toTick": 270,
       "camera": "first",
       "containerClick": {
         "slot": 40,
@@ -139,8 +139,8 @@
       }
     },
     {
-      "fromTick": 261,
-      "toTick": 279,
+      "fromTick": 271,
+      "toTick": 299,
       "camera": "first"
     }
   ]
