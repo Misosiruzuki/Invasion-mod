@@ -6,6 +6,13 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.world.Difficulty;
+import net.minecraft.world.DifficultyInstance;
+import net.minecraft.world.entity.MobSpawnType;
+import net.minecraft.world.entity.SpawnGroupData;
+import net.minecraft.server.level.ServerLevelAccessor;
+import org.jetbrains.annotations.Nullable;
+import com.whammich.invasion.util.LogHelper;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
@@ -202,6 +209,27 @@ public abstract class EntityIMLiving extends Monster implements IHasNexus, IPath
      * 1.7 {@code canDespawn = !nexusBound}: nexus-bound invasion mobs stay on Peaceful (E-01).
      * Vanilla {@link Monster#checkDespawn()} discards all monsters on PEACEFUL.
      */
+
+    /**
+     * E-02: Invasion mob stats must not scale with world difficulty (Easy/Hard same).
+     * Skip vanilla {@link Monster} difficulty equipment / attribute randomization.
+     */
+    @Override
+    public SpawnGroupData finalizeSpawn(ServerLevelAccessor level, DifficultyInstance difficulty,
+                                        MobSpawnType reason, @Nullable SpawnGroupData spawnData,
+                                        @Nullable CompoundTag dataTag) {
+        // Intentionally do not call super.finalizeSpawn — avoids Hard-mode gear / buffs.
+        this.setHealth(this.getMaxHealth());
+        if (!level.getLevel().isClientSide) {
+            double hp = getMaxHealth();
+            double atk = getAttribute(Attributes.ATTACK_DAMAGE) != null
+                    ? getAttributeValue(Attributes.ATTACK_DAMAGE) : 0.0;
+            LogHelper.info("IMMob stats type={} tier={} hp={} atk={} worldDifficulty={}",
+                    getType().getDescriptionId(), getTier(), hp, atk, level.getDifficulty());
+        }
+        return spawnData;
+    }
+
     @Override
     public void checkDespawn() {
         if (nexusBound) {

@@ -1,0 +1,71 @@
+{
+  "name": "invasion-e02-difficulty-stats",
+  "description": "P8/E-02: IM zombie maxHealth and attack identical on Easy and Hard",
+  "launchServer": true,
+  "totalTicks": 200,
+  "totalFrames": 800,
+  "captureEvery": 8,
+  "warmupFrames": 40,
+  "closeClient": true,
+  "display": {
+    "background": true
+  },
+  "commands": [
+    "time set day",
+    "gamemode creative Dev",
+    "tp Dev 0.5 -59 0.5",
+    "fill -6 -61 -6 6 -61 6 minecraft:stone",
+    "fill -6 -60 -6 6 -55 6 minecraft:air",
+    "setblock 0 -60 0 invasion:nexus"
+  ],
+  "actions": [
+    {
+      "fromTick": 0,
+      "toTick": 20,
+      "camera": "third_back",
+      "yaw": 0,
+      "pitch": 20
+    },
+    {
+      "fromTick": 21,
+      "toTick": 40,
+      "camera": "third_back",
+      "commands": [
+        "difficulty easy",
+        "summon invasion:im_zombie 0.5 -59 2.5 {CustomName:'\"VoxPilotTrack\"'}"
+      ]
+    },
+    {
+      "fromTick": 41,
+      "toTick": 70,
+      "camera": "third_back"
+    },
+    {
+      "fromTick": 71,
+      "toTick": 90,
+      "camera": "third_back",
+      "commands": [
+        "kill @e[type=invasion:im_zombie]",
+        "difficulty hard"
+      ]
+    },
+    {
+      "fromTick": 91,
+      "toTick": 110,
+      "camera": "third_back",
+      "commands": [
+        "summon invasion:im_zombie 0.5 -59 2.5 {CustomName:'\"VoxPilotTrack\"'}"
+      ]
+    },
+    {
+      "fromTick": 111,
+      "toTick": 160,
+      "camera": "third_back"
+    },
+    {
+      "fromTick": 161,
+      "toTick": 199,
+      "camera": "third_back"
+    }
+  ]
+}
