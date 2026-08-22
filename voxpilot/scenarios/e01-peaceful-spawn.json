@@ -1,0 +1,56 @@
+{
+  "name": "invasion-e01-peaceful-spawn",
+  "description": "P8/E-01: invasion mobs spawn and persist on Peaceful while nexus runs",
+  "launchServer": true,
+  "totalTicks": 280,
+  "totalFrames": 1200,
+  "captureEvery": 8,
+  "warmupFrames": 40,
+  "closeClient": true,
+  "display": {
+    "background": true
+  },
+  "commands": [
+    "time set day",
+    "difficulty peaceful",
+    "gamerule doMobSpawning false",
+    "gamemode creative Dev",
+    "tp Dev 0.5 -59 0.5",
+    "fill -8 -61 -8 8 -61 8 minecraft:stone",
+    "fill -8 -60 -8 8 -55 8 minecraft:air",
+    "setblock 0 -60 0 invasion:nexus",
+    "tp Dev 0.5 -59 2.5"
+  ],
+  "actions": [
+    {
+      "fromTick": 0,
+      "toTick": 25,
+      "camera": "third_back",
+      "yaw": 180,
+      "pitch": 15
+    },
+    {
+      "fromTick": 26,
+      "toTick": 50,
+      "camera": "third_back",
+      "commands": [
+        "invasion begin 1"
+      ]
+    },
+    {
+      "fromTick": 51,
+      "toTick": 200,
+      "camera": "third_back"
+    },
+    {
+      "fromTick": 201,
+      "toTick": 260,
+      "camera": "third_back"
+    },
+    {
+      "fromTick": 261,
+      "toTick": 279,
+      "camera": "third_back"
+    }
+  ]
+}

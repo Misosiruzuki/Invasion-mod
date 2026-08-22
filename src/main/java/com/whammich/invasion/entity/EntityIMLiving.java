@@ -197,6 +197,25 @@ public abstract class EntityIMLiving extends Monster implements IHasNexus, IPath
         return (float) getAttributeValue(Attributes.MOVEMENT_SPEED);
     }
 
+
+    /**
+     * 1.7 {@code canDespawn = !nexusBound}: nexus-bound invasion mobs stay on Peaceful (E-01).
+     * Vanilla {@link Monster#checkDespawn()} discards all monsters on PEACEFUL.
+     */
+    @Override
+    public void checkDespawn() {
+        if (nexusBound) {
+            this.noActionTime = 0;
+            return;
+        }
+        super.checkDespawn();
+    }
+
+    @Override
+    public boolean removeWhenFarAway(double distanceToClosestPlayer) {
+        return !nexusBound && super.removeWhenFarAway(distanceToClosestPlayer);
+    }
+
     @Override
     public void tick() {
         super.tick();

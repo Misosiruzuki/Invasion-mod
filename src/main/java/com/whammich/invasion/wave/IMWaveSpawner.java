@@ -176,6 +176,9 @@ public class IMWaveSpawner implements ISpawnerAccess {
         return mobBuilder.createMob(serverLevel, construct)
                 .map(entity -> {
                     entity.moveTo(spawnAt.getPos().getX() + 0.5, spawnAt.getPos().getY(), spawnAt.getPos().getZ() + 0.5, 0, 0);
+                    if (entity instanceof com.whammich.invasion.entity.EntityIMLiving living) {
+                        living.acquiredByNexus(nexus);
+                    }
                     boolean ok = serverLevel.addFreshEntity(entity);
                     if (ok) {
                         LogHelper.debug("Spawned {} at {}", construct, spawnAt.getPos());
