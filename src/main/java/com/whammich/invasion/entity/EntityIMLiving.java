@@ -245,11 +245,6 @@ public abstract class EntityIMLiving extends Monster implements IHasNexus, IPath
         return !nexusBound && super.removeWhenFarAway(distanceToClosestPlayer);
     }
 
-    @Override
-    public void tick() {
-        super.tick();
-        if (!level().isClientSide) {
-
     /** Bind to the active invasion nexus when nearby (E-04 / wave path already binds). */
     private void tryBindActiveNexus() {
         if (nexusBound || targetNexus != null) {
@@ -267,6 +262,10 @@ public abstract class EntityIMLiving extends Monster implements IHasNexus, IPath
         setAIGoal(IMGoal.BREAK_NEXUS);
     }
 
+    @Override
+    public void tick() {
+        super.tick();
+        if (!level().isClientSide) {
             tryBindActiveNexus();
             if (!loggedSpawnStats) {
                 loggedSpawnStats = true;
