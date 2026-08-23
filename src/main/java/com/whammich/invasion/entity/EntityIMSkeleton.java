@@ -9,6 +9,7 @@ public class EntityIMSkeleton extends EntityIMMob {
 
     public EntityIMSkeleton(EntityType<EntityIMSkeleton> type, Level level) {
         super(type, level);
+        setCanDig(false); // E-04: no block break, still attacks Nexus
     }
 
     public static AttributeSupplier.Builder createAttributes() {

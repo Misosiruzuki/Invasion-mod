@@ -3,6 +3,7 @@ package com.whammich.invasion.entity.ai;
 import com.whammich.invasion.entity.EntityIMMob;
 import com.whammich.invasion.entity.IMGoal;
 import com.whammich.invasion.nexus.INexusAccess;
+import com.whammich.invasion.util.LogHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.ai.goal.Goal;
 
@@ -27,7 +28,8 @@ public class EntityAIAttackNexus extends Goal {
         if (nexus == null || nexus.getHp() <= 0) {
             return false;
         }
-        return mob.findDistanceToNexus() < 4.0D * 4.0D;
+        // E-04: non-diggers (canDig=false) still attack the nexus block itself
+        return mob.findDistanceToNexus() < 3.5D * 3.5D;
     }
 
     @Override
@@ -40,7 +42,15 @@ public class EntityAIAttackNexus extends Goal {
         mob.getLookControl().setLookAt(pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5);
         if (--attackCooldown <= 0) {
             attackCooldown = 20;
-            nexus.attackNexus(Math.max(1, mob.getTier()));
+            int dmg = Math.max(1, mob.getTier());
+            int before = nexus.getHp();
+            nexus.attackNexus(dmg);
+            LogHelper.info("NexusAttack mob={} dig={} dmg={} hp {} -> {}",
+                    mob.getType().getDescriptionId(),
+                    mob.canDig(),
+                    dmg,
+                    before,
+                    nexus.getHp());
             mob.swing(net.minecraft.world.InteractionHand.MAIN_HAND);
         }
     }

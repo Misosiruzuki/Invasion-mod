@@ -1,0 +1,59 @@
+{
+  "name": "invasion-e04-nondig-nexus-attack",
+  "description": "P8/E-04: IM skeleton (canDig=false) damages Nexus HP",
+  "launchServer": true,
+  "totalTicks": 220,
+  "totalFrames": 900,
+  "captureEvery": 8,
+  "warmupFrames": 40,
+  "closeClient": true,
+  "display": {
+    "background": true
+  },
+  "commands": [
+    "time set day",
+    "difficulty hard",
+    "gamerule doMobSpawning false",
+    "gamemode creative Dev",
+    "tp Dev 0.5 -59 0.5",
+    "fill -8 -61 -8 8 -61 8 minecraft:stone",
+    "fill -8 -60 -8 8 -55 8 minecraft:air",
+    "setblock 0 -60 0 invasion:nexus",
+    "tp Dev 0.5 -59 3.5"
+  ],
+  "actions": [
+    {
+      "fromTick": 0,
+      "toTick": 20,
+      "camera": "third_back",
+      "yaw": 180,
+      "pitch": 15
+    },
+    {
+      "fromTick": 21,
+      "toTick": 45,
+      "camera": "third_back",
+      "commands": [
+        "invasion begin 1"
+      ]
+    },
+    {
+      "fromTick": 46,
+      "toTick": 70,
+      "camera": "third_back",
+      "commands": [
+        "summon invasion:im_skeleton 1.5 -59 0.5 {CustomName:'\"VoxPilotTrack\"'}"
+      ]
+    },
+    {
+      "fromTick": 71,
+      "toTick": 200,
+      "camera": "third_back"
+    },
+    {
+      "fromTick": 201,
+      "toTick": 219,
+      "camera": "third_back"
+    }
+  ]
+}

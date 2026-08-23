@@ -1,6 +1,7 @@
 package com.whammich.invasion.entity;
 
 import com.whammich.invasion.nexus.INexusAccess;
+import com.whammich.invasion.nexus.NexusTracker;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
@@ -248,6 +249,25 @@ public abstract class EntityIMLiving extends Monster implements IHasNexus, IPath
     public void tick() {
         super.tick();
         if (!level().isClientSide) {
+
+    /** Bind to the active invasion nexus when nearby (E-04 / wave path already binds). */
+    private void tryBindActiveNexus() {
+        if (nexusBound || targetNexus != null) {
+            return;
+        }
+        var active = NexusTracker.getActiveNexus();
+        if (active == null || active.getHp() <= 0) {
+            return;
+        }
+        BlockPos np = active.getBlockPosition();
+        if (distanceToSqr(np.getX() + 0.5, np.getY(), np.getZ() + 0.5) > 64.0 * 64.0) {
+            return;
+        }
+        acquiredByNexus(active);
+        setAIGoal(IMGoal.BREAK_NEXUS);
+    }
+
+            tryBindActiveNexus();
             if (!loggedSpawnStats) {
                 loggedSpawnStats = true;
                 double hp = getMaxHealth();
