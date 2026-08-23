@@ -7,6 +7,7 @@ import net.minecraft.world.level.Level;
 
 /**
  * Invasion zombie — looks similar to vanilla but uses fixed Invasion stats (E-03 / E-10+).
+ * E-10 Tier1: HP10 / atk4 (1.7 bare) / dig=true / early waves.
  * Attack strengths from 1.7 {@code EntityIMZombie.setAttributes}; HP from Invasion defaults
  * (not vanilla 20 HP / 3 dmg).
  */
@@ -69,6 +70,7 @@ public class EntityIMZombie extends EntityIMMob implements ICanDig {
         goalSelector.addGoal(1, new com.whammich.invasion.entity.ai.EntityAIAttackNexus(this));
         goalSelector.addGoal(2, new com.whammich.invasion.entity.ai.EntityAIGoToNexus(this));
         goalSelector.addGoal(3, new com.whammich.invasion.entity.ai.EntityAIMeleeAttack(this, 1.0D, 20));
+        goalSelector.addGoal(4, new com.whammich.invasion.entity.ai.EntityAIDigTowardNexus(this));
         goalSelector.addGoal(5, new com.whammich.invasion.entity.ai.EntityAIWanderIM(this, 0.8D));
         goalSelector.addGoal(8, new com.whammich.invasion.entity.ai.EntityAIWatchTarget(this));
         targetSelector.addGoal(1, new com.whammich.invasion.entity.ai.EntityAITargetRetaliate(this));
