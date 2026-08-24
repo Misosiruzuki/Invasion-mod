@@ -13,8 +13,9 @@ import net.minecraft.world.level.block.state.BlockState;
 import java.util.EnumSet;
 
 /**
- * Minimal dig goal (E-10+): when path to Nexus is blocked by soft blocks, break them.
- * Full 1.7 terrain pathfinding comes later (F-03).
+ * INTERIM dig goal — 1.7 has no matching AI class; digging is PathAction via AttackerAI.
+ * File comparison: no EntityAIDig* under invmod/common/entity/ai in 1.7.10-decompiled.
+ * Keep until pathfinder DIG (F-03) replaces this.
  */
 public class EntityAIDigTowardNexus extends Goal {
     private final EntityIMMob mob;
