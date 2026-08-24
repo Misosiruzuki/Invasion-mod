@@ -225,8 +225,8 @@ public abstract class EntityIMLiving extends Monster implements IHasNexus, IPath
             double hp = getMaxHealth();
             double atk = getAttribute(Attributes.ATTACK_DAMAGE) != null
                     ? getAttributeValue(Attributes.ATTACK_DAMAGE) : 0.0;
-            LogHelper.info("IMMob stats type={} tier={} hp={} atk={} worldDifficulty={}",
-                    getType().getDescriptionId(), getTier(), hp, atk, level.getDifficulty());
+            LogHelper.info("IMMob stats type={} tier={} hp={} atk={} dig={} worldDifficulty={}",
+                    getType().getDescriptionId(), getTier(), hp, atk, canDig(), level.getDifficulty());
         }
         return spawnData;
     }
@@ -272,8 +272,8 @@ public abstract class EntityIMLiving extends Monster implements IHasNexus, IPath
                 double hp = getMaxHealth();
                 double atk = getAttribute(Attributes.ATTACK_DAMAGE) != null
                         ? getAttributeValue(Attributes.ATTACK_DAMAGE) : 0.0;
-                LogHelper.info("IMMob stats type={} tier={} hp={} atk={} worldDifficulty={}",
-                        getType().getDescriptionId(), getTier(), hp, atk, level().getDifficulty());
+                LogHelper.info("IMMob stats type={} tier={} hp={} atk={} dig={} worldDifficulty={}",
+                        getType().getDescriptionId(), getTier(), hp, atk, canDig(), level().getDifficulty());
             }
             imNavigator.tick();
             if (targetNexus != null && targetNexus.getHp() <= 0) {
@@ -316,8 +316,15 @@ public abstract class EntityIMLiving extends Monster implements IHasNexus, IPath
         if (g >= 0 && g < goals.length) {
             currentGoal = goals[g];
         }
-        canClimb = tag.getBoolean("CanClimb");
-        canDig = tag.getBoolean("CanDig");
-        nexusBound = tag.getBoolean("NexusBound");
+        if (tag.contains("CanClimb")) {
+            canClimb = tag.getBoolean("CanClimb");
+        }
+        // Missing key must not wipe constructor/setAttributes dig flag (E-10)
+        if (tag.contains("CanDig")) {
+            canDig = tag.getBoolean("CanDig");
+        }
+        if (tag.contains("NexusBound")) {
+            nexusBound = tag.getBoolean("NexusBound");
+        }
     }
 }
