@@ -1,0 +1,60 @@
+{
+  "name": "invasion-e11-zombie-wooden-sword-drop",
+  "description": "P8/E-11: flavour-1 IM zombie holds wooden sword and drops it on death",
+  "launchServer": true,
+  "totalTicks": 160,
+  "totalFrames": 700,
+  "captureEvery": 8,
+  "warmupFrames": 40,
+  "closeClient": true,
+  "display": {
+    "background": true
+  },
+  "commands": [
+    "time set day",
+    "difficulty hard",
+    "gamerule doMobSpawning false",
+    "gamemode creative Dev",
+    "tp Dev 0.5 -59 0.5",
+    "fill -6 -61 -6 6 -61 6 minecraft:stone",
+    "fill -6 -60 -6 6 -55 6 minecraft:air"
+  ],
+  "actions": [
+    {
+      "fromTick": 0,
+      "toTick": 20,
+      "camera": "third_back"
+    },
+    {
+      "fromTick": 21,
+      "toTick": 50,
+      "camera": "third_back",
+      "commands": [
+        "summon invasion:im_zombie 0.5 -59 2.5 {CustomName:'\"VoxPilotTrack\"',Flavour:1}"
+      ]
+    },
+    {
+      "fromTick": 51,
+      "toTick": 80,
+      "camera": "third_back"
+    },
+    {
+      "fromTick": 81,
+      "toTick": 100,
+      "camera": "third_back",
+      "commands": [
+        "kill @e[type=invasion:im_zombie,name=VoxPilotTrack]"
+      ]
+    },
+    {
+      "fromTick": 101,
+      "toTick": 140,
+      "camera": "third_back"
+    },
+    {
+      "fromTick": 141,
+      "toTick": 159,
+      "camera": "third_back"
+    }
+  ]
+}

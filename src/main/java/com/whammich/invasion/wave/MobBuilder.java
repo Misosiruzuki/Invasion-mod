@@ -36,6 +36,9 @@ public class MobBuilder {
         if (entity instanceof EntityIMLiving living) {
             living.setTier(Math.max(1, construct.getTier()));
             living.setAIGoal(IMGoal.BREAK_NEXUS);
+            if (entity instanceof com.whammich.invasion.entity.EntityIMZombie zombie) {
+                zombie.setFlavour(construct.getFlavour());
+            }
         }
         return Optional.of(entity);
     }
