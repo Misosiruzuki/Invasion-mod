@@ -1,0 +1,67 @@
+{
+  "name": "invasion-m01-model-im-zombie",
+  "description": "M-01: spawn IM zombie; verify model/texture in frame PNGs (not purple-black)",
+  "launchServer": true,
+  "totalTicks": 120,
+  "totalFrames": 500,
+  "captureEvery": 5,
+  "warmupFrames": 40,
+  "closeClient": true,
+  "display": {
+    "background": true
+  },
+  "commands": [
+    "time set day",
+    "difficulty hard",
+    "gamerule doMobSpawning false",
+    "gamemode creative Dev",
+    "tp Dev 0.5 -59 3.5 180 20",
+    "fill -6 -61 -6 6 -61 6 minecraft:stone",
+    "fill -6 -60 -6 6 -55 6 minecraft:air"
+  ],
+  "actions": [
+    {
+      "fromTick": 0,
+      "toTick": 15,
+      "camera": "third_back",
+      "yaw": 180,
+      "pitch": 15
+    },
+    {
+      "fromTick": 16,
+      "toTick": 40,
+      "camera": "third_back",
+      "commands": [
+        "summon invasion:im_zombie 0.5 -59 1.5 {CustomName:'\"VoxPilotTrack\"'}"
+      ]
+    },
+    {
+      "fromTick": 41,
+      "toTick": 60,
+      "camera": "third_back",
+      "yaw": 180,
+      "pitch": 10
+    },
+    {
+      "fromTick": 61,
+      "toTick": 80,
+      "camera": "third_back",
+      "yaw": 120,
+      "pitch": 5
+    },
+    {
+      "fromTick": 81,
+      "toTick": 100,
+      "camera": "third_back",
+      "yaw": 240,
+      "pitch": 10
+    },
+    {
+      "fromTick": 101,
+      "toTick": 119,
+      "camera": "third_back",
+      "yaw": 180,
+      "pitch": 20
+    }
+  ]
+}
