@@ -1,6 +1,6 @@
 {
   "name": "invasion-m01-model-im-zombie",
-  "description": "M-01: spawn IM zombie; verify model/texture in frame PNGs (not purple-black)",
+  "description": "M-01: IM zombie vs Wiki T1a/T1b (https://minecraftjapan.miraheze.org/wiki/ファイル:ATW453-MobZombieT1a.png / ATW453-MobZombieT1b.png). Frame PNGs: no purple-black; Invasion T1 look not plain vanilla.",
   "launchServer": true,
   "totalTicks": 120,
   "totalFrames": 500,
