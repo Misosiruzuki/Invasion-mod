@@ -21,6 +21,8 @@ import net.minecraft.world.level.Level;
 public class EntityIMZombie extends EntityIMMob implements ICanDig {
 
     private int flavour;
+    /** 1.7 datawatcher 31 / getTextureId */
+    private int textureId = 1;
     /** 1.7 itemDrop */
     private Item itemDrop;
     /** 1.7 dropChance */
@@ -29,6 +31,7 @@ public class EntityIMZombie extends EntityIMMob implements ICanDig {
     public EntityIMZombie(EntityType<EntityIMZombie> type, Level level) {
         super(type, level);
         this.flavour = 0;
+        this.textureId = 1; // T1a default (Wiki ATW453-MobZombieT1a)
         setAttributes(1, 0);
     }
 
@@ -51,6 +54,32 @@ public class EntityIMZombie extends EntityIMMob implements ICanDig {
     public void setTier(int tier) {
         super.setTier(tier);
         setAttributes(tier, this.flavour);
+        // 1.7 setTier: random texture when unset (0 means "old" is valid — use -1 sentinel in port)
+        assignTextureForTier(tier);
+    }
+
+    private void assignTextureForTier(int tier) {
+        // 1.7 setTier picks random among valid ids; port uses stable defaults for reproducible tests.
+        // Random 50/50 is intentional-diff X-05 until wave spawn uses full table.
+        if (tier <= 1) {
+            this.textureId = 1; // T1a (Wiki ATW453-MobZombieT1a)
+        } else if (tier == 2) {
+            if (flavour == 2) {
+                this.textureId = 5;
+            } else {
+                this.textureId = 2;
+            }
+        } else {
+            this.textureId = 6;
+        }
+    }
+
+    public int getTextureId() {
+        return textureId;
+    }
+
+    public void setTextureId(int textureId) {
+        this.textureId = textureId;
     }
 
     /**
@@ -170,6 +199,7 @@ public class EntityIMZombie extends EntityIMMob implements ICanDig {
     public void addAdditionalSaveData(CompoundTag tag) {
         super.addAdditionalSaveData(tag);
         tag.putInt("Flavour", flavour);
+        tag.putInt("textureId", textureId);
         tag.putFloat("DropChance", dropChance);
     }
 
@@ -178,6 +208,9 @@ public class EntityIMZombie extends EntityIMMob implements ICanDig {
         super.readAdditionalSaveData(tag);
         if (tag.contains("Flavour")) {
             setAttributes(getTier(), tag.getInt("Flavour"));
+        }
+        if (tag.contains("textureId")) {
+            this.textureId = tag.getInt("textureId");
         }
     }
 }

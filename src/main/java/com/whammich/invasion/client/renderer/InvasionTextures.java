@@ -29,7 +29,15 @@ public final class InvasionTextures {
     public static final ResourceLocation SPIDER_T2 = of("textures/spidert2.png");
     public static final ResourceLocation PIG_ZOMBIE = of("textures/pigzombie64x32.png");
     public static final ResourceLocation TEST = of("textures/testmodel.png");
-    public static final ResourceLocation ZOMBIE = vanilla("textures/entity/zombie/zombie.png");
+    /** @deprecated prefer tier-specific ZOMBIE_* */
+    public static final ResourceLocation ZOMBIE = of("textures/zombiet1a.png");
+    // 1.7 RenderIMZombie texture ids (lowercase paths for 1.20 ResourceLocation)
+    public static final ResourceLocation ZOMBIE_OLD = of("textures/zombie_old.png");
+    public static final ResourceLocation ZOMBIE_T1A = of("textures/zombiet1a.png");
+    public static final ResourceLocation ZOMBIE_T2 = of("textures/zombiet2.png");
+    public static final ResourceLocation ZOMBIE_T2A = of("textures/zombiet2a.png");
+    public static final ResourceLocation ZOMBIE_TAR = of("textures/zombietar.png");
+    public static final ResourceLocation ZOMBIE_T3 = of("textures/zombiet3.png");
     public static final ResourceLocation SKELETON = vanilla("textures/entity/skeleton/skeleton.png");
     public static final ResourceLocation CREEPER = vanilla("textures/entity/creeper/creeper.png");
     public static final ResourceLocation SPIDER = vanilla("textures/entity/spider/spider.png");

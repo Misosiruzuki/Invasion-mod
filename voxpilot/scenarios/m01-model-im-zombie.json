@@ -32,7 +32,7 @@
       "toTick": 40,
       "camera": "third_back",
       "commands": [
-        "summon invasion:im_zombie 0.5 -59 1.5 {CustomName:'\"VoxPilotTrack\"'}"
+        "summon invasion:im_zombie 0.5 -59 1.5 {CustomName:'\"VoxPilotTrack\"',textureId:1}"
       ]
     },
     {
