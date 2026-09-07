@@ -1,7 +1,7 @@
 package com.whammich.invasion.client.renderer;
 
 import com.whammich.invasion.entity.EntityIMZombie;
-import net.minecraft.client.model.ZombieModel;
+import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.model.geom.ModelLayers;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.HumanoidMobRenderer;
@@ -9,11 +9,12 @@ import net.minecraft.resources.ResourceLocation;
 
 /**
  * Port of 1.7 {@code invmod.client.render.RenderIMZombie#getTexture}.
- * Uses ZombieModel (64x32 classic layout) + Invasion tier textures under textures/entity/.
+ * Uses HumanoidModel + ZOMBIE layer (ZombieModel requires T extends Zombie; EntityIMZombie is Monster).
+ * Textures: textures/entity/zombiet1a.png etc.
  */
-public class RenderIMZombie extends HumanoidMobRenderer<EntityIMZombie, ZombieModel<EntityIMZombie>> {
+public class RenderIMZombie extends HumanoidMobRenderer<EntityIMZombie, HumanoidModel<EntityIMZombie>> {
     public RenderIMZombie(EntityRendererProvider.Context ctx) {
-        super(ctx, new ZombieModel<>(ctx.bakeLayer(ModelLayers.ZOMBIE)), 0.5F);
+        super(ctx, new HumanoidModel<>(ctx.bakeLayer(ModelLayers.ZOMBIE)), 0.5F);
     }
 
     @Override
